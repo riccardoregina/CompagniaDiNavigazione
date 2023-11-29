@@ -23,8 +23,8 @@ create table Corsa(
     idCorsa serial primary key,
     PortoPartenza integer not null,
     PortoArrivo integer not null,
-    orarioPartenza time not null,
-    orarioArrivo time not null,
+    DataOraPartenza timestamp not null,
+    DataOraArrivo timestamp not null,
     data date not null,
     costoIntero money not null,
     costoRidotto money not null,
@@ -57,8 +57,8 @@ create table Porto(
 create table Scalo(
     Corsa integer primary key,
     Porto integer not null,
-    orarioAttracco time not null,
-    orarioRipartenza time not null,
+    DataOraAttracco timestamp not null,
+    DataOraRipartenza timestamp not null,
 
     check(orarioAttracco < orarioRipartenza)
 );
