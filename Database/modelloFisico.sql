@@ -35,7 +35,7 @@ create table Corsa(
     Compagnia text not null,
     Natante text not null,
 
-    check (costoIntero > costoRidotto AND PortoArrivo <> PortoPartenza AND orarioPartenza < orarioArrivo)
+    check (costoIntero > costoRidotto AND PortoArrivo <> PortoPartenza AND DataOraPartenza < DataOraArrivo)
 );
 
 create table Periodo(
@@ -60,7 +60,7 @@ create table Scalo(
     DataOraAttracco timestamp not null,
     DataOraRipartenza timestamp not null,
 
-    check(orarioAttracco < orarioRipartenza)
+    check(DataOraAttracco < DataOraRipartenza)
 );
 
 create table Natante(
