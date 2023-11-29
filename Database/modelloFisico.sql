@@ -16,7 +16,7 @@ create table Compagnia(
     login text primary key,
     password text not null,
     nome text not null,
-    sitoWeb varchar(50) not null
+    sitoWeb text not null
 );
 
 create table Corsa(
