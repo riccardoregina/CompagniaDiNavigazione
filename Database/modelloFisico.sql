@@ -1,3 +1,5 @@
+-- commento di prova github--
+
 create schema Navigazione;
 
 create domain money as numeric
