@@ -130,7 +130,7 @@ alter table Corsa
 alter table Corsa
     add constraint corsaFKnatante
         foreign key Natante references Natante(nome)
-            on delete set default   on update cascade;
+            on delete cascade   on update cascade;
 
 alter table Corsa
     add constraint corsaFKportoPartenza
