@@ -21,8 +21,8 @@ create table Navigazione.Corsa(
     costoRidotto numeric not null check(costoRidotto >= 0),
     minutiRitardo integer not null default 0,
     cancellata boolean not null default 'false',
-    postiDispPass integer not null,
-    postiDispVei integer,
+    postiDispPass integer not null check(postiDispPass >= 0),
+    postiDispVei integer check(postiDispVei >= 0 or postiDispVei is null),
     Compagnia text not null,
     Natante text not null,
 
