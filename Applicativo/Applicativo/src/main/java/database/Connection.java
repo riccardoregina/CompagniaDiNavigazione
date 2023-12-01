@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class Connection {
     private java.sql.Connection connection;
 
-    public void connection() throws Exception{
+    private void connection() throws Exception{
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -28,6 +28,21 @@ public class Connection {
             System.out.println("Connessione effettuata.");
         } else {
             System.out.println("Connessione non riuscita.");
+        }
+    }
+
+    public void getConnection() throws SQLException{
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection();
+            } else {
+                System.out.println("Una connessione e' gia attiva.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Connessione fallita.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
