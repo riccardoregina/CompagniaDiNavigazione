@@ -25,6 +25,9 @@ create table Navigazione.Corsa(
     postiDispVei integer check(postiDispVei >= 0 or postiDispVei is null),
     Compagnia text not null,
     Natante text not null,
+    incrementoBagaglio numeric default 0 check(incrementoBagaglio >= 0),
+    incrementoPrevendita numeric default 0 check(incrementoPrevendita >= 0),
+    incrementoVeicolo numeric default 0 check(incrementoVeicolo >= 0),
 
     check (costoIntero > costoRidotto AND PortoArrivo <> PortoPartenza AND dataOraPartenza < dataOraArrivo)
 );
