@@ -3,10 +3,10 @@ package model;
 public class Natante {
     private Compagnia compagnia;
     private String nome;
-    private Integer capienzaPasseggeri;
-    private Integer capienzaVeicoli = 0;
+    private int capienzaPasseggeri;
+    private int capienzaVeicoli = 0;
     private String tipo = "altro";
-    public Natante(Compagnia compagnia, String nome, Integer capienzaPasseggeri, String tipo) throws RuntimeException{
+    public Natante(Compagnia compagnia, String nome, int capienzaPasseggeri, String tipo) throws RuntimeException{
         this.compagnia = compagnia;
         this.nome = nome;
         this.capienzaPasseggeri = capienzaPasseggeri;
@@ -16,7 +16,7 @@ public class Natante {
         }
         this.tipo = tipo;
     }
-    public Natante(Compagnia compagnia, String nome, Integer capienzaPasseggeri, Integer capienzaVeicoli, String tipo) {
+    public Natante(Compagnia compagnia, String nome, int capienzaPasseggeri, int capienzaVeicoli, String tipo) {
         this.compagnia = compagnia;
         this.nome = nome;
         this.capienzaPasseggeri = capienzaPasseggeri;
@@ -32,11 +32,11 @@ public class Natante {
         return compagnia;
     }
 
-    public Integer getCapienzaPasseggeri() {
+    public int getCapienzaPasseggeri() {
         return capienzaPasseggeri;
     }
 
-    public Integer getCapienzaVeicoli() {
+    public int getCapienzaVeicoli() {
         return capienzaVeicoli;
     }
 

@@ -6,5 +6,5 @@ import java.util.Date;
 public class Periodo {
     private Date dataInizio;
     private Date dataFine;
-    private BitSet[] giorni; //vedi cosa è bitset
+    private BitSet[] giorni; //vedi meglio cosa è bitset
 }

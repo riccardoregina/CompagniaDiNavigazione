@@ -1,85 +1,66 @@
 package model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
-public class Corsa {
+public class CorsaRegolare {
     private Compagnia compagnia;
     private Natante natante;
     private Porto portoPartenza;
-    private Porto portoScalo = null;
     private Porto portoArrivo;
-    private Periodo periodoAttivita;
-    private Timestamp dataOraPartenza;
-    private Timestamp dataOraScaloAttracco;
-    private Timestamp dataOraScaloRipartenza;
-    private Timestamp dataOraArrivo;
-    private Float costoIntero;
-    private Float costoRidotto;
-    private Integer minutiRitardo = 0;
-    private Integer postiDispPass = natante.getCapienzaPasseggeri();
-    private Integer postiDispVei = natante.getCapienzaVeicoli();
-    public Corsa(Compagnia compagnia, Natante natante, Porto portoPartenza, Porto portoScalo, Porto portoArrivo, Periodo periodoAttivita, Timestamp dataOraPartenza, Timestamp dataOraScaloAttracco, Timestamp dataOraScaloRipartenza, Timestamp dataOraArrivo, Float costoIntero, Float costoRidotto) {
-        this.compagnia = compagnia;
-        this.natante = natante;
-        this.portoPartenza = portoPartenza;
-        this.portoScalo = portoScalo;
-        this.portoArrivo = portoArrivo;
-        this.dataOraArrivo = dataOraArrivo;
-        this.dataOraScaloAttracco = dataOraScaloAttracco;
-        this.dataOraScaloRipartenza = dataOraScaloRipartenza;
-        this.dataOraPartenza = dataOraPartenza;
-        this.costoIntero = costoIntero;
-        this.costoRidotto = costoRidotto;
-    }
-    public Corsa(Compagnia compagnia, Natante natante, Porto portoPartenza, Porto portoArrivo, Periodo periodoAttivita, Timestamp dataOraPartenza, Timestamp dataOraArrivo, Float costoIntero, Float costoRidotto) {
+    private ArrayList<Periodo> periodiAttivita;
+    private Time orarioPartenza;
+    private Time orarioArrivo;
+    private float costoIntero;
+    private float scontoRidotto;
+    private float costoVeicolo;
+    private float costoPrevendita;
+
+    public CorsaRegolare(Compagnia compagnia, Natante natante, Porto portoPartenza, Porto portoArrivo, Periodo periodoAttivita, Time orarioPartenza, Time orarioArrivo, float costoIntero, float scontoRidotto, float costoVeicolo, float costoPrevendita) {
         this.compagnia = compagnia;
         this.natante = natante;
         this.portoPartenza = portoPartenza;
         this.portoArrivo = portoArrivo;
-        this.dataOraArrivo = dataOraArrivo;
-        this.dataOraPartenza = dataOraPartenza;
+        periodiAttivita = new ArrayList<>();
+        periodiAttivita.add(periodoAttivita);
+        this.orarioPartenza = orarioPartenza;
+        this.orarioArrivo = orarioArrivo;
         this.costoIntero = costoIntero;
-        this.costoRidotto = costoRidotto;
+        this.scontoRidotto = scontoRidotto;
+        this.costoPrevendita = costoPrevendita;
+        this.costoVeicolo = costoVeicolo;
     }
 
     public Compagnia getCompagnia() {
         return compagnia;
     }
 
-    public Float getCostoIntero() {
+    public Date getOrarioPartenza() {
+        return orarioPartenza;
+    }
+
+    public Date getOrarioArrivo() {
+        return orarioArrivo;
+    }
+
+    public float getCostoIntero() {
         return costoIntero;
     }
 
-    public Float getCostoRidotto() {
-        return costoRidotto;
+    public float getScontoRidotto() {
+        return scontoRidotto;
     }
 
-    public Integer getMinutiRitardo() {
-        return minutiRitardo;
+    public float getCostoVeicolo() {
+        return costoVeicolo;
     }
 
-    public Integer getPostiDispPass() {
-        return postiDispPass;
-    }
-
-    public Integer getPostiDispVei() {
-        return postiDispVei;
+    public float getCostoPrevendita() {
+        return costoPrevendita;
     }
 
     public Natante getNatante() {
         return natante;
-    }
-
-    public Periodo getPeriodoAttivita() {
-        return periodoAttivita;
-    }
-
-    public Timestamp getDataOraArrivo() {
-        return dataOraArrivo;
-    }
-
-    public Timestamp getDataOraPartenza() {
-        return dataOraPartenza;
     }
 
     public Porto getPortoArrivo() {
@@ -90,15 +71,7 @@ public class Corsa {
         return portoPartenza;
     }
 
-    public Porto getPortoScalo() {
-        return portoScalo;
-    }
-
-    public Timestamp getDataOraScaloAttracco() {
-        return dataOraScaloAttracco;
-    }
-
-    public Timestamp getDataOraScaloRipartenza() {
-        return dataOraScaloRipartenza;
+    public void addPeriodoAttivita(Periodo periodoAttivita) {
+        periodiAttivita.add(periodoAttivita);
     }
 }

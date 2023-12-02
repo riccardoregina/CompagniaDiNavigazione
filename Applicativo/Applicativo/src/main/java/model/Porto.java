@@ -9,4 +9,13 @@ public class Porto {
         this.indirizzo = indirizzo;
         this.numeroTelefono = numeroTelefono;
     }
+    public String getComune() {
+        return comune;
+    }
+    public String getIndirizzo() {
+        return indirizzo;
+    }
+    public String getNumeroTelefono() {
+        return numeroTelefono;
+    }
 }
