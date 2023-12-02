@@ -4,7 +4,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Connection {
-    private java.sql.Connection connection;
+    private java.sql.Connection connection = null;
 
     private void connection() throws Exception{
         try {
@@ -31,7 +31,7 @@ public class Connection {
         }
     }
 
-    public void getConnection() throws SQLException{
+    public java.sql.Connection getConnection() throws SQLException{
         try {
             if (connection == null || connection.isClosed()) {
                 connection();
@@ -44,5 +44,6 @@ public class Connection {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return connection;
     }
 }
