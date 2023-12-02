@@ -1,3 +1,5 @@
+create database Navigazione;
+
 create schema Navigazione;
 
 create type tipoNatante as enum ('traghetto', 'motonave', 'aliscafo', 'altro');
@@ -11,25 +13,34 @@ create table Navigazione.Compagnia(
     sitoWeb text not null
 );
 
-create table Navigazione.Corsa(
+create table Navigazione.CorsaRegolare(
     idCorsa serial primary key,
     PortoPartenza integer not null,
     PortoArrivo integer not null,
-    dataOraPartenza timestamp not null,
-    dataOraArrivo timestamp not null,
+    orarioPartenza time not null,
+    orarioArrivo time not null,
     costoIntero numeric not null check(costoIntero >= 0),
-    costoRidotto numeric not null check(costoRidotto >= 0),
-    minutiRitardo integer not null default 0,
-    cancellata boolean not null default 'false',
-    postiDispPass integer not null check(postiDispPass >= 0),
-    postiDispVei integer check(postiDispVei >= 0 or postiDispVei is null),
+    scontoRidotto numeric not null check(scontoRidotto >= 0),
+    costoBagaglio numeric default 0 check(costoBagaglio >= 0),
+    costoPrevendita numeric default 0 check(costoPrevendita >= 0),
+    costoVeicolo numeric default 0 check(costoVeicolo >= 0),
     Compagnia text not null,
     Natante text not null,
-    incrementoBagaglio numeric default 0 check(incrementoBagaglio >= 0),
-    incrementoPrevendita numeric default 0 check(incrementoPrevendita >= 0),
-    incrementoVeicolo numeric default 0 check(incrementoVeicolo >= 0),
 
-    check (costoIntero > costoRidotto AND PortoArrivo <> PortoPartenza AND dataOraPartenza < dataOraArrivo)
+    check (PortoArrivo <> PortoPartenza AND dataOraPartenza < dataOraArrivo)
+);
+
+create table Navigazione.CorsaSpecifica(
+    idCorsa integer,
+    data Data,
+    postiDispPass integer not null check(postiDispPass >= 0),
+    postiDispVei integer check(postiDispVei >= 0 or postiDispVei is null),
+    minutiRitardo integer not null default 0,
+    cancellata boolean not null default 'false',
+
+    primary key(idCorsa, data),
+    foreign key(idCorsa) references CorsaRegolare(idCorsa)
+        on delete cascade       on update cascade
 );
 
 create table Navigazione.Periodo(
@@ -41,6 +52,18 @@ create table Navigazione.Periodo(
     check (dataInizio < dataFine)
 );
 
+create table Navigazione.AttivaIn (
+    idCorsa integer,
+    idPeriodo integer,
+
+    primary key(idCorsa, idPeriodo),
+    foreign key(idCorsa) references CorsaRegolare(idCorsa)
+        on delete cascade       on update cascade,
+
+    foreign key(idPeriodo) references Corsa(idPeriodo)
+        on delete cascade       on update cascade
+);
+
 create table Navigazione.Porto(
     idPorto serial primary key,
     comune text not null,
@@ -49,12 +72,12 @@ create table Navigazione.Porto(
 );
 
 create table Navigazione.Scalo(
-    Corsa integer primary key,
+    idCorsa integer primary key,
     Porto integer not null,
-    dataOraAttracco time not null,
-    dataOraRipartenza time not null,
+    orarioAttracco time not null,
+    orarioRipartenza time not null,
 
-    check(dataOraAttracco < dataOraRipartenza)
+    check(orarioAttracco < orarioRipartenza)
 );
 
 create table Navigazione.Natante(
@@ -62,7 +85,7 @@ create table Navigazione.Natante(
     Compagnia text not null,
     capienzaPasseggeri integer not null,
     capienzaVeicoli integer,
-    tipo navigazione.tipoNatante not null default 'altro'
+    tipo tipoNatante not null default 'altro'
 );
 
 create table Navigazione.Cliente(
@@ -74,19 +97,23 @@ create table Navigazione.Cliente(
 
 create table Navigazione.Biglietto(
     idBiglietto serial primary key,
-    Corsa integer not null,
+    idCorsa integer not null,
+    data Date not null,
     Cliente text not null,
     Veicolo text,
     prevendita boolean not null default 'false',
     bagaglio boolean not null default 'false',
     prezzo numeric not null check(prezzo >= 0),
     dataAcquisto date not null,
-    etaPasseggero integer not null check (etaPasseggero >= 0)
+    etaPasseggero integer not null check (etaPasseggero >= 0),
+
+    foreign key(idCorsa, data) references CorsaSpecifica(idCorsa, data)
+        on delete cascade       on update cascade
 );
 
 create table Navigazione.Veicolo(
     targa text primary key,
-    tipo Navigazione.tipoVeicolo not null default 'altro',
+    tipo tipoVeicolo not null default 'altro',
     Proprietario text not null
 );
 
@@ -106,15 +133,6 @@ create table Navigazione.Email(
 create table Navigazione.Telefono(
     numero text primary key,
     Compagnia text not null
-);
-
-create table Navigazione.AttivaIn (
-    idCorsa integer,
-    idPeriodo integer,
-
-    primary key(idCorsa, idPeriodo),
-    foreign key(idCorsa) references Corsa(idCorsa),
-    foreign key(idPeriodo) references Corsa(idPeriodo)
 );
 
 /*alter Corsa*/
@@ -141,7 +159,7 @@ alter table Corsa
 /*alter Scalo*/
 alter table Scalo
     add constraint scaloFKcorsa
-        foreign key (Corsa) references Corsa(idCorsa)
+        foreign key (idCorsa) references CorsaRegolare(idCorsa)
             on delete cascade       on update cascade;
 
 alter table Scalo
@@ -156,11 +174,6 @@ alter table Natante
             on delete cascade       on update cascade;
 
 /*alter Biglietto*/
-alter table Biglietto
-    add constraint bigliettoFKcorsa
-        foreign key (Corsa) references Corsa(idCorsa)
-            on delete cascade       on update cascade;
-
 alter table Biglietto
     add constraint bigliettoFKcliente
         foreign key (Cliente) references Cliente(login)
