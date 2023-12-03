@@ -20,7 +20,7 @@ create table Navigazione.CorsaRegolare(
     orarioPartenza time not null,
     orarioArrivo time not null,
     costoIntero numeric not null check(costoIntero >= 0),
-    scontoRidotto numeric not null check(scontoRidotto >= 0),
+    scontoRidotto numeric not null check(scontoRidotto >= 0 AND scontoRidotto <=100),
     costoBagaglio numeric default 0 check(costoBagaglio >= 0),
     costoPrevendita numeric default 0 check(costoPrevendita >= 0),
     costoVeicolo numeric default 0 check(costoVeicolo >= 0),
@@ -32,7 +32,7 @@ create table Navigazione.CorsaRegolare(
 
 create table Navigazione.CorsaSpecifica(
     idCorsa integer,
-    data Data,
+    data date,
     postiDispPass integer not null check(postiDispPass >= 0),
     postiDispVei integer check(postiDispVei >= 0 or postiDispVei is null),
     minutiRitardo integer not null default 0,
