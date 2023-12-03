@@ -9,4 +9,31 @@ public class AccountSocial {
         this.nomeSocial = nomeSocial;
         this.tag = tag;
     }
+
+    //metodi per gestire compagnia
+    public Compagnia getCompagnia() {
+        return compagnia;
+    }
+
+    public void setCompagnia(Compagnia compagnia) {
+        this.compagnia = compagnia;
+    }
+
+    //metodi per gestire nomeSocial
+    public String getNomeSocial() {
+        return nomeSocial;
+    }
+
+    public void setNomeSocial(String nomeSocial) {
+        this.nomeSocial = nomeSocial;
+    }
+
+    //metodi per gestire tag
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 }

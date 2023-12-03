@@ -7,56 +7,65 @@ import database.CorseTrovate;
 import postgresqlDAO.ClienteDB;
 
 public class Cliente extends Utente {
-    private final String login;
     private String nome;
     private String cognome;
-    private String pw;
     private ArrayList<Veicolo> veicoliPosseduti;
     private ArrayList<Biglietto> bigliettiAcquistati;
     public Cliente(String login, String pw, String nome, String cognome) {
         super(login, pw);
         this.nome = nome;
         this.cognome = cognome;
+        veicoliPosseduti = new ArrayList<Veicolo>();
+        bigliettiAcquistati = new ArrayList<Biglietto>();
     }
-    public accedi(String login, String pw) {
-        ClienteDB c = new ClienteDB();
-        c.accedi(login, pw);
-    }
-    public getNome() {
+    public String getNome() {
         return nome;
     }
-    public getCognome() {
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCognome() {
         return cognome;
     }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+    }
+
     public ArrayList<Veicolo> getVeicoliPosseduti() {
         return veicoliPosseduti;
     }
-    public addVeicolo(Veicolo veicolo) {
+
+    public void setVeicoliPosseduti(ArrayList<Veicolo> veicoliPosseduti) {
+        this.veicoliPosseduti = veicoliPosseduti;
+    }
+
+    public void addVeicolo(Veicolo veicolo) {
         veicoliPosseduti.add(veicolo);
     }
-    public addVeicolo(String targa, String tipo) {
-        veicoliPosseduti.add(new Veicolo(targa, tipo));
+
+    public void removeVeicolo(Veicolo veicolo) {
+        for(int i = 0; i < veicoliPosseduti.size(); i++) {
+            if(veicolo.getTarga().equals(veicoliPosseduti.get(i).getTarga())) {
+                veicoliPosseduti.remove(i);
+            }
+        }
     }
     public ArrayList<Veicolo> getBigliettiAcquistati() {
         return bigliettiAcquistati;
     }
-    public String getLogin() {
-        return login;
+
+    public void setBigliettiAcquistati(ArrayList<Biglietto> bigliettiAcquistati) {
+        this.bigliettiAcquistati = bigliettiAcquistati;
     }
-    public void visualizzaCorse(Date data, String portoPartenza, String portoArrivo) {
-        ClienteDB c = new ClienteDB();
-        CorseTrovate ct = c.visualizzaCorse(/*input da GUI */);
-        //Qui stampa sulla GUI in un certo formato
+
+    public void addBiglietto(Biglietto biglietto) {
+        bigliettiAcquistati.add(biglietto);
     }
-    public void acquistaBiglietto() {
-        ClienteDB c = new ClienteDB();
-        Biglietto b = new Biglietto(this, /*da GUI*/, /*da GUI */);
-        c.acquistaBiglietto(b);
-    }
-    public void salvaVeicoliPosseduti() {
-        ClienteDB c = new ClienteDB();
-        for (Veicolo v : veicoliPosseduti) {
-            c.addVeicolo(v);
-        }
+
+    public void removeBiglietto(Biglietto biglietto) {
+        bigliettiAcquistati.remove(biglietto);
     }
 }
