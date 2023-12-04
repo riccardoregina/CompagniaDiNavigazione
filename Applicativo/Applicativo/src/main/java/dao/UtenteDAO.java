@@ -1,5 +1,5 @@
 package dao;
 
 public interface UtenteDAO {
-    public void accedi(String login, String password);
+    public boolean accedi(String login, String password);
 }

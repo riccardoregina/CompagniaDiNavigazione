@@ -1,19 +1,30 @@
 package postgresqlDAO;
 
-public class CompagniaDB {
-    Connection c;
+import dao.CompagniaDAO;
+import database.ConnessioneDB;
+import model.CorsaRegolare;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
+
+public class CompagniaDB implements CompagniaDAO {
+    ConnessioneDB c;
     java.sql.Connection conn;
 
-    public void accedi(String login, String pw) {
+    public boolean accedi(String login, String pw) {
+        boolean found = false;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String query = "select *
-        from Compagnia
-        where login = ? and pw = ?";
+        String query = "select *"
+        + "from Compagnia"
+        + "where login = ? and pw = ?";
 
         try {
             conn = c.getConnection();
-        } catch (SQLException e) { 
+        } catch (SQLException e) {
             System.out.println("Connessione fallita.");
             e.printStackTrace();
         }
@@ -22,12 +33,10 @@ public class CompagniaDB {
             conn.prepareStatement(query);
             ps.setString(1, login);
             ps.setString(2, pw);
-            ps.executeStatement();
+            ps.executeQuery();
 
             if (rs.next()) { //se esiste un risultato
-                //apri nuovo frame (menu cliente) 
-            } else {
-                //stampa a schermo che l'utente non é registrato
+                found = true;
             }
             rs.close();
             conn.close();
@@ -35,12 +44,10 @@ public class CompagniaDB {
             System.out.println("Cancellazione fallita.");
             e.printStackTrace();
         }
+        return found;
     }
-    public void aggiungiCorsa(CorsaRegolare corsaRegolare) {
+    public void aggiungiCorsa(/*Attributi di corsaRegolare*/) {
         //deve chiamare una procedura
-        conn.Call //qualcosa del genere TEMP
-        String query = "insert into Natante" +
-                " values (?,?,?,?,?)";
 
         try {
             conn = c.getConnection();
@@ -50,7 +57,7 @@ public class CompagniaDB {
         }
 
         try {
-            conn.Call //qualcosa del genere TEMP
+            conn.executeProcedure() //qualcosa del genere
 
             conn.close();
         } catch (SQLException e) {
@@ -58,11 +65,11 @@ public class CompagniaDB {
             e.printStackTrace();
         }
     }
-    public void modificaCorsaRegolare(CorsaRegolare corsaRegolareModificata) {
+    public void modificaCorsaRegolare(/*Attributi di corsaRegolare*/) {
         PreparedStatement ps = null;
-        String query = "update CorsaRegolare
-        set portoPartenza = ?, portoArrivo = ?, orarioPartenza = ?, orarioArrivo = ?, costoIntero = ?, scontoRidotto = ?, costoBagaglio = ?, costoPrevendita = ?, costoVeicolo = ?
-        where idCorsa = ?";
+        String query = "update CorsaRegolare"
+        + "set portoPartenza = ?, portoArrivo = ?, orarioPartenza = ?, orarioArrivo = ?, costoIntero = ?, scontoRidotto = ?, costoBagaglio = ?, costoPrevendita = ?, costoVeicolo = ?"
+        + "where idCorsa = ?";
 
         try {
             conn = c.getConnection();
@@ -73,9 +80,9 @@ public class CompagniaDB {
 
         try {
             conn.prepareStatement(query);
-            ps.setInt(1, corsaRegolare.getPortoPartenza().getId());
+            ps.setInt(1, idPortoPartenza);
             //etc.
-            ps.setInt(10, corsaRegolare.getId());
+            ps.setInt(10, idCorsa);
             ps.executeUpdate();
 
             conn.close();
@@ -84,10 +91,10 @@ public class CompagniaDB {
             e.printStackTrace();
         }
     }
-    public void modificaCorsaSpecifica(CorsaSpecifica corsaSpecificaModificata) {
+    public void modificaCorsaSpecifica(/*Attributi di corsaRegolare*/) {
         //...
     }
-    public void cancellaCorsaRegolare(CorsaRegolare corsaRegolare) {
+    public void cancellaCorsaRegolare(int idCorsa) {
         PreparedStatement ps = null;
         String query = "delete from CorsaRegolare where idCorsa = ?";
 
@@ -100,7 +107,7 @@ public class CompagniaDB {
 
         try {
             conn.prepareStatement(query);
-            ps.setInt(1, corsaRegolare.getId());
+            ps.setInt(1, idCorsa);
             
             ps.executeUpdate();
 
@@ -110,11 +117,11 @@ public class CompagniaDB {
             e.printStackTrace();
         }
     }
-    public void cancellaCorsaSpecifica(CorsaSpecifica corsaSpecifica) {
+    public void cancellaCorsaSpecifica(int idCorsa, Date data) {
         PreparedStatement ps = null;
-        String query = "update CorsaSpecifica
-        set cancellata = true
-        where idCorsa = ? and data = ?";
+        String query = "update CorsaSpecifica"
+        + "set cancellata = true"
+        + "where idCorsa = ? and data = ?";
 
         try {
             conn = c.getConnection();
@@ -125,8 +132,8 @@ public class CompagniaDB {
 
         try {
             conn.prepareStatement(query);
-            ps.setInt(1, corsaSpecifica.getCorsaRegolare().getId());
-            ps.setDate(2, corsaSpecifica.getDate());
+            ps.setInt(1, idCorsa);
+            ps.setDate(2, (java.sql.Date) data);
             
             ps.executeUpdate();
 
@@ -136,11 +143,11 @@ public class CompagniaDB {
             e.printStackTrace();
         }
     }
-    public void segnalaRitardo(CorsaSpecifica corsaSpecifica, int ritardo) {
+    public void segnalaRitardo(int idCorsa, Date data, int ritardo) {
         PreparedStatement ps = null;
-        String query = "update CorsaSpecifica
-        set minutiRitardo = ?
-        where idCorsa = ? and data = ?";
+        String query = "update CorsaSpecifica"
+        + "set minutiRitardo = ?"
+        + "where idCorsa = ? and data = ?";
 
         try {
             conn = c.getConnection();
@@ -152,8 +159,8 @@ public class CompagniaDB {
         try {
             conn.prepareStatement(query);
             ps.setInt(1, ritardo);
-            ps.setInt(2, corsaSpecifica.getCorsaRegolare().getId());
-            ps.setDate(3, corsaSpecifica.getDate());
+            ps.setInt(2, idCorsa);
+            ps.setDate(3, (java.sql.Date) data);
             
             ps.executeUpdate();
 
@@ -163,10 +170,10 @@ public class CompagniaDB {
             e.printStackTrace();
         }
     }
-    public void aggiungeNatante(Natante natante) {
+    public void aggiungeNatante(/*Attributi di corsaRegolare*/) {
         PreparedStatement ps = null;
-        String query = "insert into Natante
-        values (?,?,?,?,?)";
+        String query = "insert into Natante"
+        + "values (?,?,?,?,?)";
 
         try {
             conn = c.getConnection();
@@ -177,7 +184,7 @@ public class CompagniaDB {
 
         try {
             conn.prepareStatement(query);
-            ps.setString(1, natante.getCompagnia().getLogin());
+            ps.setString(1, idCompagnia);
             //etc.
             
             ps.executeUpdate();
@@ -188,10 +195,10 @@ public class CompagniaDB {
             e.printStackTrace();
         }
     }
-    public void rimuoviNatante(Natante natante) {
+    public void rimuoviNatante(String nomeNatante) {
         PreparedStatement ps = null;
-        String query = "delete from Natante
-        where nome = ?";
+        String query = "delete from Natante"
+        + "where nome = ?";
 
         try {
             conn = c.getConnection();
@@ -202,7 +209,7 @@ public class CompagniaDB {
 
         try {
             conn.prepareStatement(query);
-            ps.setString(1, natante.getNome());
+            ps.setString(1, nomeNatante);
             
             ps.executeUpdate();
 

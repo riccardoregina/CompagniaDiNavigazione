@@ -53,7 +53,7 @@ public class Cliente extends Utente {
             }
         }
     }
-    public ArrayList<Veicolo> getBigliettiAcquistati() {
+    public ArrayList<Biglietto> getBigliettiAcquistati() {
         return bigliettiAcquistati;
     }
 

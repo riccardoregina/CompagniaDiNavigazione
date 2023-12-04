@@ -3,7 +3,7 @@ package database;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Connection {
+public class ConnessioneDB {
     private java.sql.Connection connection = null;
 
     private void connection() throws Exception{
