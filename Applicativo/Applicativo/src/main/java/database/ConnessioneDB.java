@@ -3,6 +3,9 @@ package database;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * The type Connessione db.
+ */
 public class ConnessioneDB {
     private java.sql.Connection connection = null;
 
@@ -31,6 +34,12 @@ public class ConnessioneDB {
         }
     }
 
+    /**
+     * Gets connection.
+     *
+     * @return the connection
+     * @throws SQLException the sql exception
+     */
     public java.sql.Connection getConnection() throws SQLException{
         try {
             if (connection == null || connection.isClosed()) {

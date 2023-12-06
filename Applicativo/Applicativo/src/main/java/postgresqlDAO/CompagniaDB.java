@@ -2,18 +2,26 @@ package postgresqlDAO;
 
 import dao.CompagniaDAO;
 import database.ConnessioneDB;
-import model.CorsaRegolare;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+/**
+ * The type Compagnia db.
+ */
 public class CompagniaDB implements CompagniaDAO {
-    ConnessioneDB c;
-    java.sql.Connection conn;
+    private ConnessioneDB c;
+    private java.sql.Connection conn;
 
+    /**
+     * Accedi boolean.
+     *
+     * @param login the login
+     * @param pw    the pw
+     * @return the boolean
+     */
     public boolean accedi(String login, String pw) {
         boolean found = false;
         PreparedStatement ps = null;
@@ -46,12 +54,52 @@ public class CompagniaDB implements CompagniaDAO {
         }
         return found;
     }
+
+    /**
+     * Fetch compagnia from db.
+     *
+     * @param loginCompagnia the login compagnia
+     */
+    public void fetchCompagniaFromDB(String loginCompagnia, /*ATTRIBUTI DA RIEMPIRE DI COMPAGNIA*/) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String query = "select *"
+                + "from Compagnia"
+                + "where login = ?";
+
+        try {
+            conn = c.getConnection();
+        } catch (SQLException e) {
+            System.out.println("Connessione fallita.");
+            e.printStackTrace();
+        }
+
+        try {
+            conn.prepareStatement(query);
+            ps.setString(1, loginCompagnia);
+            ps.executeQuery();
+
+            if (rs.next()) { //se esiste un risultato
+                //RIEMPI GLI ATTRIBUTI PASSATI COME PARAMETRI
+            }
+            rs.close();
+            ps.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Cancellazione fallita.");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Aggiungi corsa.
+     */
     public void aggiungiCorsa(/*Attributi di corsaRegolare*/) {
         //deve chiamare una procedura
 
         try {
             conn = c.getConnection();
-        } catch (SQLException e) { 
+        } catch (SQLException e) {
             System.out.println("Connessione fallita.");
             e.printStackTrace();
         }
@@ -65,6 +113,10 @@ public class CompagniaDB implements CompagniaDAO {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Modifica corsa regolare.
+     */
     public void modificaCorsaRegolare(/*Attributi di corsaRegolare*/) {
         PreparedStatement ps = null;
         String query = "update CorsaRegolare"
@@ -91,9 +143,19 @@ public class CompagniaDB implements CompagniaDAO {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Modifica corsa specifica.
+     */
     public void modificaCorsaSpecifica(/*Attributi di corsaRegolare*/) {
         //...
     }
+
+    /**
+     * Cancella corsa regolare.
+     *
+     * @param idCorsa the id corsa
+     */
     public void cancellaCorsaRegolare(int idCorsa) {
         PreparedStatement ps = null;
         String query = "delete from CorsaRegolare where idCorsa = ?";
@@ -117,6 +179,13 @@ public class CompagniaDB implements CompagniaDAO {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Cancella corsa specifica.
+     *
+     * @param idCorsa the id corsa
+     * @param data    the data
+     */
     public void cancellaCorsaSpecifica(int idCorsa, Date data) {
         PreparedStatement ps = null;
         String query = "update CorsaSpecifica"
@@ -143,6 +212,14 @@ public class CompagniaDB implements CompagniaDAO {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Segnala ritardo.
+     *
+     * @param idCorsa the id corsa
+     * @param data    the data
+     * @param ritardo the ritardo
+     */
     public void segnalaRitardo(int idCorsa, Date data, int ritardo) {
         PreparedStatement ps = null;
         String query = "update CorsaSpecifica"
@@ -170,6 +247,10 @@ public class CompagniaDB implements CompagniaDAO {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Aggiunge natante.
+     */
     public void aggiungeNatante(/*Attributi di corsaRegolare*/) {
         PreparedStatement ps = null;
         String query = "insert into Natante"
@@ -185,7 +266,7 @@ public class CompagniaDB implements CompagniaDAO {
         try {
             conn.prepareStatement(query);
             ps.setString(1, idCompagnia);
-            //etc.
+            //etc. (il resto degli attributi da settare)
             
             ps.executeUpdate();
 
@@ -195,6 +276,12 @@ public class CompagniaDB implements CompagniaDAO {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Rimuovi natante.
+     *
+     * @param nomeNatante the nome natante
+     */
     public void rimuoviNatante(String nomeNatante) {
         PreparedStatement ps = null;
         String query = "delete from Natante"
