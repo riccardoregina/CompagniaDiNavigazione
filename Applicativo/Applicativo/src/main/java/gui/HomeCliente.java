@@ -52,9 +52,8 @@ public class HomeCliente {
         bAggiungiVeicolo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controllerCompagnia = new ControllerCompagnia();
-                LoginCompagnia credenzialiCompagnia = new LoginCompagnia(frame, controllerCompagnia);
-                credenzialiCompagnia.frame.setVisible(true);
+                AggiungiVeicolo aggiungiVeicolo = new AggiungiVeicolo(frame, controllerCliente);
+                aggiungiVeicolo.frame.setVisible(true);
                 frame.setVisible(false);
             }
         });
