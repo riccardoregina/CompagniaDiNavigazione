@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * The type Cliente.
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 public class Cliente extends Utente {
     private String nome;
     private String cognome;
-    private ArrayList<Veicolo> veicoliPosseduti;
+    private HashMap<String, Veicolo> veicoliPosseduti;
     private ArrayList<Biglietto> bigliettiAcquistati;
 
     /**
@@ -23,7 +24,7 @@ public class Cliente extends Utente {
         super(login, pw);
         this.nome = nome;
         this.cognome = cognome;
-        veicoliPosseduti = new ArrayList<Veicolo>();
+        veicoliPosseduti = new HashMap<>();
         bigliettiAcquistati = new ArrayList<Biglietto>();
     }
 
@@ -68,7 +69,7 @@ public class Cliente extends Utente {
      *
      * @return the veicoli posseduti
      */
-    public ArrayList<Veicolo> getVeicoliPosseduti() {
+    public HashMap<String, Veicolo> getVeicoliPosseduti() {
         return veicoliPosseduti;
     }
 
@@ -77,7 +78,7 @@ public class Cliente extends Utente {
      *
      * @param veicoliPosseduti the veicoli posseduti
      */
-    public void setVeicoliPosseduti(ArrayList<Veicolo> veicoliPosseduti) {
+    public void setVeicoliPosseduti(HashMap<String, Veicolo> veicoliPosseduti) {
         this.veicoliPosseduti = veicoliPosseduti;
     }
 
@@ -87,7 +88,7 @@ public class Cliente extends Utente {
      * @param veicolo the veicolo
      */
     public void addVeicolo(Veicolo veicolo) {
-        veicoliPosseduti.add(veicolo);
+        veicoliPosseduti.put(veicolo.getTarga(), veicolo);
     }
 
     /**
@@ -96,11 +97,7 @@ public class Cliente extends Utente {
      * @param veicolo the veicolo
      */
     public void removeVeicolo(Veicolo veicolo) {
-        for(int i = 0; i < veicoliPosseduti.size(); i++) {
-            if(veicolo.getTarga().equals(veicoliPosseduti.get(i).getTarga())) {
-                veicoliPosseduti.remove(i);
-            }
-        }
+        veicoliPosseduti.remove(veicolo.getTarga());
     }
 
     /**

@@ -3,13 +3,10 @@ package controller;
 import model.*;
 import postgresqlDAO.ClienteDB;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
+
 import unnamed.Pair;
 
 /**
@@ -20,7 +17,7 @@ public class ControllerCliente {
     private Cliente cliente;
     private HashMap<Integer, Porto> porti;
     private HashMap<String, Compagnia> compagnie;
-    private ArrayList<CorsaSpecifica> corse;
+    private HashMap<Pair, CorsaSpecifica> corse;
     private ArrayList<Biglietto> bigliettiAcquistati;
 
     /**
@@ -30,7 +27,7 @@ public class ControllerCliente {
         clienteDB = new ClienteDB();
         porti = new HashMap<>();
         compagnie = new HashMap<>();
-        corse = new ArrayList<>();
+        corse = new HashMap<Pair, CorsaSpecifica>();
         bigliettiAcquistati = new ArrayList<>();
     }
 
@@ -70,7 +67,7 @@ public class ControllerCliente {
     }
 
     /**
-     * Build model.
+     * Questo metodo si occupa di costruire l'ambiente dell'applicativo a partire dal fetching del DB
      */
     public void buildModel() {
         buildCompagnie();
@@ -129,7 +126,11 @@ public class ControllerCliente {
     }
 
     /**
-     * Build corse.
+     * Questo metodo (l'ordine é dettato dalle dipendenze):
+     *  1) costruisce i natanti e li assegna alle compagnie
+     *  2) costruisce le corse regolari e le assegna alle compagnie
+     *  3) assegna i periodi alle corse regolari
+     *  4) costruisce le corse specifiche e popola la collezione 'corse' di questa classe
      */
     public void buildCorse() {
         //Elementi dei natanti
@@ -172,18 +173,22 @@ public class ControllerCliente {
             float cVei = costoVeicolo.get(i);
             c.addCorsaRegolare(new CorsaRegolare(id, c, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cPrev, cVei));
         }
-        //Elementi dei periodi CONTINUA, BISOGNA ASSEGNARE AD OGNI CORSA REGOLARE I PROPRI PERIODI DI ATTIVITA'
+
+        //Elementi dei periodi
         HashMap<Integer, Periodo> periodi = new HashMap<>();
+        ArrayList<String> compagnia = new ArrayList<>();
         ArrayList<Integer> corsa = new ArrayList<>();
         ArrayList<Integer> idPeriodo = new ArrayList<>();
         ArrayList<Date> dataInizio = new ArrayList<>();
         ArrayList<Date> dataFine = new ArrayList<>();
         ArrayList<BitSet> giorni = new ArrayList<>();
-        clienteDB.fetchPeriodiAttivitaCorse(idPeriodo, dataInizio, dataFine, giorni, corsa);
+        clienteDB.fetchPeriodiAttivitaCorse(idPeriodo, dataInizio, dataFine, giorni, corsa, compagnia);
+        //Assegno un periodo alla sua corsa.
         for (int i = 0; i < dataInizio.size(); i++) {
-            periodi.put(idPeriodo.get(i), new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), giorni.get(i)));
+            Compagnia c = compagnie.get(compagnia.get(i));
+            CorsaRegolare cr = c.getCorseErogate().get(corsa.get(i));
+            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), giorni.get(i)));
         }
-
 
         //Elementi delle corseSpecifiche
         ArrayList<String> compagniaCorsaS = new ArrayList<>();
@@ -202,7 +207,8 @@ public class ControllerCliente {
             int pVei = postiDispVei.get(i);
             int mRit = minutiRitardo.get(i);
             boolean canc = cancellata.get(i);
-            corse.add(new CorsaSpecifica(cr, d, pPass, pVei, mRit, canc));
+            Pair pair = new Pair(cr.getIdCorsa(), d);
+            corse.put(pair, new CorsaSpecifica(cr, d, pPass, pVei, mRit, canc));
         }
     }
 
@@ -221,8 +227,11 @@ public class ControllerCliente {
         ArrayList<Integer> etaPasseggero = new ArrayList<>();
         clienteDB.fetchBigliettiCliente(cliente.getLogin(), idBiglietto, idCorsa, dataCorsa, targaVeicolo, prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero);
         for (int i = 0; i < idBiglietto.size(); i++) {
-            //... CONTINUA
-            cliente.addBiglietto(new Biglietto(cliente, ...)); //CONTINUA
+            //trovo la corsa specifica con id e Data
+            CorsaSpecifica cs = corse.get(new Pair(idCorsa.get(i), dataCorsa.get(i)));
+            Veicolo v = cliente.getVeicoliPosseduti().get(targaVeicolo.get(i));
+
+            cliente.addBiglietto(new Biglietto(idBiglietto.get(i), cliente, cs, etaPasseggero.get(i), v, bagaglio.get(i), prevendita.get(i), prezzo.get(i), dataAcquisto.get(i)));
         }
     }
 
@@ -238,7 +247,10 @@ public class ControllerCliente {
      */
     public void visualizzaCorse(Porto portoPartenza, Porto portoArrivo, Date data, int etaPasseggero, boolean veicolo, boolean bagaglio) {
         ArrayList<Pair> corseSelezionate = new ArrayList<>();
-        for (CorsaSpecifica cs : corse) {
+
+        //un iteratore per scorrere la HashMap
+        for (Map.Entry<Pair, CorsaSpecifica> it : corse.entrySet()) {
+            CorsaSpecifica cs = it.getValue();
             if (cs.getCorsaRegolare().getPortoPartenza().equals(portoPartenza) && cs.getCorsaRegolare().getPortoArrivo().equals(portoArrivo) && cs.getData().equals(data)) {
                 float prezzoCalcolato = cs.getCorsaRegolare().getCostoIntero();
                 if (etaPasseggero < 12) {
@@ -266,9 +278,8 @@ public class ControllerCliente {
      */
     public void acquistaBiglietto(CorsaSpecifica cs, Veicolo v, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
         clienteDB.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), v.getTarga(), prevendita, bagaglio, prezzo, LocalDate.now(), etaPasseggero);
-        cliente.addBiglietto(new Biglietto(cliente, cs, etaPasseggero));
-        //Eventuali aggiunte al biglietto
-        //...
+        //DISCUSSIONE SUGLI ID DEI BIGLIETTI APPENA ACQUISTATI (vedi immediatamente sotto, primo parametro)
+        cliente.addBiglietto(new Biglietto(-1, cliente, cs, etaPasseggero, v, prevendita, bagaglio, prezzo, LocalDate.now()));
     }
 
     /**

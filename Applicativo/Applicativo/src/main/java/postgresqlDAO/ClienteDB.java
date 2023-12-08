@@ -335,10 +335,10 @@ public class ClienteDB implements ClienteDAO {
      * @param giorni     the giorni
      * @param corsa      the corsa
      */
-    public void fetchPeriodiAttivitaCorse(ArrayList<Integer> idPeriodo ,ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<BitSet> giorni, ArrayList<Integer> corsa) {
+    public void fetchPeriodiAttivitaCorse(ArrayList<Integer> idPeriodo ,ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<BitSet> giorni, ArrayList<Integer> corsa, ArrayList<String> compagnia) {
         Statement s = null;
         ResultSet rs = null;
-        String query = "select * from Periodo natural join AttivaIn";
+        String query = "select * from Periodo natural join AttivaIn natural join CorsaRegolare";
 
         try {
             conn = c.getConnection();
@@ -351,6 +351,7 @@ public class ClienteDB implements ClienteDAO {
             s.executeQuery(query);
 
             while (rs.next()) {
+                compagnia.add(rs.getString("Compagnia"));
                 idPeriodo.add(rs.getInt("idPeriodo"));
                 dataInizio.add(rs.getDate("dataInizio"));
                 dataFine.add(rs.getDate("dataFine"));

@@ -47,7 +47,7 @@ public class Biglietto {
      * @param dataAcquisto  the data acquisto
      * @param etaPasseggero the eta passeggero
      */
-    public Biglietto(int idBiglietto, Cliente acquirente, CorsaSpecifica corsa, Veicolo veicolo, boolean bagaglio, boolean prevendita, float prezzo, LocalDate dataAcquisto, int etaPasseggero) {
+    public Biglietto(int idBiglietto, Cliente acquirente, CorsaSpecifica corsa,  int etaPasseggero, Veicolo veicolo, boolean bagaglio, boolean prevendita, float prezzo, LocalDate dataAcquisto) {
         this.idBiglietto = idBiglietto;
         this.acquirente = acquirente;
         this.corsa = corsa;
