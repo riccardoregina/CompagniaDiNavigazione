@@ -49,10 +49,20 @@ public class LoginCliente {
         buttonInvio.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //prima di chiamare il nuovo frame bisogna controllare le credenziali, funzione booleana
-                HomeCliente homeCliente = new HomeCliente(frame, controllerCliente);
-                homeCliente.frame.setVisible(true);
-                frame.dispose();
+                String login = loginCliente.getText();
+                char[] pw =passwordCliente.getPassword();
+                String pwd = pw.toString();
+                //boolean chekLogin;
+                //chekLogin = controllerCliente.clienteAccede(login, pwd);
+                if (login.equals("") || pwd.equals("")) {
+                    JOptionPane.showMessageDialog(null,"inserisci i campi richiesti" );
+                return;
+                }
+                else if (controllerCliente.clienteAccede(login, Pwd)) {
+                    HomeCliente homeCliente = new HomeCliente(frame, controllerCliente);
+                    homeCliente.frame.setVisible(true);
+                    frame.dispose();
+                }
             }
         });
     }

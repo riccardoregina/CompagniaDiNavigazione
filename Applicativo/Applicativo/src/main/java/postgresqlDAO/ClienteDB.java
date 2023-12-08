@@ -3,6 +3,7 @@ package postgresqlDAO;
 import database.*;
 import dao.*;
 
+import javax.swing.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,7 +45,8 @@ public class ClienteDB implements ClienteDAO {
         try {
             conn = c.getConnection();
         } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
+            //System.out.println("Connessione fallita.");
+            //JOptionPane.showMessageDialog(null, "Connesione al database non riuscita");
             e.printStackTrace();
         }
 

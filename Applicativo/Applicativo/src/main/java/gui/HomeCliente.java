@@ -4,6 +4,8 @@ import controller.ControllerCliente;
 import controller.ControllerCompagnia;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * The type Home cliente.
@@ -47,5 +49,14 @@ public class HomeCliente {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        bAggiungiVeicolo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controllerCompagnia = new ControllerCompagnia();
+                LoginCompagnia credenzialiCompagnia = new LoginCompagnia(frame, controllerCompagnia);
+                credenzialiCompagnia.frame.setVisible(true);
+                frame.setVisible(false);
+            }
+        });
     }
 }
