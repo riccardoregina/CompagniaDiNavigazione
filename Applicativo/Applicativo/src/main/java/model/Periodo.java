@@ -7,6 +7,7 @@ import java.util.Date;
  * The type Periodo.
  */
 public class Periodo {
+    private int idPeriodo;
     private Date dataInizio;
     private Date dataFine;
     private BitSet giorni;
@@ -21,6 +22,21 @@ public class Periodo {
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
         giorni = new BitSet(7);
+    }
+
+    /**
+     * Instantiates a new Periodo.
+     *
+     * @param idPeriodo  the id periodo
+     * @param dataInizio the data inizio
+     * @param dataFine   the data fine
+     * @param giorni     the giorni
+     */
+    public Periodo(int idPeriodo, Date dataInizio, Date dataFine, BitSet giorni) {
+        this.dataInizio = dataInizio;
+        this.dataFine = dataFine;
+        this.giorni = giorni;
+        this.idPeriodo = idPeriodo;
     }
 
     /**

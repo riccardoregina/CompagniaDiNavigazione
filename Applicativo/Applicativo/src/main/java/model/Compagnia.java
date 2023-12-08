@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import postgresqlDAO.CompagniaDB;
 
@@ -13,8 +14,8 @@ public class Compagnia extends Utente{
     private ArrayList<String> emails;
     private String sitoWeb;
     private ArrayList<AccountSocial> accounts;
-    private ArrayList<Natante> natantiPosseduti;
-    private ArrayList<CorsaRegolare> corseErogate;
+    private HashMap<String, Natante> natantiPosseduti;
+    private HashMap<Integer, CorsaRegolare> corseErogate;
 
     /**
      * Instantiates a new Compagnia.
@@ -25,7 +26,7 @@ public class Compagnia extends Utente{
      */
     public Compagnia(String login, String pw, String nome) {
         super(login, pw);
-        natantiPosseduti = new ArrayList<Natante>();
+        natantiPosseduti = new HashMap<>();
         this.nome = nome;
     }
 
@@ -54,7 +55,7 @@ public class Compagnia extends Utente{
      * @return the natanti posseduti
      */
 //metodi per gestire i natanti posseduti
-    public ArrayList<Natante> getNatantiPosseduti() {
+    public HashMap<String, Natante> getNatantiPosseduti() {
         return natantiPosseduti;
     }
 
@@ -63,7 +64,7 @@ public class Compagnia extends Utente{
      *
      * @param natanti the natanti
      */
-    public void setNatantiPosseduti(ArrayList<Natante> natanti) {
+    public void setNatantiPosseduti(HashMap<String, Natante> natanti) {
         this.natantiPosseduti = natanti;
     }
 
@@ -73,7 +74,7 @@ public class Compagnia extends Utente{
      * @param natante the natante
      */
     public void addNatante(Natante natante) {
-        natantiPosseduti.add(natante);
+        natantiPosseduti.put(natante.getNome(), natante);
     }
 
     /**
@@ -82,11 +83,7 @@ public class Compagnia extends Utente{
      * @param natante the natante
      */
     public void removeNatante(Natante natante) {
-        for(int i = 0; i < natantiPosseduti.size(); i++) {
-            if (natante.getNome().equals(natantiPosseduti.get(i).getNome())) {
-                natantiPosseduti.remove(i);
-            }
-        }
+        natantiPosseduti.remove(natante.getNome());
     }
 
     /**
@@ -239,7 +236,7 @@ public class Compagnia extends Utente{
      * @return the corse erogate
      */
 //metodi per gestire le corse erogate
-    public ArrayList<CorsaRegolare> getCorseErogate() {
+    public HashMap<Integer, CorsaRegolare> getCorseErogate() {
         return corseErogate;
     }
 
@@ -248,7 +245,7 @@ public class Compagnia extends Utente{
      *
      * @param corseErogate the corse erogate
      */
-    public void setCorseErogate(ArrayList<CorsaRegolare> corseErogate) {
+    public void setCorseErogate(HashMap<Integer, CorsaRegolare> corseErogate) {
         this.corseErogate = corseErogate;
     }
 
@@ -258,7 +255,7 @@ public class Compagnia extends Utente{
      * @param corsa the corsa
      */
     public void addCorsaRegolare(CorsaRegolare corsa) {
-        corseErogate.add(corsa);
+        corseErogate.put(corsa.getIdCorsa(), corsa);
     }
 
     /**

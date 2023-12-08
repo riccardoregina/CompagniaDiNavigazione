@@ -60,7 +60,7 @@ public class CompagniaDB implements CompagniaDAO {
      *
      * @param loginCompagnia the login compagnia
      */
-    public void fetchCompagniaFromDB(String loginCompagnia, /*ATTRIBUTI DA RIEMPIRE DI COMPAGNIA*/) {
+    public void fetchCompagniaFromDB(String loginCompagnia /*ATTRIBUTI DA RIEMPIRE DI COMPAGNIA*/) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select *"
@@ -105,7 +105,7 @@ public class CompagniaDB implements CompagniaDAO {
         }
 
         try {
-            conn.executeProcedure() //qualcosa del genere
+            conn.executeProcedure(); //qualcosa del genere
 
             conn.close();
         } catch (SQLException e) {

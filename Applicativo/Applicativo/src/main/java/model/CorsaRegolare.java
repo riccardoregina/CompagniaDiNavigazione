@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * The type Corsa regolare.
  */
 public class CorsaRegolare {
+    private int idCorsa;
     private Compagnia compagnia;
     private Natante natante;
     private Porto portoPartenza;
@@ -26,6 +27,7 @@ public class CorsaRegolare {
     /**
      * Instantiates a new Corsa regolare.
      *
+     * @param idCorsa         the id corsa
      * @param compagnia       the compagnia
      * @param natante         the natante
      * @param portoPartenza   the porto partenza
@@ -38,9 +40,10 @@ public class CorsaRegolare {
      * @param costoVeicolo    the costo veicolo
      * @param costoPrevendita the costo prevendita
      */
-    public CorsaRegolare(Compagnia compagnia, Natante natante, Porto portoPartenza, Porto portoArrivo,
+    public CorsaRegolare(int idCorsa, Compagnia compagnia, Natante natante, Porto portoPartenza, Porto portoArrivo,
                          LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto,
                          float costoBagaglio, float costoVeicolo, float costoPrevendita) {
+        this.idCorsa = idCorsa;
         this.compagnia = compagnia;
         this.natante = natante;
         this.portoPartenza = portoPartenza;
@@ -54,6 +57,15 @@ public class CorsaRegolare {
         this.costoVeicolo = costoVeicolo;
         periodiAttivita = new ArrayList<Periodo>();
         corseSpecifiche = new ArrayList<CorsaSpecifica>();
+    }
+
+    /**
+     * Gets id corsa.
+     *
+     * @return the id corsa
+     */
+    public int getIdCorsa() {
+        return idCorsa;
     }
 
     /**

@@ -4,6 +4,7 @@ package model;
  * The type Porto.
  */
 public class Porto {
+    private int idPorto;
     private String comune;
     private String indirizzo;
     private String numeroTelefono;
@@ -11,14 +12,34 @@ public class Porto {
     /**
      * Instantiates a new Porto.
      *
+     * @param idPorto        the id porto
      * @param comune         the comune
      * @param indirizzo      the indirizzo
      * @param numeroTelefono the numero telefono
      */
-    public Porto(String comune, String indirizzo, String numeroTelefono) {
+    public Porto(int idPorto, String comune, String indirizzo, String numeroTelefono) {
+        this.idPorto = idPorto;
         this.comune = comune;
         this.indirizzo = indirizzo;
         this.numeroTelefono = numeroTelefono;
+    }
+
+    /**
+     * Gets id porto.
+     *
+     * @return the id porto
+     */
+    public int getIdPorto() {
+        return idPorto;
+    }
+
+    /**
+     * Sets id porto.
+     *
+     * @param idPorto the id porto
+     */
+    public void setIdPorto(int idPorto) {
+        this.idPorto = idPorto;
     }
 
     /**

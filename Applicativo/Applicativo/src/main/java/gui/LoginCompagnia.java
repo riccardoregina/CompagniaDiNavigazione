@@ -6,17 +6,35 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The type Login compagnia.
+ */
 public class LoginCompagnia {
     private JPanel panel1;
     private JPanel panelContainerLogin;
     private JPasswordField passwordCompagnia;
     private JTextField loginCompagnia;
     private JButton buttonInvio;
+    /**
+     * The Controller compagnia.
+     */
     public ControllerCompagnia controllerCompagnia;
+    /**
+     * The Frame chiamante.
+     */
     public JFrame frameChiamante;
+    /**
+     * The Frame.
+     */
     public JFrame frame;
 
 
+    /**
+     * Instantiates a new Login compagnia.
+     *
+     * @param frameChiamante      the frame chiamante
+     * @param controllerCompagnia the controller compagnia
+     */
     public LoginCompagnia(JFrame frameChiamante, ControllerCompagnia controllerCompagnia) {
 
         this.frameChiamante=frameChiamante;

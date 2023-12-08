@@ -2,6 +2,9 @@ package gui;
 
 import javax.swing.*;
 
+/**
+ * The type Cerca corse.
+ */
 public class CercaCorse {
     private JPanel panel1;
     private JTextField tfPortoPart;

@@ -6,6 +6,7 @@ import java.time.LocalDate;
  * The type Biglietto.
  */
 public class Biglietto {
+    private int idBiglietto;
     private Cliente acquirente;
     private CorsaSpecifica corsa;
     private Veicolo veicolo;
@@ -31,6 +32,40 @@ public class Biglietto {
         veicolo = null;
         bagaglio = false;
         prevendita = false;
+    }
+
+    /**
+     * Instantiates a new Biglietto.
+     *
+     * @param idBiglietto   the id biglietto
+     * @param acquirente    the acquirente
+     * @param corsa         the corsa
+     * @param veicolo       the veicolo
+     * @param bagaglio      the bagaglio
+     * @param prevendita    the prevendita
+     * @param prezzo        the prezzo
+     * @param dataAcquisto  the data acquisto
+     * @param etaPasseggero the eta passeggero
+     */
+    public Biglietto(int idBiglietto, Cliente acquirente, CorsaSpecifica corsa, Veicolo veicolo, boolean bagaglio, boolean prevendita, float prezzo, LocalDate dataAcquisto, int etaPasseggero) {
+        this.idBiglietto = idBiglietto;
+        this.acquirente = acquirente;
+        this.corsa = corsa;
+        this.veicolo = veicolo;
+        this.bagaglio = bagaglio;
+        this.prevendita = prevendita;
+        this.prezzo = prezzo;
+        this.dataAcquisto = dataAcquisto;
+        this.etaPasseggero = etaPasseggero;
+    }
+
+    /**
+     * Gets id biglietto.
+     *
+     * @return the id biglietto
+     */
+    public int getIdBiglietto() {
+        return idBiglietto;
     }
 
     /**

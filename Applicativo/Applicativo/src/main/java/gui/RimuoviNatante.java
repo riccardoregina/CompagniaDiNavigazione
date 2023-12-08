@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The type Rimuovi natante.
+ */
 public class RimuoviNatante {
     private JLabel Didascalia1;
     private JLabel Didascalia2;
@@ -15,11 +18,26 @@ public class RimuoviNatante {
     private JPanel panel1;
     private JPanel panel1_1;
     private JPanel panel1_2;
+    /**
+     * The Controller compagnia.
+     */
     public ControllerCompagnia controllerCompagnia;
+    /**
+     * The Frame chiamante.
+     */
     public JFrame frameChiamante;
+    /**
+     * The Frame.
+     */
     public JFrame frame;
 
 
+    /**
+     * Instantiates a new Rimuovi natante.
+     *
+     * @param frameChiamante      the frame chiamante
+     * @param controllerCompagnia the controller compagnia
+     */
     public RimuoviNatante(JFrame frameChiamante, ControllerCompagnia controllerCompagnia) {
 
         frame = new JFrame("rimuoviNatante");

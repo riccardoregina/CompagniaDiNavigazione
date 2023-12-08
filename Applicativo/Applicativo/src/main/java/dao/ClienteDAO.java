@@ -1,5 +1,6 @@
 package dao;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,7 +45,7 @@ public interface ClienteDAO extends UtenteDAO {
      * @param dataAcquisto  the data acquisto
      * @param etaPasseggero the eta passeggero
      */
-    public void acquistaBiglietto(int idCorsa, Date data, String loginCliente, String targaVeicolo, boolean prevendita, boolean bagaglio, float prezzo, Date dataAcquisto, int etaPasseggero);
+    public void acquistaBiglietto(int idCorsa, LocalDate data, String loginCliente, String targaVeicolo, boolean prevendita, boolean bagaglio, float prezzo, LocalDate dataAcquisto, int etaPasseggero);
 
     /**
      * Aggiungi veicolo.

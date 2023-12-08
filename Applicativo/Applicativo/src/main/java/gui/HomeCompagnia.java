@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The type Home compagnia.
+ */
 public class HomeCompagnia {
     private JPanel panel1;
     private JPanel panelContainerButton;
@@ -13,10 +16,25 @@ public class HomeCompagnia {
     private JButton bModificaCorsa;
     private JButton bAggiungiNatante;
     private JButton bRimuoviNatante;
+    /**
+     * The Controller compagnia.
+     */
     public ControllerCompagnia controllerCompagnia;
+    /**
+     * The Frame chiamante.
+     */
     public JFrame frameChiamante;
+    /**
+     * The Frame.
+     */
     public JFrame frame;
 
+    /**
+     * Instantiates a new Home compagnia.
+     *
+     * @param frameChiamante      the frame chiamante
+     * @param controllerCompagnia the controller compagnia
+     */
     public HomeCompagnia(JFrame frameChiamante, ControllerCompagnia controllerCompagnia) {
 
         this.frameChiamante = frameChiamante;

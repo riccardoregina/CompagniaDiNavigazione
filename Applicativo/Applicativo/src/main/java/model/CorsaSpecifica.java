@@ -29,6 +29,25 @@ public class CorsaSpecifica {
     }
 
     /**
+     * Instantiates a new Corsa specifica.
+     *
+     * @param corsaRegolare the corsa regolare
+     * @param data          the data
+     * @param postiDispPass the posti disp pass
+     * @param postiDispVei  the posti disp vei
+     * @param minutiRitardo the minuti ritardo
+     * @param cancellata    the cancellata
+     */
+    public CorsaSpecifica(CorsaRegolare corsaRegolare, LocalDate data, int postiDispPass, int postiDispVei, int minutiRitardo, boolean cancellata) {
+        this.corsaRegolare = corsaRegolare;
+        this.data = data;
+        this.postiDispPass = postiDispPass;
+        this.postiDispVei = postiDispVei;
+        this.minutiRitardo = minutiRitardo;
+        this.cancellata = cancellata;
+    }
+
+    /**
      * Gets corsa regolare.
      *
      * @return the corsa regolare
