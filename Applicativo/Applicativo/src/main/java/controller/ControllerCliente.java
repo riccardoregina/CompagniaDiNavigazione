@@ -238,15 +238,18 @@ public class ControllerCliente {
     /**
      * Visualizza corse.
      *
-     * @param portoPartenza the porto partenza
-     * @param portoArrivo   the porto arrivo
-     * @param data          the data
-     * @param etaPasseggero the eta passeggero
-     * @param veicolo       the veicolo
-     * @param bagaglio      the bagaglio
+     * @param idPortoPartenza  the porto partenza
+     * @param idPortoArrivo    the porto arrivo
+     * @param data             the data
+     * @param etaPasseggero    the eta passeggero
+     * @param veicolo          the veicolo
+     * @param bagaglio         the bagaglio
+     * @param corseSelezionate the corse selezionate
      */
-    public void visualizzaCorse(Porto portoPartenza, Porto portoArrivo, Date data, int etaPasseggero, boolean veicolo, boolean bagaglio) {
-        ArrayList<Pair> corseSelezionate = new ArrayList<>();
+    public void visualizzaCorse(int idPortoPartenza, int idPortoArrivo, Date data, int etaPasseggero, boolean veicolo, boolean bagaglio, ArrayList<Pair> corseSelezionate) {
+        corseSelezionate = new ArrayList<>();
+        Porto portoPartenza = porti.get(idPortoPartenza);
+        Porto portoArrivo = porti.get(idPortoArrivo);
 
         //un iteratore per scorrere la HashMap
         for (Map.Entry<Pair, CorsaSpecifica> it : corse.entrySet()) {
@@ -263,7 +266,6 @@ public class ControllerCliente {
                 corseSelezionate.add(new Pair(cs, prezzoCalcolato));
             }
         }
-        //ADESSO STAMPA corseSelezionate SULLA GUI GLI ARRAYLIST IN UNA OPPORTUNA FORMATTAZIONE
     }
 
     /**
@@ -284,8 +286,76 @@ public class ControllerCliente {
 
     /**
      * Visualizza porti.
+     *
+     * @param porto the porto
      */
-    public void visualizzaPorti() {
-        //QUI STAMPA porti SULLA GUI IN MANIERA OPPORTUNA
+    public void visualizzaPorti(ArrayList<Pair> porto) {
+        for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
+            porto.add(new Pair(it.getKey(), it.getValue()));
+        }
+    }
+
+    /**
+     * Add veicolo boolean.
+     *
+     * @param targa       the targa
+     * @param tipoVeicolo the tipo veicolo
+     * @return a boolean
+     */
+    boolean addVeicolo(String targa, String tipoVeicolo) {
+        try {
+            clienteDB.aggiungiVeicolo(targa, tipoVeicolo, cliente.getLogin());
+        } catch(Exception e) {
+            return false;
+        }
+        cliente.addVeicolo(new Veicolo(targa, tipoVeicolo));
+        return true;
+    }
+
+    /**
+     * Gets compagnie.
+     *
+     * @param nomi the nomi
+     * @param id   the id
+     */
+    void getCompagnie(ArrayList<String> nomi, ArrayList<String> id) {
+        for (Map.Entry<String, Compagnia> it : compagnie.entrySet()) {
+            nomi.add(it.getValue().getNome());
+            id.add(it.getKey());
+        }
+    }
+
+    /**
+     * Visualizza contatti.
+     *
+     * @param idCompagnia the id compagnia
+     * @param nomeSocial  the nome social
+     * @param tag         the tag
+     * @param email       the email
+     * @param telefono    the telefono
+     * @param sitoWeb     the sito web
+     */
+    void visualizzaContatti(String idCompagnia, ArrayList<String> nomeSocial, ArrayList<String> tag, ArrayList<String> email, ArrayList<String> telefono, String sitoWeb) {
+        Compagnia c = compagnie.get(idCompagnia);
+        for (AccountSocial x : c.getAccounts()) {
+            nomeSocial.add(x.getNomeSocial());
+            tag.add(x.getTag());
+        }
+        email = c.getEmails();
+        telefono = c.getTelefoni();
+        sitoWeb = c.getSitoWeb();
+    }
+
+    /**
+     * Visualizza veicoli.
+     *
+     * @param targa the targa
+     * @param tipo  the tipo
+     */
+    void visualizzaVeicoli(ArrayList<String> targa, ArrayList<String> tipo) {
+        for (Map.Entry<String, Veicolo> it : cliente.getVeicoliPosseduti().entrySet()) {
+            targa.add(it.getKey());
+            tipo.add(it.getValue().getTipo());
+        }
     }
 }
