@@ -57,5 +57,22 @@ public class HomeCliente {
                 frame.setVisible(false);
             }
         });
+        bVediInfoCompagnia.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nomeCompagnia = (string) comboBox1.getSelectedItem();
+                ContattiCompagnia contattiCompagnia = new ContattiCompagnia(frame, controllerCliente, nomeCompagnia);
+                contattiCompagnia.frame.setVisible(true);
+                frame.setVisible(false);
+            }
+        });
+        bBigliettiCliente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TuoiBiglietti iTuoiBiglietti = new TuoiBiglietti(frame, controllerCliente);
+                iTuoiBiglietti.frame.setVisible(true);
+                frame.setVisible(false);
+            }
+        });
     }
 }
