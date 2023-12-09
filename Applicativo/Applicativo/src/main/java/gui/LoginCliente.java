@@ -52,16 +52,17 @@ public class LoginCliente {
                 String login = loginCliente.getText();
                 char[] pw =passwordCliente.getPassword();
                 String pwd = pw.toString();
-                //boolean chekLogin;
-                //chekLogin = controllerCliente.clienteAccede(login, pwd);
+
                 if (login.equals("") || pwd.equals("")) {
-                    JOptionPane.showMessageDialog(null,"inserisci i campi richiesti" );
+                    JOptionPane.showMessageDialog(null,"inserisci le tue credenziali" );
                 return;
                 }
                 else if (controllerCliente.clienteAccede(login, Pwd)) {
                     HomeCliente homeCliente = new HomeCliente(frame, controllerCliente);
                     homeCliente.frame.setVisible(true);
                     frame.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "connessione al DB fallita/ credenziali errate");
                 }
             }
         });

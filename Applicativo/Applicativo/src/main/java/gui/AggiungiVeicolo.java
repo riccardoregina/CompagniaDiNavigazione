@@ -37,12 +37,28 @@ public class AggiungiVeicolo {
             cbTipoVeicolo.addItem(s);
         }
 
+
+
         bAggiungi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //aggiungi veicolo al db e model
                 frameChiamante.setVisible(true);
                 frame.dispose();
+            }
+        });
+        bAggiungi.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String tipoVeicolo = (String) cbTipoVeicolo.getSelectedItem();
+                String targa= tfTargaVeicolo.getText();
+                if (targa.equals("Targa") || targa.equals("")) {
+                    JOptionPane.showMessageDialog("Inserisci la targa.");
+                    return;
+                } else {
+                    //si deve aggiungere il veicolo al model e al db
+                    frame.dispose();
+                }
             }
         });
     }
