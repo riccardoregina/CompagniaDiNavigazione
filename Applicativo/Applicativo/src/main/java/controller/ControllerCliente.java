@@ -289,10 +289,12 @@ public class ControllerCliente {
      *
      * @param porto the porto
      */
-    public void visualizzaPorti(ArrayList<Pair> porto) {
+    public ArrayList<Pair> visualizzaPorti() {
+        ArrayList<Pair> porto = new ArrayList<>();
         for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
             porto.add(new Pair(it.getKey(), it.getValue()));
         }
+        return porto;
     }
 
     /**

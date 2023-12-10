@@ -6,10 +6,7 @@ import unnamed.Pair;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * The type Controller compagnia.
@@ -177,4 +174,43 @@ public class ControllerCompagnia {
             corseSpecifiche.put(pair, new CorsaSpecifica(cr, d, pPass, pVei, mRit, canc));
         }
     }
+
+    public boolean aggiungiNatante (String nome, String tipo, int capienzaPasseggeri, int capienzaVeicoli) {
+        try {
+            compagniaDB.aggiungeNatante(compagnia.getLogin(), nome, capienzaPasseggeri, capienzaVeicoli, tipo);
+        } catch (Exception e) {
+            return false;
+        }
+        compagnia.addNatante(new Natante(compagnia, nome, capienzaPasseggeri, capienzaVeicoli, tipo));
+        return true;
+    }
+
+    public void visualizzaNatanti(ArrayList<String> nome, ArrayList<Integer> capienzaPasseggeri, ArrayList<Integer> capienzaVeicoli, ArrayList<String> tipo) {
+        for (Map.Entry<String, Natante> it : compagnia.getNatantiPosseduti().entrySet()) {
+            Natante natante = it.getValue();
+            nome.add(natante.getNome());
+            capienzaPasseggeri.add(natante.getCapienzaPasseggeri());
+            capienzaVeicoli.add(natante.getCapienzaVeicoli());
+            tipo.add(natante.getTipo());
+        }
+    }
+
+    public boolean rimuoviNatante(String nomeNatante) {
+        try {
+            compagniaDB.rimuoveNatante(nomeNatante);
+        } catch (Exception e) {
+            return false;
+        }
+        compagnia.getNatantiPosseduti().remove(nomeNatante);
+        return true;
+    }
+
+    public ArrayList<Pair> visualizzaPorti() {
+        ArrayList<Pair> porto = new ArrayList<>();
+        for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
+            porto.add(new Pair(it.getKey(), it.getValue()));
+        }
+        return porto;
+    }
+
 }

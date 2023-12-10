@@ -524,7 +524,7 @@ public class CompagniaDB implements CompagniaDAO {
     /**
      * Aggiunge natante.
      */
-    public void aggiungeNatante(String loginCompagnia, String nomeNatante, int capienzaPasseggeri, int capienzaVeicoli, String tipo) {
+    public void aggiungeNatante(String loginCompagnia, String nomeNatante, int capienzaPasseggeri, int capienzaVeicoli, String tipo) throws Exception {
         PreparedStatement ps = null;
         String query = "insert into Natante"
         + "values (?,?,?,?,?)";
@@ -549,7 +549,7 @@ public class CompagniaDB implements CompagniaDAO {
             conn.close();
         } catch (SQLException e) {
             System.out.println("Aggiunta fallita.");
-            e.printStackTrace();
+            throw new Exception();
         }
     }
 
