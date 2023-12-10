@@ -11,5 +11,5 @@ public interface UtenteDAO {
      * @param password the password
      * @return the boolean
      */
-    public boolean accedi(String login, String password);
+    public boolean accede(String login, String password);
 }

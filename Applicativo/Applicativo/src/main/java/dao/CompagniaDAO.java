@@ -1,5 +1,6 @@
 package dao;
 
+import java.time.LocalTime;
 import java.util.Date;
 
 /**
@@ -7,14 +8,14 @@ import java.util.Date;
  */
 public interface CompagniaDAO extends UtenteDAO {
     /**
-     * Aggiungi corsa.
+     * Aggiunge corsa.
      */
-    public void aggiungiCorsa(/*Attributi di corsaRegolare*/);
+    public void aggiungeCorsa(/*Attributi di corsaRegolare*/);
 
     /**
      * Modifica corsa regolare.
      */
-    public void modificaCorsaRegolare(/*Attributi di corsaRegolare*/);
+    public void modificaCorsaRegolare(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, int idCorsa);
 
     /**
      * Modifica corsa specifica.
@@ -26,7 +27,7 @@ public interface CompagniaDAO extends UtenteDAO {
      *
      * @param idCorsa the id corsa
      */
-    public void cancellaCorsaRegolare(/*Attributi di corsaRegolare*/int idCorsa);
+    public void cancellaCorsaRegolare(int idCorsa);
 
     /**
      * Cancella corsa specifica.
@@ -48,12 +49,12 @@ public interface CompagniaDAO extends UtenteDAO {
     /**
      * Aggiunge natante.
      */
-    public void aggiungeNatante(/*Attributi di Natante*/);
+    public void aggiungeNatante(String loginCompagnia, String nomeNatante, int capienzaPasseggeri, int capienzaVeicoli, String tipo);
 
     /**
-     * Rimuovi natante.
+     * Rimuove natante.
      *
      * @param nomeNatante the nome natante
      */
-    public void rimuoviNatante(/*Attributi di Natante*/String nomeNatante);
+    public void rimuoveNatante(/*Attributi di Natante*/String nomeNatante);
 }

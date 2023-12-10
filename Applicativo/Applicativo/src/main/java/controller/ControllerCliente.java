@@ -27,7 +27,7 @@ public class ControllerCliente {
         clienteDB = new ClienteDB();
         porti = new HashMap<>();
         compagnie = new HashMap<>();
-        corse = new HashMap<Pair, CorsaSpecifica>();
+        corse = new HashMap<>();
         bigliettiAcquistati = new ArrayList<>();
     }
 
@@ -44,7 +44,7 @@ public class ControllerCliente {
      * @return the boolean
      */
     public boolean clienteAccede(String login, String password) {
-        boolean exists = clienteDB.accedi(login, password);
+        boolean exists = clienteDB.accede(login, password);
         if (exists) {
             String nome = null;
             String cognome = null;
@@ -127,10 +127,10 @@ public class ControllerCliente {
 
     /**
      * Questo metodo (l'ordine é dettato dalle dipendenze):
-     *  1) costruisce i natanti e li assegna alle compagnie
-     *  2) costruisce le corse regolari e le assegna alle compagnie
-     *  3) assegna i periodi alle corse regolari
-     *  4) costruisce le corse specifiche e popola la collezione 'corse' di questa classe
+     * 1) costruisce i natanti e li assegna alle compagnie
+     * 2) costruisce le corse regolari e le assegna alle compagnie
+     * 3) assegna i periodi alle corse regolari
+     * 4) costruisce le corse specifiche e popola la collezione 'corse' di questa classe
      */
     public void buildCorse() {
         //Elementi dei natanti
@@ -161,7 +161,7 @@ public class ControllerCliente {
         for (int i = 0; i < costoIntero.size(); i++) {
             int id = idCorsa.get(i);
             Compagnia c = compagnie.get(compagniaCorsa.get(i));
-            Natante n = c.getNatantiPosseduti().get(nome.get(i));
+            Natante n = c.getNatantiPosseduti().get(nomeNatante.get(i));
             Porto pPartenza = porti.get(idPortoPartenza.get(i));
             Porto pArrivo = porti.get(idPortoArrivo.get(i));
             LocalTime oraPartenza = orarioPartenza.get(i);
@@ -280,7 +280,7 @@ public class ControllerCliente {
      */
     public void acquistaBiglietto(CorsaSpecifica cs, Veicolo v, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
         clienteDB.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), v.getTarga(), prevendita, bagaglio, prezzo, LocalDate.now(), etaPasseggero);
-        //DISCUSSIONE SUGLI ID DEI BIGLIETTI APPENA ACQUISTATI (vedi immediatamente sotto, primo parametro)
+        //DISCUSSIONE SUGLI ID DEI BIGLIETTI APPENA ACQUISTATI (vedi idBiglietto, primo parametro del metodo immediatamente sotto)
         cliente.addBiglietto(new Biglietto(-1, cliente, cs, etaPasseggero, v, prevendita, bagaglio, prezzo, LocalDate.now()));
     }
 
@@ -304,7 +304,7 @@ public class ControllerCliente {
      */
     boolean addVeicolo(String targa, String tipoVeicolo) {
         try {
-            clienteDB.aggiungiVeicolo(targa, tipoVeicolo, cliente.getLogin());
+            clienteDB.aggiungeVeicolo(targa, tipoVeicolo, cliente.getLogin());
         } catch(Exception e) {
             return false;
         }

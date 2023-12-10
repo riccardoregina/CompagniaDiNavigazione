@@ -3,7 +3,6 @@ package postgresqlDAO;
 import database.*;
 import dao.*;
 
-import javax.swing.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,7 +33,7 @@ public class ClienteDB implements ClienteDAO {
      * @param pw    the pw
      * @return the boolean
      */
-    public boolean accedi(String login, String pw) {
+    public boolean accede(String login, String pw) {
         boolean found = false;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -294,7 +293,7 @@ public class ClienteDB implements ClienteDAO {
      * @param tipo               the tipo
      */
     public void fetchNatanti(ArrayList<String> compagnia, ArrayList<String> nome, ArrayList<Integer> capienzaPasseggeri, ArrayList<Integer> capienzaVeicoli, ArrayList<String> tipo) {
-        PreparedStatement ps = null;
+        Statement s = null;
         ResultSet rs = null;
         String query = "select * from Natante";
 
@@ -308,11 +307,9 @@ public class ClienteDB implements ClienteDAO {
         try {
             conn.prepareStatement(query);
 
-            ps.executeQuery();
+            s.executeQuery(query);
 
             while(rs.next()) {
-                //Riempio delle variabili locali con le colonne della tupla trovata
-                // e faccio costruire a controller un porto da inserire nel model
                 compagnia.add(rs.getString("Compagnia"));
                 nome.add(rs.getString("nome"));
                 capienzaPasseggeri.add(rs.getInt("capienzaPasseggeri"));
@@ -320,7 +317,7 @@ public class ClienteDB implements ClienteDAO {
                 tipo.add(rs.getString("tipo"));
             }
             rs.close();
-            ps.close();
+            s.close();
             conn.close();
         } catch (SQLException e) {
             System.out.println("Aggiunta fallita.");
@@ -336,6 +333,7 @@ public class ClienteDB implements ClienteDAO {
      * @param dataFine   the data fine
      * @param giorni     the giorni
      * @param corsa      the corsa
+     * @param compagnia  the compagnia
      */
     public void fetchPeriodiAttivitaCorse(ArrayList<Integer> idPeriodo ,ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<BitSet> giorni, ArrayList<Integer> corsa, ArrayList<String> compagnia) {
         Statement s = null;
@@ -523,72 +521,6 @@ public class ClienteDB implements ClienteDAO {
     }
 
     /**
-     * Cerca corse.
-     *
-     * @param data              the data
-     * @param idPortoPartenza   the id porto partenza
-     * @param idPortoArrivo     the id porto arrivo
-     * @param idCorsa           the id corsa
-     * @param nomePortoPartenza the nome porto partenza
-     * @param nomePortoArrivo   the nome porto arrivo
-     * @param orarioPartenza    the orario partenza
-     * @param orarioArrivo      the orario arrivo
-     * @param costoIntero       the costo intero
-     * @param scontoRidotto     the sconto ridotto
-     * @param costoBagaglio     the costo bagaglio
-     * @param costoPrevendita   the costo prevendita
-     * @param costoVeicolo      the costo veicolo
-     * @param nomeCompagnia     the nome compagnia
-     * @param nomeNatante       the nome natante
-     * @param tipoNatante       the tipo natante
-     */
-    public void cercaCorse(Date data, int idPortoPartenza, int idPortoArrivo, ArrayList<Integer> idCorsa, ArrayList<String> nomePortoPartenza, ArrayList<String> nomePortoArrivo, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<String> nomeCompagnia, ArrayList<String> nomeNatante, ArrayList<String> tipoNatante) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        //DA RIVEDERE LA QUERY, SOPRATTUTTO PER QUANTO RIGUARDA I RENAME
-        String query = "select *"
-        +"from ((CorsaRegolare join Porto as PP on PortoPartenza = idPorto) join Porto as PA on PortoArrivo = idPorto) join Natante on Natante = nome) natural join CorsaSpecifica) join Compagnia on Compagnia = login"
-        +"where data = ? and portoPartenza = ? and portoArrivo = ?";
-
-        try {
-            conn = c.getConnection();
-        } catch (SQLException e) { 
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
-            ps.setDate(1, (java.sql.Date) data);
-            ps.setInt(2, idPortoPartenza);
-            ps.setInt(3, idPortoArrivo);
-            ps.executeQuery();
-
-            while (rs.next()) {
-                idCorsa.add(rs.getInt("idCorsa"));
-                nomePortoPartenza.add(rs.getString("nomePortoPartenza"));
-                nomePortoArrivo.add(rs.getString("nomePortoArrivo"));
-                nomeNatante.add(rs.getString("nomeNatante"));
-                tipoNatante.add(rs.getString("tipo"));
-                orarioPartenza.add((LocalTime) rs.getTime("orarioPartenza")); //risolvere il casting
-                orarioArrivo.add((LocalTime) rs.getTime("orarioArrivo")); //risolvere il casting
-                costoIntero.add(rs.getFloat("costoIntero"));
-                scontoRidotto.add(rs.getFloat("scontoRidotto"));
-                costoBagaglio.add(rs.getFloat("costoBagaglio"));
-                costoPrevendita.add(rs.getFloat("costoPrevendita"));
-                costoVeicolo.add(rs.getFloat("costoVeicolo"));
-                nomeCompagnia.add(rs.getString("nomeCompagnia"));
-            }
-            rs.close();
-            ps.close();
-            conn.close();
-        } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Acquista biglietto.
      *
      * @param idCorsa       the id corsa
@@ -601,7 +533,7 @@ public class ClienteDB implements ClienteDAO {
      * @param dataAcquisto  the data acquisto
      * @param etaPasseggero the eta passeggero
      */
-    public void acquistaBiglietto(int idCorsa, LocalDate data, String loginCliente, String targaVeicolo, boolean prevendita, boolean bagaglio, float prezzo, Date dataAcquisto, int etaPasseggero) {
+    public void acquistaBiglietto(int idCorsa, LocalDate data, String loginCliente, String targaVeicolo, boolean prevendita, boolean bagaglio, float prezzo, LocalDate dataAcquisto, int etaPasseggero) {
         //l'aggiornamento dei posti disponibili sará effettuato dal DB
         
         PreparedStatement ps = null;
@@ -642,7 +574,7 @@ public class ClienteDB implements ClienteDAO {
      * @param tipo              the tipo
      * @param loginProprietario the login proprietario
      */
-    public void aggiungiVeicolo(String targa, String tipo, String loginProprietario) {
+    public void aggiungeVeicolo(String targa, String tipo, String loginProprietario) {
         PreparedStatement ps = null;
         String query = "insert into Veicolo" +
                 " values (?,?,?)";
