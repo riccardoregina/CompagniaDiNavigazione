@@ -12,4 +12,6 @@ public class AggiungiNatante {
     private JTextField capienzaPasseggeriTextField;
     private JTextField capienzaVeicoliTextField;
     private JTextField nomeNatanteTextField;
+
+
 }

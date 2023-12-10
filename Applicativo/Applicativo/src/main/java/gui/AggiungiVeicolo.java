@@ -53,10 +53,15 @@ public class AggiungiVeicolo {
                 String tipoVeicolo = (String) cbTipoVeicolo.getSelectedItem();
                 String targa= tfTargaVeicolo.getText();
                 if (targa.equals("Targa") || targa.equals("")) {
-                    JOptionPane.showMessageDialog("Inserisci la targa.");
+                    JOptionPane.showMessageDialog(null,"Inserisci la targa.");
                     return;
                 } else {
-                    //si deve aggiungere il veicolo al model e al db
+                    boolean check = controllerCliente.addVeicolo(tipoVeicolo, targa);
+                    if (check == false) {
+                        JOptionPane.showMessageDialog(null, "non è stato possibile aggiungere il veicolo.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "veicolo aggiunto.");
+                    }
                     frame.dispose();
                 }
             }

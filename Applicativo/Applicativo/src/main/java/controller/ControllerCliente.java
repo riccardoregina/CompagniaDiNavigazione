@@ -304,7 +304,7 @@ public class ControllerCliente {
      * @param tipoVeicolo the tipo veicolo
      * @return a boolean
      */
-    boolean addVeicolo(String targa, String tipoVeicolo) {
+    public boolean addVeicolo(String targa, String tipoVeicolo) {
         try {
             clienteDB.aggiungeVeicolo(targa, tipoVeicolo, cliente.getLogin());
         } catch(Exception e) {
@@ -320,7 +320,7 @@ public class ControllerCliente {
      * @param nomi the nomi
      * @param id   the id
      */
-    void getCompagnie(ArrayList<String> nomi, ArrayList<String> id) {
+    public void getCompagnie(ArrayList<String> nomi, ArrayList<String> id) {
         for (Map.Entry<String, Compagnia> it : compagnie.entrySet()) {
             nomi.add(it.getValue().getNome());
             id.add(it.getKey());
@@ -337,7 +337,7 @@ public class ControllerCliente {
      * @param telefono    the telefono
      * @param sitoWeb     the sito web
      */
-    void visualizzaContatti(String idCompagnia, ArrayList<String> nomeSocial, ArrayList<String> tag, ArrayList<String> email, ArrayList<String> telefono, String sitoWeb) {
+    public void visualizzaContatti(String idCompagnia, ArrayList<String> nomeSocial, ArrayList<String> tag, ArrayList<String> email, ArrayList<String> telefono, String sitoWeb) {
         Compagnia c = compagnie.get(idCompagnia);
         for (AccountSocial x : c.getAccounts()) {
             nomeSocial.add(x.getNomeSocial());
@@ -354,7 +354,7 @@ public class ControllerCliente {
      * @param targa the targa
      * @param tipo  the tipo
      */
-    void visualizzaVeicoli(ArrayList<String> targa, ArrayList<String> tipo) {
+    public void visualizzaVeicoli(ArrayList<String> targa, ArrayList<String> tipo) {
         for (Map.Entry<String, Veicolo> it : cliente.getVeicoliPosseduti().entrySet()) {
             targa.add(it.getKey());
             tipo.add(it.getValue().getTipo());
