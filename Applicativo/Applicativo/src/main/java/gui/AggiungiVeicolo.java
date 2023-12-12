@@ -5,10 +5,7 @@ import controller.ControllerCliente;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;rt java.awt.*;
-import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.ResourceBundle;
 
 /**
  * The type Aggiungi veicolo.
@@ -21,7 +18,7 @@ public class AggiungiVeicolo {
 
     public JFrame frame;
     public JFrame frameChiamante;
-    public controllerCliente controllerCliente;
+    public ControllerCliente controllerCliente;
 
     public AggiungiVeicolo(JFrame frameChiamante, ControllerCliente controllerCliente) {
 
@@ -37,16 +34,6 @@ public class AggiungiVeicolo {
             cbTipoVeicolo.addItem(s);
         }
 
-
-
-        bAggiungi.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //aggiungi veicolo al db e model
-                frameChiamante.setVisible(true);
-                frame.dispose();
-            }
-        });
         bAggiungi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -62,6 +49,7 @@ public class AggiungiVeicolo {
                     } else {
                         JOptionPane.showMessageDialog(null, "veicolo aggiunto.");
                     }
+                    frameChiamante.setVisible(true);
                     frame.dispose();
                 }
             }

@@ -6,6 +6,7 @@ import controller.ControllerCompagnia;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * The type Home cliente.
@@ -57,10 +58,22 @@ public class HomeCliente {
                 frame.setVisible(false);
             }
         });
+
+        ArrayList<String> compagnie = new ArrayList<String>();
+        ArrayList<String> idsCompagnie = new ArrayList<String>();
+        controllerCliente.getCompagnie(compagnie, idsCompagnie);
+        for (String nomeCompagnia : compagnie) {
+            comboBox1.addItem( nomeCompagnia);
+        }
         bVediInfoCompagnia.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nomeCompagnia = (string) comboBox1.getSelectedItem();
+                String nomeComp = (String) comboBox1.getSelectedItem();
+                int i = 0;
+
+                //devo trovare id compagnia e passarlo alla nuova gui per avere tutte le info
+
+                String nomeCompagnia = (String) comboBox1.getSelectedItem();
                 ContattiCompagnia contattiCompagnia = new ContattiCompagnia(frame, controllerCliente, nomeCompagnia);
                 contattiCompagnia.frame.setVisible(true);
                 frame.setVisible(false);

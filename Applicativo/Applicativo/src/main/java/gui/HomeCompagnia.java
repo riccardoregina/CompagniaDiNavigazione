@@ -50,6 +50,15 @@ public class HomeCompagnia {
             public void actionPerformed(ActionEvent e) {
                 RimuoviNatante rimuoviNatante = new RimuoviNatante(frame, controllerCompagnia);
                 rimuoviNatante.frame.setVisible(true);
+                frame.setVisible(false);
+            }
+        });
+        bAggiungiNatante.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AggiungiNatante aggiungiNatante = new AggiungiNatante(frame, controllerCompagnia);
+                aggiungiNatante.frame.setVisible(true);
+                frame.setVisible(false);
             }
         });
     }
