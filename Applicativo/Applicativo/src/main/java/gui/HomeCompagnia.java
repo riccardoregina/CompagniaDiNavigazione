@@ -49,7 +49,6 @@ public class HomeCompagnia {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RimuoviNatante rimuoviNatante = new RimuoviNatante(frame, controllerCompagnia);
-                rimuoviNatante.frame.setVisible(true);
                 frame.setVisible(false);
             }
         });
@@ -57,7 +56,6 @@ public class HomeCompagnia {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AggiungiNatante aggiungiNatante = new AggiungiNatante(frame, controllerCompagnia);
-                aggiungiNatante.frame.setVisible(true);
                 frame.setVisible(false);
             }
         });

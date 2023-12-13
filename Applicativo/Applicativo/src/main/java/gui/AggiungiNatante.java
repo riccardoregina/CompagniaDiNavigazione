@@ -76,7 +76,7 @@ public class AggiungiNatante {
                     return;
                 } else {
                     boolean check = controllerCompagnia.aggiungiNatante(nome, tipoNatante, capPasseggeri, capVeicoli);
-                    if (check == false) {
+                    if (!check) {
                         JOptionPane.showMessageDialog(null, "non è stato possibile aggiungere il natante.");
                     } else {
                         JOptionPane.showMessageDialog(null, "natante aggiunto.");

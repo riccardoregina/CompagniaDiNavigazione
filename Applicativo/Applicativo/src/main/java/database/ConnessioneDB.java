@@ -16,7 +16,7 @@ public class ConnessioneDB {
     private Connection connection = null;
     private String url = "jdbc:postgresql://ep-wispy-king-20409617.eu-central-1.aws.neon.tech/navigazione";
     private String user = "riccardoregina04";
-    private String password = METTI PASSWORD QUA;
+    private String password = METTI PW ;
     private String driver = "org.postgresql.Driver";
     private ConnessioneDB() {
         try {

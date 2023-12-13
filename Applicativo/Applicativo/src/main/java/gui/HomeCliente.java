@@ -54,7 +54,6 @@ public class HomeCliente {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AggiungiVeicolo aggiungiVeicolo = new AggiungiVeicolo(frame, controllerCliente);
-                aggiungiVeicolo.frame.setVisible(true);
                 frame.setVisible(false);
             }
         });
@@ -75,7 +74,6 @@ public class HomeCliente {
 
                 String nomeCompagnia = (String) comboBox1.getSelectedItem();
                 ContattiCompagnia contattiCompagnia = new ContattiCompagnia(frame, controllerCliente, nomeCompagnia);
-                contattiCompagnia.frame.setVisible(true);
                 frame.setVisible(false);
             }
         });
@@ -83,7 +81,6 @@ public class HomeCliente {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TuoiBiglietti iTuoiBiglietti = new TuoiBiglietti(frame, controllerCliente);
-                iTuoiBiglietti.frame.setVisible(true);
                 frame.setVisible(false);
             }
         });

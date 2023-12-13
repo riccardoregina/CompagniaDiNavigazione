@@ -59,7 +59,6 @@ public class LoginCliente {
                 }
                 else if (controllerCliente.clienteAccede(login, pwd)) {
                     HomeCliente homeCliente = new HomeCliente(frame, controllerCliente);
-                    homeCliente.frame.setVisible(true);
                     frame.dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "connessione al DB fallita/ credenziali errate");

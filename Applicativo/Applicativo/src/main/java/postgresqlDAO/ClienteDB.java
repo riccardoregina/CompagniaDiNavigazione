@@ -297,7 +297,7 @@ public class ClienteDB implements ClienteDAO {
                 idPeriodo.add(rs.getInt("idPeriodo"));
                 dataInizio.add(rs.getDate("dataInizio"));
                 dataFine.add(rs.getDate("dataFine"));
-                giorni.add((rs.getBytes("giorni"))); //VEDI BENE COME CONVERTIRE
+                //giorni.add((rs.getBytes("giorni"))); //VEDI BENE COME CONVERTIRE
                 corsa.add(rs.getInt("idCorsa"));
             }
             rs.close();
@@ -339,8 +339,8 @@ public class ClienteDB implements ClienteDAO {
                 idCorsa.add(rs.getInt("idCorsa"));
                 idPortoPartenza.add(rs.getInt("idPortoPartenza"));
                 idPortoArrivo.add(rs.getInt("idPortoArrivo"));
-                orarioPartenza.add(rs.getTime("orarioPartenza")); //VEDI CONVERSIONE
-                orarioArrivo.add(rs.getTime("orarioArrivo")); //VEDI CONVERSIONE
+                //orarioPartenza.add(rs.getTime("orarioPartenza")); //VEDI CONVERSIONE
+                //orarioArrivo.add(rs.getTime("orarioArrivo")); //VEDI CONVERSIONE
                 costoIntero.add(rs.getFloat("costoIntero"));
                 scontoRidotto.add(rs.getFloat("scontoRidotto"));
                 costoBagaglio.add(rs.getFloat("costoBagaglio"));
@@ -382,7 +382,7 @@ public class ClienteDB implements ClienteDAO {
             while (rs.next()) {
                 compagniaCorsaS.add(rs.getString("Compagnia"));
                 corsaRegolare.add(rs.getInt("idCorsa"));
-                data.add(rs.getDate("data")); //VEDI CONVERSIONE
+                //data.add(rs.getDate("data")); //VEDI CONVERSIONE
                 postiDispPass.add(rs.getInt("postiDispPass"));
                 postiDispVei.add(rs.getInt("postiDispVei"));
                 minutiRitardo.add(rs.getInt("minutiRitardo"));
@@ -426,8 +426,8 @@ public class ClienteDB implements ClienteDAO {
             while(rs.next()) {
                 idBiglietto.add(rs.getInt("idBiglietto"));
                 idCorsa.add(rs.getInt("idCorsa"));
-                dataCorsa.add(rs.getDate("data")); //VEDI CASTING
-                dataAcquisto.add(rs.getDate("dataAcquisto")); //VEDI CASTING
+                //dataCorsa.add(rs.getDate("data")); //VEDI CASTING
+                //dataAcquisto.add(rs.getDate("dataAcquisto")); //VEDI CASTING
                 targaVeicolo.add(rs.getString("Veicolo"));
                 prevendita.add(rs.getBoolean("prevendita"));
                 bagaglio.add(rs.getBoolean("bagaglio"));
@@ -466,13 +466,13 @@ public class ClienteDB implements ClienteDAO {
         try {
             ps = connection.prepareStatement(query);
             ps.setInt(1, idCorsa);
-            ps.setDate(2, (java.sql.Date) data);
+            //ps.setDate(2, (java.sql.Date) data);
             ps.setString(3, loginCliente);
             ps.setString(4, targaVeicolo);
             ps.setBoolean(5, prevendita);
             ps.setBoolean(6, bagaglio);
             ps.setFloat(7, prezzo);
-            ps.setDate(8, (java.sql.Date) dataAcquisto);
+            //ps.setDate(8, (java.sql.Date) dataAcquisto);
             ps.setInt(9, etaPasseggero);
             ps.executeUpdate();
 

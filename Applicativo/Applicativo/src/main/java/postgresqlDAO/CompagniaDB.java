@@ -217,8 +217,8 @@ public class CompagniaDB implements CompagniaDAO {
                 idCorsa.add(rs.getInt("idCorsa"));
                 idPortoPartenza.add(rs.getInt("idPortoPartenza"));
                 idPortoArrivo.add(rs.getInt("idPortoArrivo"));
-                orarioPartenza.add(rs.getTime("orarioPartenza")); //VEDI CONVERSIONE
-                orarioArrivo.add(rs.getTime("orarioArrivo")); //VEDI CONVERSIONE
+                //orarioPartenza.add(rs.getTime("orarioPartenza")); //VEDI CONVERSIONE
+                //orarioArrivo.add(rs.getTime("orarioArrivo")); //VEDI CONVERSIONE
                 costoIntero.add(rs.getFloat("costoIntero"));
                 scontoRidotto.add(rs.getFloat("scontoRidotto"));
                 costoBagaglio.add(rs.getFloat("costoBagaglio"));
@@ -260,7 +260,7 @@ public class CompagniaDB implements CompagniaDAO {
                 idPeriodo.add(rs.getInt("idPeriodo"));
                 dataInizio.add(rs.getDate("dataInizio"));
                 dataFine.add(rs.getDate("dataFine"));
-                giorni.add((rs.getBytes("giorni"))); //VEDI BENE COME CONVERTIRE
+                //giorni.add((rs.getBytes("giorni"))); //VEDI BENE COME CONVERTIRE
                 corsa.add(rs.getInt("idCorsa"));
             }
             rs.close();
@@ -296,7 +296,7 @@ public class CompagniaDB implements CompagniaDAO {
 
             while (rs.next()) {
                 corsaRegolare.add(rs.getInt("idCorsa"));
-                data.add(rs.getDate("data")); //VEDI CONVERSIONE
+                //data.add(rs.getDate("data")); //VEDI CONVERSIONE
                 postiDispPass.add(rs.getInt("postiDispPass"));
                 postiDispVei.add(rs.getInt("postiDispVei"));
                 minutiRitardo.add(rs.getInt("minutiRitardo"));
@@ -341,8 +341,8 @@ public class CompagniaDB implements CompagniaDAO {
             connection.prepareStatement(query);
             ps.setInt(1, idPortoPartenza);
             ps.setInt(2, idPortoArrivo);
-            ps.setTime(3, orarioPartenza); //DA RISOLVERE LA CONVERSIONE
-            ps.setTime(4, orarioArrivo);
+            //ps.setTime(3, orarioPartenza); //DA RISOLVERE LA CONVERSIONE
+            //ps.setTime(4, orarioArrivo);   //DA RISOLVERE LA CONVERSIONE
             ps.setFloat(5, costoIntero);
             ps.setFloat(6, scontoRidotto);
             ps.setFloat(7, costoBagaglio);

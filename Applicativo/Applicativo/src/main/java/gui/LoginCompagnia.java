@@ -51,7 +51,6 @@ public class LoginCompagnia {
             public void actionPerformed(ActionEvent e) {
                 //prima di chiamare il nuovo frame bisogna controllare le credenziali, funzione booleana
                 HomeCompagnia homeCompagnia = new HomeCompagnia(frame, controllerCompagnia);
-                homeCompagnia.frame.setVisible(true);
                 frame.dispose();
             }
         });

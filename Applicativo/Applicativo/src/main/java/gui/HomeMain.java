@@ -38,7 +38,6 @@ public class HomeMain {
             public void actionPerformed(ActionEvent e) {
                 controllerCompagnia = new ControllerCompagnia();
                 LoginCompagnia credenzialiCompagnia = new LoginCompagnia(frame, controllerCompagnia);
-                credenzialiCompagnia.frame.setVisible(true);
                 frame.dispose();
             }
         });
@@ -48,7 +47,6 @@ public class HomeMain {
             public void actionPerformed(ActionEvent e) {
                 controllerCliente= new ControllerCliente();
                 LoginCliente credenzialiCliente = new LoginCliente(frame, controllerCliente);
-                credenzialiCliente.frame.setVisible(true);
                 frame.dispose();
             }
         });
