@@ -15,6 +15,7 @@ public class AggiungiVeicolo {
     private JButton bAggiungi;
     private JTextField tfTargaVeicolo;
     private JComboBox cbTipoVeicolo;
+    private JButton bIndietro;
 
     public JFrame frame;
     public JFrame frameChiamante;
@@ -52,6 +53,13 @@ public class AggiungiVeicolo {
                     frameChiamante.setVisible(true);
                     frame.dispose();
                 }
+            }
+        });
+        bIndietro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frameChiamante.setVisible(true);
+                frame.dispose();
             }
         });
     }
