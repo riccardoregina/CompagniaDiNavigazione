@@ -12,7 +12,6 @@ import java.util.*;
  * The type Controller compagnia.
  */
 public class ControllerCompagnia {
-    private CompagniaDB compagniaDB;
     private Compagnia compagnia;
     private HashMap<Integer, Porto> porti;
     private HashMap<Pair, CorsaSpecifica> corseSpecifiche;
@@ -22,7 +21,6 @@ public class ControllerCompagnia {
      */
 //Metodi per Compagnia
     public ControllerCompagnia() {
-        compagniaDB = new CompagniaDB();
         porti = new HashMap<>();
         corseSpecifiche = new HashMap<>();
     }
@@ -63,6 +61,7 @@ public class ControllerCompagnia {
      * Build porti.
      */
     public void buildPorti() {
+        CompagniaDB compagniaDB = new CompagniaDB();
         ArrayList<Integer> idPorto = new ArrayList<>();
         ArrayList<String> comuni = new ArrayList<>();
         ArrayList<String> indirizzi = new ArrayList<>();
@@ -80,6 +79,7 @@ public class ControllerCompagnia {
      * @param password       the password
      */
     public void buildCompagnia(String loginCompagnia, String password) {
+        CompagniaDB compagniaDB = new CompagniaDB();
         String nomeCompagnia = null;
         ArrayList<String> telefono = new ArrayList<>();
         ArrayList<String> email = new ArrayList<>();
@@ -156,6 +156,7 @@ public class ControllerCompagnia {
      * Build corse specifiche.
      */
     public void buildCorseSpecifiche() {
+        CompagniaDB compagniaDB = new CompagniaDB();
         ArrayList<Integer> corsaRegolare = new ArrayList<>();
         ArrayList<LocalDate> data = new ArrayList<>();
         ArrayList<Integer> postiDispPass = new ArrayList<>();
@@ -176,6 +177,7 @@ public class ControllerCompagnia {
     }
 
     public boolean aggiungiNatante (String nome, String tipo, int capienzaPasseggeri, int capienzaVeicoli) {
+        CompagniaDB compagniaDB = new CompagniaDB();
         try {
             compagniaDB.aggiungeNatante(compagnia.getLogin(), nome, capienzaPasseggeri, capienzaVeicoli, tipo);
         } catch (Exception e) {
@@ -196,6 +198,7 @@ public class ControllerCompagnia {
     }
 
     public boolean rimuoviNatante(String nomeNatante) {
+        CompagniaDB compagniaDB = new CompagniaDB();
         try {
             compagniaDB.rimuoveNatante(nomeNatante);
         } catch (Exception e) {

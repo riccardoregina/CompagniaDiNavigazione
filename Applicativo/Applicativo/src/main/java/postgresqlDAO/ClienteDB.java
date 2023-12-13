@@ -3,10 +3,7 @@ package postgresqlDAO;
 import database.*;
 import dao.*;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -17,14 +14,14 @@ import java.util.Date;
  * The type Cliente db.
  */
 public class ClienteDB implements ClienteDAO {
-    /**
-     * The C.
-     */
-    private ConnessioneDB c;
-    /**
-     * The Conn.
-     */
-    private java.sql.Connection conn;
+    private Connection connection;
+    public ClienteDB() {
+        try {
+            connection = ConnessioneDB.getInstance().getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Accedi boolean.
@@ -38,28 +35,21 @@ public class ClienteDB implements ClienteDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select *"
-        + "from Cliente"
-        + "where login = ? and pw = ?";
+        + " from navigazione.cliente"
+        + " where login = ? and password = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            //System.out.println("Connessione fallita.");
-            //JOptionPane.showMessageDialog(null, "Connesione al database non riuscita");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, login);
             ps.setString(2, pw);
-            ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.next()) { //se esiste un risultato
                 found = true;
             }
             rs.close();
-            conn.close();
+            connection.close();
+            return found;
         } catch (SQLException e) {
             System.out.println("Accesso negato.");
             e.printStackTrace();
@@ -78,21 +68,13 @@ public class ClienteDB implements ClienteDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select *"
-                + "from Cliente"
-                + "where login = ?";
+                + " from navigazione.Cliente"
+                + " where login = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            //prima query
-            conn.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, login);
-            ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.next()) {
                 nome = rs.getString("nome");
@@ -101,7 +83,7 @@ public class ClienteDB implements ClienteDAO {
             rs.close();
             ps.close();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -118,19 +100,12 @@ public class ClienteDB implements ClienteDAO {
     public void fetchVeicoliCliente(String login, ArrayList<String> veicoliTarga, ArrayList<String> veicoliTipo) {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String query2 = "select * from Veicolo where Proprietario = ?";
+        String query = "select * from navigazione.Veicolo where Proprietario = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query2);
+            ps = connection.prepareStatement(query);
             ps.setString(1, login);
-            ps.executeQuery();
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 veicoliTarga.add(rs.getString("targa"));
@@ -138,7 +113,7 @@ public class ClienteDB implements ClienteDAO {
             }
             rs.close();
             ps.close();
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -162,17 +137,11 @@ public class ClienteDB implements ClienteDAO {
     public void fetchCompagnie(ArrayList<String> login, ArrayList<String> nomeCompagnia, ArrayList<String> sitoWeb, ArrayList<String> compagniaSocial, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> compagniaEmail, ArrayList<String> indirizzoEmail, ArrayList<String> compagniaTelefono, ArrayList<String> numeroTelefono) {
         Statement s = null;
         ResultSet rs = null;
-        String query = "select * from Compagnia";
+        String query = "select * from navigazione.Compagnia";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            s.executeQuery(query);
+            s = connection.createStatement();
+            rs = s.executeQuery(query);
 
             while (rs.next()) {
                 login.add(rs.getString("login"));
@@ -182,7 +151,7 @@ public class ClienteDB implements ClienteDAO {
             rs.close();
             s.close();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -195,20 +164,13 @@ public class ClienteDB implements ClienteDAO {
     private void fetchContattiCompagnie(ArrayList<String> compagniaSocial, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> compagniaEmail, ArrayList<String> indirizzoEmail, ArrayList<String> compagniaTelefono, ArrayList<String> numeroTelefono) {
         Statement s = null;
         ResultSet rs = null;
-        String query1 = "select * from AccountSocial";
-        String query2 = "select * from Email";
-        String query3 = "select * from Telefono";
-
-
-        try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
+        String query1 = "select * from navigazione.AccountSocial";
+        String query2 = "select * from navigazione.Email";
+        String query3 = "select * from navigazione.Telefono";
 
         try {
-            s.executeQuery(query1);
+            s = connection.createStatement();
+            rs = s.executeQuery(query1);
 
             while (rs.next()) {
                 compagniaSocial.add(rs.getString("Compagnia"));
@@ -236,7 +198,7 @@ public class ClienteDB implements ClienteDAO {
             rs.close();
             s.close();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -254,17 +216,11 @@ public class ClienteDB implements ClienteDAO {
     public void fetchPorti(ArrayList<Integer> idPorto, ArrayList<String> comuni, ArrayList<String> indirizzi, ArrayList<String> numeriTelefono) {
         Statement s = null;
         ResultSet rs = null;
-        String query = "select * from Porto";
+        String query = "select * from navigazione.Porto";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            s.executeQuery(query);
+            s = connection.createStatement();
+            rs = s.executeQuery(query);
 
             while(rs.next()) {
                 //Riempio delle variabili locali con le colonne della tupla trovata
@@ -276,7 +232,7 @@ public class ClienteDB implements ClienteDAO {
             }
             rs.close();
             s.close();
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Aggiunta fallita.");
             e.printStackTrace();
@@ -295,19 +251,11 @@ public class ClienteDB implements ClienteDAO {
     public void fetchNatanti(ArrayList<String> compagnia, ArrayList<String> nome, ArrayList<Integer> capienzaPasseggeri, ArrayList<Integer> capienzaVeicoli, ArrayList<String> tipo) {
         Statement s = null;
         ResultSet rs = null;
-        String query = "select * from Natante";
+        String query = "select * from navigazione.Natante";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
-
-            s.executeQuery(query);
+            s = connection.createStatement();
+            rs = s.executeQuery(query);
 
             while(rs.next()) {
                 compagnia.add(rs.getString("Compagnia"));
@@ -318,7 +266,7 @@ public class ClienteDB implements ClienteDAO {
             }
             rs.close();
             s.close();
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Aggiunta fallita.");
             e.printStackTrace();
@@ -338,17 +286,11 @@ public class ClienteDB implements ClienteDAO {
     public void fetchPeriodiAttivitaCorse(ArrayList<Integer> idPeriodo ,ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<BitSet> giorni, ArrayList<Integer> corsa, ArrayList<String> compagnia) {
         Statement s = null;
         ResultSet rs = null;
-        String query = "select * from Periodo natural join AttivaIn natural join CorsaRegolare";
+        String query = "select * from navigazione.Periodo natural join navigazione.AttivaIn natural join navigazione.CorsaRegolare";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            s.executeQuery(query);
+            s = connection.createStatement();
+            rs = s.executeQuery(query);
 
             while (rs.next()) {
                 compagnia.add(rs.getString("Compagnia"));
@@ -361,7 +303,7 @@ public class ClienteDB implements ClienteDAO {
             rs.close();
             s.close();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -387,17 +329,11 @@ public class ClienteDB implements ClienteDAO {
     public void fetchCorseRegolari(ArrayList<Integer> idCorsa, ArrayList<Integer> idPortoPartenza, ArrayList<Integer> idPortoArrivo, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<String> compagniaCorsa, ArrayList<String> nomeNatante) {
         Statement s = null;
         ResultSet rs = null;
-        String query = "select * from CorsaRegolare";
+        String query = "select * from navigazione.CorsaRegolare";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            s.executeQuery(query);
+            s = connection.createStatement();
+            rs = s.executeQuery(query);
 
             while (rs.next()) {
                 idCorsa.add(rs.getInt("idCorsa"));
@@ -416,7 +352,7 @@ public class ClienteDB implements ClienteDAO {
             rs.close();
             s.close();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -437,17 +373,11 @@ public class ClienteDB implements ClienteDAO {
     public void fetchCorseSpecifiche(ArrayList<String> compagniaCorsaS, ArrayList<Integer> corsaRegolare, ArrayList<LocalDate> data, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Integer> minutiRitardo, ArrayList<Boolean> cancellata) {
         Statement s = null;
         ResultSet rs = null;
-        String query = "select * from CorsaSpecifica join CorsaRegolare on Corsa = idCorsa";
+        String query = "select * from navigazione.CorsaSpecifica natural join navigazione.CorsaRegolare";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            s.executeQuery(query);
+            s = connection.createStatement();
+            rs = s.executeQuery(query);
 
             while (rs.next()) {
                 compagniaCorsaS.add(rs.getString("Compagnia"));
@@ -461,7 +391,7 @@ public class ClienteDB implements ClienteDAO {
             rs.close();
             s.close();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -485,20 +415,13 @@ public class ClienteDB implements ClienteDAO {
     public void fetchBigliettiCliente(String login, ArrayList<Integer> idBiglietto, ArrayList<Integer> idCorsa, ArrayList<LocalDate> dataCorsa, ArrayList<String> targaVeicolo, ArrayList<Boolean> prevendita, ArrayList<Boolean> bagaglio, ArrayList<Float> prezzo, ArrayList<LocalDate> dataAcquisto, ArrayList<Integer> etaPasseggero) {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String query = "select * from Biglietto where Cliente = ?";
+        String query = "select * from navigazione.Biglietto where Cliente = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, login);
 
-            ps.executeQuery();
+            rs = ps.executeQuery();
 
             while(rs.next()) {
                 idBiglietto.add(rs.getInt("idBiglietto"));
@@ -513,7 +436,7 @@ public class ClienteDB implements ClienteDAO {
             }
             rs.close();
             ps.close();
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Aggiunta fallita.");
             e.printStackTrace();
@@ -537,18 +460,11 @@ public class ClienteDB implements ClienteDAO {
         //l'aggiornamento dei posti disponibili sará effettuato dal DB
         
         PreparedStatement ps = null;
-        String query = "insert into Biglietto (idCorsa, data, loginCliente, targaVeicolo, prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero)" +
+        String query = "insert into navigazione.Biglietto (idCorsa, data, cliente, veicolo, prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero)" +
                 " values (?,?,?,?,?,?,?,?,?)";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) { 
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setInt(1, idCorsa);
             ps.setDate(2, (java.sql.Date) data);
             ps.setString(3, loginCliente);
@@ -560,7 +476,7 @@ public class ClienteDB implements ClienteDAO {
             ps.setInt(9, etaPasseggero);
             ps.executeUpdate();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Acquisto fallito.");
             e.printStackTrace();
@@ -576,25 +492,18 @@ public class ClienteDB implements ClienteDAO {
      */
     public void aggiungeVeicolo(String targa, String tipo, String loginProprietario) {
         PreparedStatement ps = null;
-        String query = "insert into Veicolo" +
+        String query = "insert into navigazione.Veicolo" +
                 " values (?,?,?)";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) { 
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, targa);
             ps.setString(2, tipo);
             ps.setString(3, loginProprietario);
             
             ps.executeUpdate();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Aggiunta fallita.");
             e.printStackTrace();

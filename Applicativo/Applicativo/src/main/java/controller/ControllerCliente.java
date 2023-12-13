@@ -13,7 +13,6 @@ import unnamed.Pair;
  * The type Controller.
  */
 public class ControllerCliente {
-    private ClienteDB clienteDB;
     private Cliente cliente;
     private HashMap<Integer, Porto> porti;
     private HashMap<String, Compagnia> compagnie;
@@ -24,7 +23,6 @@ public class ControllerCliente {
      * Instantiates a new Controller cliente.
      */
     public ControllerCliente() {
-        clienteDB = new ClienteDB();
         porti = new HashMap<>();
         compagnie = new HashMap<>();
         corse = new HashMap<>();
@@ -44,6 +42,7 @@ public class ControllerCliente {
      * @return the boolean
      */
     public boolean clienteAccede(String login, String password) {
+        ClienteDB clienteDB = new ClienteDB();
         boolean exists = clienteDB.accede(login, password);
         if (exists) {
             String nome = null;
@@ -80,6 +79,7 @@ public class ControllerCliente {
      * Download porti.
      */
     public void buildPorti() {
+        ClienteDB clienteDB = new ClienteDB();
         ArrayList<Integer> idPorto = new ArrayList<>();
         ArrayList<String> comuni = new ArrayList<>();
         ArrayList<String> indirizzi = new ArrayList<>();
@@ -94,6 +94,7 @@ public class ControllerCliente {
      * Build compagnie.
      */
     public void buildCompagnie() {
+        ClienteDB clienteDB = new ClienteDB();
         //password verra' settata a null nel model per motivi di sicurezza
         ArrayList<String> login = new ArrayList<>();
         ArrayList<String> nomeCompagnia = new ArrayList<>();
@@ -133,6 +134,7 @@ public class ControllerCliente {
      * 4) costruisce le corse specifiche e popola la collezione 'corse' di questa classe
      */
     public void buildCorse() {
+        ClienteDB clienteDB = new ClienteDB();
         //Elementi dei natanti
         ArrayList<String> compagniaNatante = new ArrayList<>();
         ArrayList<String> nome = new ArrayList<>();
@@ -216,6 +218,7 @@ public class ControllerCliente {
      * Build biglietti acquistati.
      */
     public void buildBigliettiAcquistati() {
+        ClienteDB clienteDB = new ClienteDB();
         ArrayList<Integer> idBiglietto = new ArrayList<>();
         ArrayList<Integer> idCorsa = new ArrayList<>();
         ArrayList<LocalDate> dataCorsa = new ArrayList<>();
@@ -279,6 +282,7 @@ public class ControllerCliente {
      * @param prezzo        the prezzo
      */
     public void acquistaBiglietto(CorsaSpecifica cs, Veicolo v, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
+        ClienteDB clienteDB = new ClienteDB();
         clienteDB.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), v.getTarga(), prevendita, bagaglio, prezzo, LocalDate.now(), etaPasseggero);
         //DISCUSSIONE SUGLI ID DEI BIGLIETTI APPENA ACQUISTATI (vedi idBiglietto, primo parametro del metodo immediatamente sotto)
         cliente.addBiglietto(new Biglietto(-1, cliente, cs, etaPasseggero, v, prevendita, bagaglio, prezzo, LocalDate.now()));
@@ -305,6 +309,7 @@ public class ControllerCliente {
      * @return a boolean
      */
     public boolean addVeicolo(String targa, String tipoVeicolo) {
+        ClienteDB clienteDB = new ClienteDB();
         try {
             clienteDB.aggiungeVeicolo(targa, tipoVeicolo, cliente.getLogin());
         } catch(Exception e) {

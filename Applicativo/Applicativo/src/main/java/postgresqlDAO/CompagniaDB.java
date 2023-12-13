@@ -4,10 +4,7 @@ import dao.CompagniaDAO;
 import database.ConnessioneDB;
 import model.Natante;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -18,8 +15,14 @@ import java.util.Date;
  * The type Compagnia db.
  */
 public class CompagniaDB implements CompagniaDAO {
-    private ConnessioneDB c;
-    private java.sql.Connection conn;
+    private Connection connection;
+    public CompagniaDB() {
+        try {
+            connection = ConnessioneDB.getInstance().getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Accedi boolean.
@@ -33,18 +36,11 @@ public class CompagniaDB implements CompagniaDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select *"
-        + "from Compagnia"
-        + "where login = ? and pw = ?";
+        + " from Compagnia"
+        + " where login = ? and pw = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            connection.prepareStatement(query);
             ps.setString(1, login);
             ps.setString(2, pw);
             ps.executeQuery();
@@ -53,7 +49,7 @@ public class CompagniaDB implements CompagniaDAO {
                 found = true;
             }
             rs.close();
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Cancellazione fallita.");
             e.printStackTrace();
@@ -79,14 +75,6 @@ public class CompagniaDB implements CompagniaDAO {
         String query2 = "select * from AccountSocial where Compagnia = ?";
         String query3 = "select * from Email where Compagnia = ?";
         String query4 = "select * from Telefono where Compagnia = ?";
-
-
-        try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
 
         try {
             ps.executeQuery(query1);
@@ -123,7 +111,7 @@ public class CompagniaDB implements CompagniaDAO {
             rs.close();
             ps.close();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -144,13 +132,6 @@ public class CompagniaDB implements CompagniaDAO {
         String query = "select * from Porto";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
             s.executeQuery(query);
 
             while(rs.next()) {
@@ -163,7 +144,7 @@ public class CompagniaDB implements CompagniaDAO {
             }
             rs.close();
             s.close();
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Aggiunta fallita.");
             e.printStackTrace();
@@ -183,18 +164,11 @@ public class CompagniaDB implements CompagniaDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select *"
-                + "from Natante"
-                + "where Compagnia = ?";
+                + " from Natante"
+                + " where Compagnia = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            connection.prepareStatement(query);
             ps.setString(1, loginCompagnia);
             ps.executeQuery();
 
@@ -206,7 +180,7 @@ public class CompagniaDB implements CompagniaDAO {
             }
             rs.close();
             ps.close();
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Cancellazione fallita.");
             e.printStackTrace();
@@ -235,13 +209,7 @@ public class CompagniaDB implements CompagniaDAO {
         String query = "select * from CorsaRegolare where Compagnia = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
+            connection.prepareStatement(query);
             ps.setString(1, loginCompagnia);
             ps.executeQuery();
 
@@ -261,7 +229,7 @@ public class CompagniaDB implements CompagniaDAO {
             rs.close();
             ps.close();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -284,13 +252,7 @@ public class CompagniaDB implements CompagniaDAO {
         String query = "select * from Periodo natural join AttivaIn natural join CorsaRegolare where Compagnia = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
+            connection.prepareStatement(query);
             ps.setString(1, loginCompagnia);
             ps.executeQuery();
 
@@ -304,7 +266,7 @@ public class CompagniaDB implements CompagniaDAO {
             rs.close();
             ps.close();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -328,13 +290,7 @@ public class CompagniaDB implements CompagniaDAO {
         String query = "select * from CorsaSpecifica join CorsaRegolare on Corsa = idCorsa where Compagnia = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
+            connection.prepareStatement(query);
             ps.setString(1, loginCompagnia);
             ps.executeQuery();
 
@@ -349,7 +305,7 @@ public class CompagniaDB implements CompagniaDAO {
             rs.close();
             ps.close();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
@@ -363,16 +319,9 @@ public class CompagniaDB implements CompagniaDAO {
         //deve chiamare una procedura
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
+            //conn.executeProcedure(); //qualcosa del genere
 
-        try {
-            conn.executeProcedure(); //qualcosa del genere
-
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Cancellazione fallita.");
             e.printStackTrace();
@@ -385,18 +334,11 @@ public class CompagniaDB implements CompagniaDAO {
     public void modificaCorsaRegolare(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, int idCorsa) {
         PreparedStatement ps = null;
         String query = "update CorsaRegolare"
-        + "set portoPartenza = ?, portoArrivo = ?, orarioPartenza = ?, orarioArrivo = ?, costoIntero = ?, scontoRidotto = ?, costoBagaglio = ?, costoPrevendita = ?, costoVeicolo = ?"
-        + "where idCorsa = ?";
+        + " set portoPartenza = ?, portoArrivo = ?, orarioPartenza = ?, orarioArrivo = ?, costoIntero = ?, scontoRidotto = ?, costoBagaglio = ?, costoPrevendita = ?, costoVeicolo = ?"
+        + " where idCorsa = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) { 
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            connection.prepareStatement(query);
             ps.setInt(1, idPortoPartenza);
             ps.setInt(2, idPortoArrivo);
             ps.setTime(3, orarioPartenza); //DA RISOLVERE LA CONVERSIONE
@@ -410,7 +352,7 @@ public class CompagniaDB implements CompagniaDAO {
             ps.executeUpdate();
 
             ps.close();
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Modifica fallita.");
             e.printStackTrace();
@@ -434,19 +376,12 @@ public class CompagniaDB implements CompagniaDAO {
         String query = "delete from CorsaRegolare where idCorsa = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) { 
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            connection.prepareStatement(query);
             ps.setInt(1, idCorsa);
             
             ps.executeUpdate();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Eliminazione fallita.");
             e.printStackTrace();
@@ -462,24 +397,17 @@ public class CompagniaDB implements CompagniaDAO {
     public void cancellaCorsaSpecifica(int idCorsa, Date data) {
         PreparedStatement ps = null;
         String query = "update CorsaSpecifica"
-        + "set cancellata = true"
-        + "where idCorsa = ? and data = ?";
-
+        + " set cancellata = true"
+        + " where idCorsa = ? and data = ?";
+        
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) { 
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            connection.prepareStatement(query);
             ps.setInt(1, idCorsa);
             ps.setDate(2, (java.sql.Date) data);
             
             ps.executeUpdate();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Cancellazione fallita.");
             e.printStackTrace();
@@ -496,25 +424,18 @@ public class CompagniaDB implements CompagniaDAO {
     public void segnalaRitardo(int idCorsa, Date data, int ritardo) {
         PreparedStatement ps = null;
         String query = "update CorsaSpecifica"
-        + "set minutiRitardo = ?"
-        + "where idCorsa = ? and data = ?";
-
+        + " set minutiRitardo = ?"
+        + " where idCorsa = ? and data = ?";
+        
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) { 
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            connection.prepareStatement(query);
             ps.setInt(1, ritardo);
             ps.setInt(2, idCorsa);
             ps.setDate(3, (java.sql.Date) data);
             
             ps.executeUpdate();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Segnalazione ritardo fallita.");
             e.printStackTrace();
@@ -527,17 +448,10 @@ public class CompagniaDB implements CompagniaDAO {
     public void aggiungeNatante(String loginCompagnia, String nomeNatante, int capienzaPasseggeri, int capienzaVeicoli, String tipo) throws Exception {
         PreparedStatement ps = null;
         String query = "insert into Natante"
-        + "values (?,?,?,?,?)";
+        + " values (?,?,?,?,?)";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) { 
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            connection.prepareStatement(query);
             ps.setString(1, loginCompagnia);
             ps.setString(2, nomeNatante);
             ps.setInt(3, capienzaPasseggeri);
@@ -546,7 +460,7 @@ public class CompagniaDB implements CompagniaDAO {
             
             ps.executeUpdate();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Aggiunta fallita.");
             throw new Exception();
@@ -561,22 +475,15 @@ public class CompagniaDB implements CompagniaDAO {
     public void rimuoveNatante(String nomeNatante) {
         PreparedStatement ps = null;
         String query = "delete from Natante"
-        + "where nome = ?";
+        + " where nome = ?";
 
         try {
-            conn = c.getConnection();
-        } catch (SQLException e) { 
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        }
-
-        try {
-            conn.prepareStatement(query);
+            connection.prepareStatement(query);
             ps.setString(1, nomeNatante);
             
             ps.executeUpdate();
 
-            conn.close();
+            connection.close();
         } catch (SQLException e) {
             System.out.println("Eliminazione fallita.");
             e.printStackTrace();

@@ -22,9 +22,6 @@ public class AggiungiNatante {
     public JFrame frameChiamante;
 
 
-
-
-
     public AggiungiNatante(JFrame frameChiamnte, ControllerCompagnia controllerCompagnia) {
 
         this.frameChiamante = frameChiamante;
@@ -45,7 +42,7 @@ public class AggiungiNatante {
             public void actionPerformed(ActionEvent e) {
 
                 int capVeicoli;
-                String nome= tfNomeNatante.getText();
+                String nome = tfNomeNatante.getText();
                 int capPasseggeri;
                 String temp1 = tfCapPasseggeri.getText();
                 String tipoNatante = (String) cbTipoNatante.getSelectedItem();
@@ -58,14 +55,14 @@ public class AggiungiNatante {
                 }
 
 
-                if(tipoNatante == "traghetto" || tipoNatante == "altro") {
+                if (tipoNatante == "traghetto" || tipoNatante == "altro") {
                     tfCapPasseggeri.setEnabled(true);
 
-                    String temp= tfCapVeicoli.getText();
+                    String temp = tfCapVeicoli.getText();
 
                     try {
                         capVeicoli = Integer.parseInt(temp);
-                    }catch (Exception ex){
+                    } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "Inserisci un valore numerico in Capienza Veicoli");
                         return;
                     }
@@ -74,8 +71,8 @@ public class AggiungiNatante {
                 }
 
 
-                if (nome =="Nome Natante" || nome == "" ) {
-                    JOptionPane.showMessageDialog(null,"inserisci il nome correttamente.");
+                if (nome == "Nome Natante" || nome == "") {
+                    JOptionPane.showMessageDialog(null, "inserisci il nome correttamente.");
                     return;
                 } else {
                     boolean check = controllerCompagnia.aggiungiNatante(nome, tipoNatante, capPasseggeri, capVeicoli);
@@ -92,3 +89,4 @@ public class AggiungiNatante {
             }
         });
     }
+}

@@ -49,7 +49,7 @@ public interface CompagniaDAO extends UtenteDAO {
     /**
      * Aggiunge natante.
      */
-    public void aggiungeNatante(String loginCompagnia, String nomeNatante, int capienzaPasseggeri, int capienzaVeicoli, String tipo);
+    public void aggiungeNatante(String loginCompagnia, String nomeNatante, int capienzaPasseggeri, int capienzaVeicoli, String tipo) throws Exception;
 
     /**
      * Rimuove natante.

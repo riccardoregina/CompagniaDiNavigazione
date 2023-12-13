@@ -1,5 +1,10 @@
 package database;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -7,52 +12,34 @@ import java.sql.SQLException;
  * The type Connessione db.
  */
 public class ConnessioneDB {
-    private java.sql.Connection connection = null;
-
-    private void connection() throws Exception{
+    private static ConnessioneDB instance;
+    private Connection connection = null;
+    private String url = "jdbc:postgresql://ep-wispy-king-20409617.eu-central-1.aws.neon.tech/navigazione";
+    private String user = "riccardoregina04";
+    private String password = METTI PASSWORD QUA;
+    private String driver = "org.postgresql.Driver";
+    private ConnessioneDB() {
         try {
-            Class.forName("org.postgresql.Driver");
+            //password = Files.readString(Path.of("password.txt"), Charset.defaultCharset());
+            Class.forName(driver);
+            connection = DriverManager.getConnection(url, user, password);
         } catch (ClassNotFoundException e) {
-            System.out.println("DB non trovato.");
             e.printStackTrace();
-        }
-
-        connection = null;
-
-        try {
-            String url = "jdbc:postgresql://localhost:5432/postgres";
-            connection = DriverManager.getConnection(url,"postgres", "progetto");
         } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
             e.printStackTrace();
-        }
-
-        if (connection != null) {
-            System.out.println("Connessione effettuata.");
-        } else {
-            System.out.println("Connessione non riuscita.");
         }
     }
 
-    /**
-     * Gets connection.
-     *
-     * @return the connection
-     * @throws SQLException the sql exception
-     */
-    public java.sql.Connection getConnection() throws SQLException{
-        try {
-            if (connection == null || connection.isClosed()) {
-                connection();
-            } else {
-                System.out.println("Una connessione e' gia attiva.");
-            }
-        } catch (SQLException e) {
-            System.out.println("Connessione fallita.");
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static ConnessioneDB getInstance() throws SQLException {
+        if (instance == null) {
+            instance = new ConnessioneDB();
+        } else if (instance.connection.isClosed()) {
+            instance = new ConnessioneDB();
         }
+        return instance;
+    }
+
+    public Connection getConnection() {
         return connection;
     }
 }
