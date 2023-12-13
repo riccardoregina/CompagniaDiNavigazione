@@ -39,7 +39,7 @@ public class LoginCliente {
 
         this.frameChiamante=frameChiamante;
         this.controllerCliente=controllerCliente;
-        frame = new JFrame("loginCompagnia");
+        frame = new JFrame("loginCliente");
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -51,7 +51,7 @@ public class LoginCliente {
             public void actionPerformed(ActionEvent e) {
                 String login = loginCliente.getText();
                 char[] pw =passwordCliente.getPassword();
-                String pwd = new String(pw);
+                String pwd = new String (pw);
 
                 if (login.equals("") || pwd.equals("")) {
                     JOptionPane.showMessageDialog(null,"inserisci le tue credenziali" );

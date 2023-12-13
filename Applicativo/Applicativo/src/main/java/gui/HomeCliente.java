@@ -87,5 +87,12 @@ public class HomeCliente {
                 frame.setVisible(false);
             }
         });
+        bVeicoliCliente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TuoiVeicoli iTuoiVeicoli = new TuoiVeicoli(frame, controllerCliente);
+                frame.setVisible(false);
+            }
+        });
     }
 }
