@@ -16,6 +16,7 @@ public class AggiungiNatante {
     private JTextField tfCapPasseggeri;
     private JTextField tfCapVeicoli;
     private JTextField tfNomeNatante;
+    private JButton bIndietro;
 
     public ControllerCompagnia controllerCompagnia;
     public JFrame frame;
@@ -86,6 +87,13 @@ public class AggiungiNatante {
 
 
                 }
+            }
+        });
+        bIndietro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frameChiamante.setVisible(true);
+                frame.dispose();
             }
         });
     }

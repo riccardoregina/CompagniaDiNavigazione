@@ -68,12 +68,18 @@ public class HomeCliente {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String nomeComp = (String) comboBox1.getSelectedItem();
-                int i = 0;
 
-                //devo trovare id compagnia e passarlo alla nuova gui per avere tutte le info
+                int posTrovato = 0;
+                for (int i = 0; i < compagnie.size(); i++) {
+                    if (nomeComp.equals(compagnie.get(i))) {
+                        posTrovato = i;
+                        break;
+                    }
+                }
 
                 String nomeCompagnia = (String) comboBox1.getSelectedItem();
-                ContattiCompagnia contattiCompagnia = new ContattiCompagnia(frame, controllerCliente, nomeCompagnia);
+                String idCompagnia = idsCompagnie.get(posTrovato);
+                ContattiCompagnia contattiCompagnia = new ContattiCompagnia(frame, controllerCliente, idCompagnia );
                 frame.setVisible(false);
             }
         });

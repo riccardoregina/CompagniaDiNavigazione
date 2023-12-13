@@ -3,8 +3,10 @@ package gui;
 import controller.ControllerCompagnia;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * The type Rimuovi natante.
@@ -18,6 +20,8 @@ public class RimuoviNatante {
     private JPanel panel1;
     private JPanel panel1_1;
     private JPanel panel1_2;
+    private JPanel panel1_3;
+    private JButton bIndietro;
     /**
      * The Controller compagnia.
      */
@@ -46,11 +50,35 @@ public class RimuoviNatante {
         frame.pack();
         frame.setVisible(true);
 
+        ArrayList<String> nome = new ArrayList<String>();
+        ArrayList<Integer> capPasseggeri = new ArrayList<Integer>();
+        ArrayList<Integer> capVeicoli = new ArrayList<Integer>();
+        ArrayList<String> tipo = new ArrayList<String>();
+
+        controllerCompagnia.visualizzaNatanti(nome, capPasseggeri, capVeicoli, tipo);
+
+        table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        DefaultTableModel tableModel = new DefaultTableModel(new Object[][][][]{}, new String[]{"nome", "Tipo", "num Passeggeri", "num Veicoli"});
+        table1.setModel(tableModel);
+        if (tipo != null) {
+            for (int i = 0; i < tipo.size(); i++) {
+                tableModel.addRow(new Object[]{tipo.get(i), nome.get(i), capPasseggeri.get(i), capVeicoli.get(i)});
+                comboBox1.addItem(nome.get(i));
+            }
+        }
 
         buttonElimina.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //chiamare il metodo per eliminare l'id della combobox affianco
+                String nomeEliminato = (String) comboBox1.getSelectedItem();
+                controllerCompagnia.rimuoviNatante(nomeEliminato);
+                frame.dispose();
+            }
+        });
+        bIndietro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frameChiamante.setVisible(true);
                 frame.dispose();
             }
         });
