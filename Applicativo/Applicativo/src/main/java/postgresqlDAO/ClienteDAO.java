@@ -1,7 +1,6 @@
 package postgresqlDAO;
 
 import database.*;
-import dao.*;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -13,9 +12,9 @@ import java.util.Date;
 /**
  * The type Cliente db.
  */
-public class ClienteDB implements ClienteDAO {
+public class ClienteDAO implements dao.ClienteDAO {
     private Connection connection;
-    public ClienteDB() {
+    public ClienteDAO() {
         try {
             connection = ConnessioneDB.getInstance().getConnection();
         } catch (SQLException e) {
@@ -156,12 +155,9 @@ public class ClienteDB implements ClienteDAO {
             System.out.println("Richiesta al DB fallita.");
             e.printStackTrace();
         }
-
-        //Inoltre...
-        fetchContattiCompagnie(compagniaSocial, nomeSocial, tagSocial, compagniaEmail, indirizzoEmail, compagniaTelefono, numeroTelefono);
     }
 
-    private void fetchContattiCompagnie(ArrayList<String> compagniaSocial, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> compagniaEmail, ArrayList<String> indirizzoEmail, ArrayList<String> compagniaTelefono, ArrayList<String> numeroTelefono) {
+    public void fetchContattiCompagnie(ArrayList<String> compagniaSocial, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> compagniaEmail, ArrayList<String> indirizzoEmail, ArrayList<String> compagniaTelefono, ArrayList<String> numeroTelefono) {
         Statement s = null;
         ResultSet rs = null;
         String query1 = "select * from navigazione.AccountSocial";
@@ -180,7 +176,8 @@ public class ClienteDB implements ClienteDAO {
             rs.close();
             s.close();
 
-            s.executeQuery(query2);
+            s = connection.createStatement();
+            rs = s.executeQuery(query2);
 
             while (rs.next()) {
                 compagniaEmail.add(rs.getString("Compagnia"));
@@ -189,7 +186,8 @@ public class ClienteDB implements ClienteDAO {
             rs.close();
             s.close();
 
-            s.executeQuery(query3);
+            s = connection.createStatement();
+            rs = s.executeQuery(query3);
 
             while (rs.next()) {
                 compagniaTelefono.add(rs.getString("Compagnia"));
@@ -490,10 +488,10 @@ public class ClienteDB implements ClienteDAO {
      * @param tipo              the tipo
      * @param loginProprietario the login proprietario
      */
-    public void aggiungeVeicolo(String targa, String tipo, String loginProprietario) {
+    public void aggiungeVeicolo(String tipo, String targa, String loginProprietario) {
         PreparedStatement ps = null;
         String query = "insert into navigazione.Veicolo" +
-                " values (?,?,?)";
+                " values (?,?::tipoveicolo,?)";
 
         try {
             ps = connection.prepareStatement(query);

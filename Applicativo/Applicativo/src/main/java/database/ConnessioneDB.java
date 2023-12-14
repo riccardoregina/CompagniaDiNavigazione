@@ -14,9 +14,9 @@ import java.sql.SQLException;
 public class ConnessioneDB {
     private static ConnessioneDB instance;
     private Connection connection = null;
-    private String url = "jdbc:postgresql://ep-wispy-king-20409617.eu-central-1.aws.neon.tech/navigazione";
-    private String user = "riccardoregina04";
-    private String password = METTI PW ;
+    private String url = "jdbc:postgresql://ep-wispy-king-20409617.eu-central-1.aws.neon.tech/navigazione" + "?stringtype=unspecified";
+    private String user = QUI METTI PASSWORD;
+    private String password = "brO8l0LpDKxT";
     private String driver = "org.postgresql.Driver";
     private ConnessioneDB() {
         try {

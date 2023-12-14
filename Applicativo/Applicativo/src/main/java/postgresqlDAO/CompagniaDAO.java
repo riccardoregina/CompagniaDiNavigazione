@@ -1,8 +1,6 @@
 package postgresqlDAO;
 
-import dao.CompagniaDAO;
 import database.ConnessioneDB;
-import model.Natante;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -14,9 +12,9 @@ import java.util.Date;
 /**
  * The type Compagnia db.
  */
-public class CompagniaDB implements CompagniaDAO {
+public class CompagniaDAO implements dao.CompagniaDAO {
     private Connection connection;
-    public CompagniaDB() {
+    public CompagniaDAO() {
         try {
             connection = ConnessioneDB.getInstance().getConnection();
         } catch (SQLException e) {
@@ -36,14 +34,14 @@ public class CompagniaDB implements CompagniaDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select *"
-        + " from Compagnia"
-        + " where login = ? and pw = ?";
+        + " from navigazione.Compagnia"
+        + " where login = ? and password = ?";
 
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, login);
             ps.setString(2, pw);
-            ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.next()) { //se esiste un risultato
                 found = true;
@@ -71,13 +69,14 @@ public class CompagniaDB implements CompagniaDAO {
     public void fetchCompagnia(String loginCompagnia, String nome, ArrayList<String> telefono, ArrayList<String> email, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, String sitoWeb) {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String query1 = "select * from Compagnia where login = ?";
-        String query2 = "select * from AccountSocial where Compagnia = ?";
-        String query3 = "select * from Email where Compagnia = ?";
-        String query4 = "select * from Telefono where Compagnia = ?";
+        String query1 = "select * from navigazione.Compagnia where login = ?";
+        String query2 = "select * from navigazione.AccountSocial where Compagnia = ?";
+        String query3 = "select * from navigazione.Email where Compagnia = ?";
+        String query4 = "select * from navigazione.Telefono where Compagnia = ?";
 
         try {
-            ps.executeQuery(query1);
+            ps = connection.prepareStatement(query1);
+            rs = ps.executeQuery(query1);
 
             if (rs.next()) {
                 nome = rs.getString("nome");
@@ -86,7 +85,8 @@ public class CompagniaDB implements CompagniaDAO {
             rs.close();
             ps.close();
 
-            ps.executeQuery(query2);
+            ps = connection.prepareStatement(query2);
+            rs = ps.executeQuery(query2);
 
             while (rs.next()) {
                 nomeSocial.add(rs.getString("nomeSocial"));
@@ -95,7 +95,8 @@ public class CompagniaDB implements CompagniaDAO {
             rs.close();
             ps.close();
 
-            ps.executeQuery(query3);
+            ps = connection.prepareStatement(query3);
+            rs = ps.executeQuery(query3);
 
             while (rs.next()) {
                 email.add(rs.getString("indirizzo"));
@@ -103,7 +104,8 @@ public class CompagniaDB implements CompagniaDAO {
             rs.close();
             ps.close();
 
-            ps.executeQuery(query4);
+            ps = connection.prepareStatement(query4);
+            rs = ps.executeQuery(query4);
 
             while (rs.next()) {
                 telefono.add(rs.getString("numero"));
@@ -129,10 +131,11 @@ public class CompagniaDB implements CompagniaDAO {
     public void fetchPorti(ArrayList<Integer> idPorto, ArrayList<String> comuni, ArrayList<String> indirizzi, ArrayList<String> numeriTelefono) {
         Statement s = null;
         ResultSet rs = null;
-        String query = "select * from Porto";
+        String query = "select * from navigazione.Porto";
 
         try {
-            s.executeQuery(query);
+            s = connection.createStatement();
+            rs = s.executeQuery(query);
 
             while(rs.next()) {
                 //Riempio delle variabili locali con le colonne della tupla trovata
@@ -164,13 +167,13 @@ public class CompagniaDB implements CompagniaDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select *"
-                + " from Natante"
+                + " from navigazione.Natante"
                 + " where Compagnia = ?";
 
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, loginCompagnia);
-            ps.executeQuery();
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 nomeNatante.add(rs.getString("nome"));
@@ -206,12 +209,12 @@ public class CompagniaDB implements CompagniaDAO {
     public void fetchCorseRegolari(String loginCompagnia, ArrayList<Integer> idCorsa, ArrayList<Integer> idPortoPartenza, ArrayList<Integer> idPortoArrivo, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<String> nomeNatante) {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String query = "select * from CorsaRegolare where Compagnia = ?";
+        String query = "select * from navigazione.CorsaRegolare where Compagnia = ?";
 
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, loginCompagnia);
-            ps.executeQuery();
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 idCorsa.add(rs.getInt("idCorsa"));
@@ -249,12 +252,12 @@ public class CompagniaDB implements CompagniaDAO {
     public void fetchPeriodiAttivitaCorse(String loginCompagnia, ArrayList<Integer> idPeriodo, ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<BitSet> giorni, ArrayList<Integer> corsa) {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String query = "select * from Periodo natural join AttivaIn natural join CorsaRegolare where Compagnia = ?";
+        String query = "select * from navigazione.Periodo natural join navigazione.AttivaIn natural join navigazione.CorsaRegolare where Compagnia = ?";
 
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, loginCompagnia);
-            ps.executeQuery();
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 idPeriodo.add(rs.getInt("idPeriodo"));
@@ -287,12 +290,12 @@ public class CompagniaDB implements CompagniaDAO {
     public void fetchCorseSpecifiche(String loginCompagnia, ArrayList<Integer> corsaRegolare, ArrayList<LocalDate> data, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Integer> minutiRitardo, ArrayList<Boolean> cancellata) {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String query = "select * from CorsaSpecifica join CorsaRegolare on Corsa = idCorsa where Compagnia = ?";
+        String query = "select * from navigazione.CorsaSpecifica natural join navigazione.CorsaRegolare where Compagnia = ?";
 
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, loginCompagnia);
-            ps.executeQuery();
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 corsaRegolare.add(rs.getInt("idCorsa"));
@@ -333,12 +336,12 @@ public class CompagniaDB implements CompagniaDAO {
      */
     public void modificaCorsaRegolare(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, int idCorsa) {
         PreparedStatement ps = null;
-        String query = "update CorsaRegolare"
+        String query = "update navigazione.CorsaRegolare"
         + " set portoPartenza = ?, portoArrivo = ?, orarioPartenza = ?, orarioArrivo = ?, costoIntero = ?, scontoRidotto = ?, costoBagaglio = ?, costoPrevendita = ?, costoVeicolo = ?"
         + " where idCorsa = ?";
 
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setInt(1, idPortoPartenza);
             ps.setInt(2, idPortoArrivo);
             //ps.setTime(3, orarioPartenza); //DA RISOLVERE LA CONVERSIONE
@@ -373,10 +376,10 @@ public class CompagniaDB implements CompagniaDAO {
      */
     public void cancellaCorsaRegolare(int idCorsa) {
         PreparedStatement ps = null;
-        String query = "delete from CorsaRegolare where idCorsa = ?";
+        String query = "delete from navigazione.CorsaRegolare where idCorsa = ?";
 
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setInt(1, idCorsa);
             
             ps.executeUpdate();
@@ -396,12 +399,12 @@ public class CompagniaDB implements CompagniaDAO {
      */
     public void cancellaCorsaSpecifica(int idCorsa, Date data) {
         PreparedStatement ps = null;
-        String query = "update CorsaSpecifica"
+        String query = "update navigazione.CorsaSpecifica"
         + " set cancellata = true"
         + " where idCorsa = ? and data = ?";
         
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setInt(1, idCorsa);
             ps.setDate(2, (java.sql.Date) data);
             
@@ -423,12 +426,12 @@ public class CompagniaDB implements CompagniaDAO {
      */
     public void segnalaRitardo(int idCorsa, Date data, int ritardo) {
         PreparedStatement ps = null;
-        String query = "update CorsaSpecifica"
+        String query = "update navigazione.CorsaSpecifica"
         + " set minutiRitardo = ?"
         + " where idCorsa = ? and data = ?";
         
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setInt(1, ritardo);
             ps.setInt(2, idCorsa);
             ps.setDate(3, (java.sql.Date) data);
@@ -447,11 +450,11 @@ public class CompagniaDB implements CompagniaDAO {
      */
     public void aggiungeNatante(String loginCompagnia, String nomeNatante, int capienzaPasseggeri, int capienzaVeicoli, String tipo) throws Exception {
         PreparedStatement ps = null;
-        String query = "insert into Natante"
-        + " values (?,?,?,?,?)";
+        String query = "insert into navigazione.natante"
+        + " values (?,?,?,?,?::tiponatante)";
 
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, loginCompagnia);
             ps.setString(2, nomeNatante);
             ps.setInt(3, capienzaPasseggeri);
@@ -474,11 +477,11 @@ public class CompagniaDB implements CompagniaDAO {
      */
     public void rimuoveNatante(String nomeNatante) {
         PreparedStatement ps = null;
-        String query = "delete from Natante"
+        String query = "delete from navigazione.natante"
         + " where nome = ?";
 
         try {
-            connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, nomeNatante);
             
             ps.executeUpdate();

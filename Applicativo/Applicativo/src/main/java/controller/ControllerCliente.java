@@ -1,7 +1,7 @@
 package controller;
 
 import model.*;
-import postgresqlDAO.ClienteDB;
+import postgresqlDAO.ClienteDAO;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -42,16 +42,18 @@ public class ControllerCliente {
      * @return the boolean
      */
     public boolean clienteAccede(String login, String password) {
-        ClienteDB clienteDB = new ClienteDB();
-        boolean exists = clienteDB.accede(login, password);
+        ClienteDAO clienteDAO = new ClienteDAO();
+        boolean exists = clienteDAO.accede(login, password);
         if (exists) {
             String nome = null;
             String cognome = null;
             ArrayList<String> veicoliTipo = new ArrayList<>();
             ArrayList<String> veicoliTarga = new ArrayList<>();
             //crea oggetto cliente e lo popola con i dati del DB
-            clienteDB.fetchCliente(login, nome, cognome);
-            clienteDB.fetchVeicoliCliente(login, veicoliTipo, veicoliTarga);
+            clienteDAO = new ClienteDAO();
+            clienteDAO.fetchCliente(login, nome, cognome);
+            clienteDAO = new ClienteDAO();
+            clienteDAO.fetchVeicoliCliente(login, veicoliTipo, veicoliTarga);
             for (int i = 0; i < veicoliTarga.size(); i++) {
                 cliente.addVeicolo(new Veicolo(veicoliTipo.get(i), veicoliTarga.get(i)));
             }
@@ -79,12 +81,12 @@ public class ControllerCliente {
      * Download porti.
      */
     public void buildPorti() {
-        ClienteDB clienteDB = new ClienteDB();
+        ClienteDAO clienteDAO = new ClienteDAO();
         ArrayList<Integer> idPorto = new ArrayList<>();
         ArrayList<String> comuni = new ArrayList<>();
         ArrayList<String> indirizzi = new ArrayList<>();
         ArrayList<String> numeriTelefono = new ArrayList<>();
-        clienteDB.fetchPorti(idPorto, comuni, indirizzi, numeriTelefono);
+        clienteDAO.fetchPorti(idPorto, comuni, indirizzi, numeriTelefono);
         for (int i = 0; i < comuni.size(); i++) {
             porti.put(idPorto.get(i), new Porto(idPorto.get(i), comuni.get(i), indirizzi.get(i), numeriTelefono.get(i)));
         }
@@ -94,7 +96,7 @@ public class ControllerCliente {
      * Build compagnie.
      */
     public void buildCompagnie() {
-        ClienteDB clienteDB = new ClienteDB();
+        ClienteDAO clienteDAO = new ClienteDAO();
         //password verra' settata a null nel model per motivi di sicurezza
         ArrayList<String> login = new ArrayList<>();
         ArrayList<String> nomeCompagnia = new ArrayList<>();
@@ -109,12 +111,14 @@ public class ControllerCliente {
         //Elementi dei telefoni
         ArrayList<String> compagniaTelefono = new ArrayList<>();
         ArrayList<String> numeroTelefono = new ArrayList<>();
-        clienteDB.fetchCompagnie(login, nomeCompagnia, sitoWeb, compagniaSocial, nomeSocial, tagSocial, compagniaEmail, indirizzoEmail, compagniaTelefono, numeroTelefono);
+        clienteDAO.fetchCompagnie(login, nomeCompagnia, sitoWeb, compagniaSocial, nomeSocial, tagSocial, compagniaEmail, indirizzoEmail, compagniaTelefono, numeroTelefono);
         for (int i = 0; i < login.size(); i++) {
             compagnie.put(login.get(i), new Compagnia(login.get(i), nomeCompagnia.get(i), sitoWeb.get(i)));
         }
 
         //Aggiungo a ciascuna compagnia i suoi contatti
+        clienteDAO = new ClienteDAO();
+        clienteDAO.fetchContattiCompagnie(compagniaSocial, nomeSocial, tagSocial, compagniaEmail, indirizzoEmail, compagniaTelefono, numeroTelefono);
         for (int i = 0; i < tagSocial.size(); i++) {
             compagnie.get(compagniaSocial.get(i)).addAccount(new AccountSocial(compagnie.get(compagniaSocial.get(i)), nomeSocial.get(i), tagSocial.get(i)));
         }
@@ -134,14 +138,14 @@ public class ControllerCliente {
      * 4) costruisce le corse specifiche e popola la collezione 'corse' di questa classe
      */
     public void buildCorse() {
-        ClienteDB clienteDB = new ClienteDB();
+        ClienteDAO clienteDAO = new ClienteDAO();
         //Elementi dei natanti
         ArrayList<String> compagniaNatante = new ArrayList<>();
         ArrayList<String> nome = new ArrayList<>();
         ArrayList<Integer> capienzaPasseggeri = new ArrayList<>();
         ArrayList<Integer> capienzaVeicoli = new ArrayList<>();
         ArrayList<String> tipo = new ArrayList<>();
-        clienteDB.fetchNatanti(compagniaNatante, nome, capienzaPasseggeri, capienzaVeicoli, tipo);
+        clienteDAO.fetchNatanti(compagniaNatante, nome, capienzaPasseggeri, capienzaVeicoli, tipo);
         for (int i = 0; i < nome.size(); i++) {
             compagnie.get(compagniaNatante.get(i)).addNatante(new Natante(compagnie.get(compagniaNatante.get(i)), nome.get(i), capienzaPasseggeri.get(i), capienzaVeicoli.get(i), tipo.get(i)));
         }
@@ -159,7 +163,8 @@ public class ControllerCliente {
         ArrayList<Float> costoVeicolo = new ArrayList<>();
         ArrayList<String> compagniaCorsa = new ArrayList<>();
         ArrayList<String> nomeNatante = new ArrayList<>();
-        clienteDB.fetchCorseRegolari(idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagniaCorsa, nomeNatante);
+        clienteDAO = new ClienteDAO();
+        clienteDAO.fetchCorseRegolari(idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagniaCorsa, nomeNatante);
         for (int i = 0; i < costoIntero.size(); i++) {
             int id = idCorsa.get(i);
             Compagnia c = compagnie.get(compagniaCorsa.get(i));
@@ -184,7 +189,8 @@ public class ControllerCliente {
         ArrayList<Date> dataInizio = new ArrayList<>();
         ArrayList<Date> dataFine = new ArrayList<>();
         ArrayList<BitSet> giorni = new ArrayList<>();
-        clienteDB.fetchPeriodiAttivitaCorse(idPeriodo, dataInizio, dataFine, giorni, corsa, compagnia);
+        clienteDAO = new ClienteDAO();
+        clienteDAO.fetchPeriodiAttivitaCorse(idPeriodo, dataInizio, dataFine, giorni, corsa, compagnia);
         //Assegno un periodo alla sua corsa.
         for (int i = 0; i < dataInizio.size(); i++) {
             Compagnia c = compagnie.get(compagnia.get(i));
@@ -200,7 +206,8 @@ public class ControllerCliente {
         ArrayList<Integer> postiDispVei = new ArrayList<>();
         ArrayList<Integer> minutiRitardo = new ArrayList<>();
         ArrayList<Boolean> cancellata = new ArrayList<>();
-        clienteDB.fetchCorseSpecifiche(compagniaCorsaS, corsaRegolare, data, postiDispPass, postiDispVei, minutiRitardo, cancellata);
+        clienteDAO = new ClienteDAO();
+        clienteDAO.fetchCorseSpecifiche(compagniaCorsaS, corsaRegolare, data, postiDispPass, postiDispVei, minutiRitardo, cancellata);
         for (int i = 0; i < data.size(); i++) {
             Compagnia c = compagnie.get(compagniaCorsaS.get(i));
             CorsaRegolare cr = c.getCorseErogate().get(corsaRegolare.get(i));
@@ -218,7 +225,7 @@ public class ControllerCliente {
      * Build biglietti acquistati.
      */
     public void buildBigliettiAcquistati() {
-        ClienteDB clienteDB = new ClienteDB();
+        ClienteDAO clienteDAO = new ClienteDAO();
         ArrayList<Integer> idBiglietto = new ArrayList<>();
         ArrayList<Integer> idCorsa = new ArrayList<>();
         ArrayList<LocalDate> dataCorsa = new ArrayList<>();
@@ -228,7 +235,7 @@ public class ControllerCliente {
         ArrayList<Float> prezzo = new ArrayList<>();
         ArrayList<LocalDate> dataAcquisto = new ArrayList<>();
         ArrayList<Integer> etaPasseggero = new ArrayList<>();
-        clienteDB.fetchBigliettiCliente(cliente.getLogin(), idBiglietto, idCorsa, dataCorsa, targaVeicolo, prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero);
+        clienteDAO.fetchBigliettiCliente(cliente.getLogin(), idBiglietto, idCorsa, dataCorsa, targaVeicolo, prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero);
         for (int i = 0; i < idBiglietto.size(); i++) {
             //trovo la corsa specifica con id e Data
             CorsaSpecifica cs = corse.get(new Pair(idCorsa.get(i), dataCorsa.get(i)));
@@ -282,8 +289,8 @@ public class ControllerCliente {
      * @param prezzo        the prezzo
      */
     public void acquistaBiglietto(CorsaSpecifica cs, Veicolo v, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
-        ClienteDB clienteDB = new ClienteDB();
-        clienteDB.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), v.getTarga(), prevendita, bagaglio, prezzo, LocalDate.now(), etaPasseggero);
+        ClienteDAO clienteDAO = new ClienteDAO();
+        clienteDAO.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), v.getTarga(), prevendita, bagaglio, prezzo, LocalDate.now(), etaPasseggero);
         //DISCUSSIONE SUGLI ID DEI BIGLIETTI APPENA ACQUISTATI (vedi idBiglietto, primo parametro del metodo immediatamente sotto)
         cliente.addBiglietto(new Biglietto(-1, cliente, cs, etaPasseggero, v, prevendita, bagaglio, prezzo, LocalDate.now()));
     }
@@ -309,9 +316,9 @@ public class ControllerCliente {
      * @return a boolean
      */
     public boolean addVeicolo(String targa, String tipoVeicolo) {
-        ClienteDB clienteDB = new ClienteDB();
+        ClienteDAO clienteDAO = new ClienteDAO();
         try {
-            clienteDB.aggiungeVeicolo(targa, tipoVeicolo, cliente.getLogin());
+            clienteDAO.aggiungeVeicolo(targa, tipoVeicolo, cliente.getLogin());
         } catch(Exception e) {
             return false;
         }

@@ -3,8 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import postgresqlDAO.CompagniaDB;
-
 /**
  * The type Compagnia.
  */

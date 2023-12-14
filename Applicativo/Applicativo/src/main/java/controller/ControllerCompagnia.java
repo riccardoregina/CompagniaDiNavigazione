@@ -1,7 +1,7 @@
 package controller;
 
 import model.*;
-import postgresqlDAO.CompagniaDB;
+import postgresqlDAO.CompagniaDAO;
 import unnamed.Pair;
 
 import java.time.LocalDate;
@@ -33,8 +33,8 @@ public class ControllerCompagnia {
      * @return the boolean
      */
     public boolean compagniaAccede(String login, String password) {
-        CompagniaDB compagniaDB = new CompagniaDB();
-        boolean exists = compagniaDB.accede(login, password);
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        boolean exists = compagniaDAO.accede(login, password);
         if (exists) {
             //prende dal DB tutte i dati della compagnia e costruisce l'ambiente per l'uso dell'applicativo
             buildModel(login, password);
@@ -61,12 +61,12 @@ public class ControllerCompagnia {
      * Build porti.
      */
     public void buildPorti() {
-        CompagniaDB compagniaDB = new CompagniaDB();
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
         ArrayList<Integer> idPorto = new ArrayList<>();
         ArrayList<String> comuni = new ArrayList<>();
         ArrayList<String> indirizzi = new ArrayList<>();
         ArrayList<String> numeriTelefono = new ArrayList<>();
-        compagniaDB.fetchPorti(idPorto, comuni, indirizzi, numeriTelefono);
+        compagniaDAO.fetchPorti(idPorto, comuni, indirizzi, numeriTelefono);
         for (int i = 0; i < comuni.size(); i++) {
             porti.put(idPorto.get(i), new Porto(idPorto.get(i), comuni.get(i), indirizzi.get(i), numeriTelefono.get(i)));
         }
@@ -79,14 +79,14 @@ public class ControllerCompagnia {
      * @param password       the password
      */
     public void buildCompagnia(String loginCompagnia, String password) {
-        CompagniaDB compagniaDB = new CompagniaDB();
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
         String nomeCompagnia = null;
         ArrayList<String> telefono = new ArrayList<>();
         ArrayList<String> email = new ArrayList<>();
         ArrayList<String> nomeSocial = new ArrayList<>();
         ArrayList<String> tagSocial = new ArrayList<>();
         String sitoWeb = null;
-        compagniaDB.fetchCompagnia(loginCompagnia, nomeCompagnia, telefono, email, nomeSocial, tagSocial, sitoWeb);
+        compagniaDAO.fetchCompagnia(loginCompagnia, nomeCompagnia, telefono, email, nomeSocial, tagSocial, sitoWeb);
 
         compagnia = new Compagnia(loginCompagnia, password, nomeCompagnia);
         compagnia.setTelefoni(telefono);
@@ -104,7 +104,7 @@ public class ControllerCompagnia {
         ArrayList<Integer> capienzaPasseggeri = new ArrayList<>();
         ArrayList<Integer> capienzaVeicoli = new ArrayList<>();
         ArrayList<String> tipo = new ArrayList<>();
-        compagniaDB.fetchNatantiCompagnia(loginCompagnia, nomeNatante, capienzaPasseggeri, capienzaVeicoli, tipo);
+        compagniaDAO.fetchNatantiCompagnia(loginCompagnia, nomeNatante, capienzaPasseggeri, capienzaVeicoli, tipo);
         for (int i = 0; i < nomeNatante.size(); i++) {
             compagnia.addNatante(new Natante(compagnia, nomeNatante.get(i), capienzaPasseggeri.get(i), capienzaVeicoli.get(i), tipo.get(i)));
         }
@@ -121,7 +121,7 @@ public class ControllerCompagnia {
         ArrayList<Float> costoPrevendita = new ArrayList<>();
         ArrayList<Float> costoVeicolo = new ArrayList<>();
         ArrayList<String> nomeNatanteCorsa = new ArrayList<>();
-        compagniaDB.fetchCorseRegolari(loginCompagnia, idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatante);
+        compagniaDAO.fetchCorseRegolari(loginCompagnia, idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatanteCorsa);
         for (int i = 0; i < costoIntero.size(); i++) {
             int id = idCorsa.get(i);
             Natante n = compagnia.getNatantiPosseduti().get(nomeNatanteCorsa.get(i));
@@ -144,7 +144,7 @@ public class ControllerCompagnia {
         ArrayList<Date> dataInizio = new ArrayList<>();
         ArrayList<Date> dataFine = new ArrayList<>();
         ArrayList<BitSet> giorni = new ArrayList<>();
-        compagniaDB.fetchPeriodiAttivitaCorse(loginCompagnia, idPeriodo, dataInizio, dataFine, giorni, corsa);
+        compagniaDAO.fetchPeriodiAttivitaCorse(loginCompagnia, idPeriodo, dataInizio, dataFine, giorni, corsa);
         //Assegno un periodo alla sua corsa.
         for (int i = 0; i < dataInizio.size(); i++) {
             CorsaRegolare cr = compagnia.getCorseErogate().get(corsa.get(i));
@@ -156,14 +156,14 @@ public class ControllerCompagnia {
      * Build corse specifiche.
      */
     public void buildCorseSpecifiche() {
-        CompagniaDB compagniaDB = new CompagniaDB();
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
         ArrayList<Integer> corsaRegolare = new ArrayList<>();
         ArrayList<LocalDate> data = new ArrayList<>();
         ArrayList<Integer> postiDispPass = new ArrayList<>();
         ArrayList<Integer> postiDispVei = new ArrayList<>();
         ArrayList<Integer> minutiRitardo = new ArrayList<>();
         ArrayList<Boolean> cancellata = new ArrayList<>();
-        compagniaDB.fetchCorseSpecifiche(compagnia.getLogin(),corsaRegolare, data, postiDispPass, postiDispVei, minutiRitardo, cancellata);
+        compagniaDAO.fetchCorseSpecifiche(compagnia.getLogin(),corsaRegolare, data, postiDispPass, postiDispVei, minutiRitardo, cancellata);
         for (int i = 0; i < data.size(); i++) {
             CorsaRegolare cr = compagnia.getCorseErogate().get(corsaRegolare.get(i));
             LocalDate d = data.get(i);
@@ -177,9 +177,9 @@ public class ControllerCompagnia {
     }
 
     public boolean aggiungiNatante (String nome, String tipo, int capienzaPasseggeri, int capienzaVeicoli) {
-        CompagniaDB compagniaDB = new CompagniaDB();
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
-            compagniaDB.aggiungeNatante(compagnia.getLogin(), nome, capienzaPasseggeri, capienzaVeicoli, tipo);
+            compagniaDAO.aggiungeNatante(compagnia.getLogin(), nome, capienzaPasseggeri, capienzaVeicoli, tipo);
         } catch (Exception e) {
             return false;
         }
@@ -198,9 +198,9 @@ public class ControllerCompagnia {
     }
 
     public boolean rimuoviNatante(String nomeNatante) {
-        CompagniaDB compagniaDB = new CompagniaDB();
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
-            compagniaDB.rimuoveNatante(nomeNatante);
+            compagniaDAO.rimuoveNatante(nomeNatante);
         } catch (Exception e) {
             return false;
         }
@@ -216,4 +216,14 @@ public class ControllerCompagnia {
         return porto;
     }
 
+    /*
+    * boolean creaCorse (inizioPeriodo, finePeriodo, oraPart, oraArrivo, costo, scontoRidotto, costoBagaglio, costoVeicolo, nomeNatante)
+//dal natante prende i posti disponibili per le corse specifiche
+    *
+    * viewCorseCompagnia(data, portoPart, portoArrivo, ArrayL idCorsaSpec, ArrayL oraPart, ArrayL OraArrivo, nomeNatante)
+// gli passo la data e i porti per vedere le corse, me le restituisce negli arraylist che gli ho passato
+    *
+    * modificaCorsa(idCorsaSpec, int ritardo, boolean cancellata)
+//modifica la corsa specifica con ritardo e cancellata, se non c'è ritardo: ritardo=0;
+     */
 }
