@@ -52,12 +52,14 @@ public class ControllerCliente {
             //crea oggetto cliente e lo popola con i dati del DB
             clienteDAO = new ClienteDAO();
             clienteDAO.fetchCliente(login, nome, cognome);
+            cliente = new Cliente(login, password, nome, cognome);
+
             clienteDAO = new ClienteDAO();
             clienteDAO.fetchVeicoliCliente(login, veicoliTipo, veicoliTarga);
             for (int i = 0; i < veicoliTarga.size(); i++) {
                 cliente.addVeicolo(new Veicolo(veicoliTipo.get(i), veicoliTarga.get(i)));
             }
-            cliente = new Cliente(login, password, nome, cognome);
+
 
             //crea il resto del contorno di cliente
             buildModel();
