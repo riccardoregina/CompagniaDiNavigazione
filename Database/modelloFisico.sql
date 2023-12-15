@@ -27,7 +27,7 @@ create table Navigazione.CorsaRegolare(
     Compagnia text not null,
     Natante text not null,
 
-    check (PortoArrivo <> PortoPartenza AND dataOraPartenza < dataOraArrivo)
+    check (PortoArrivo <> PortoPartenza)
 );
 
 create table Navigazione.CorsaSpecifica(
@@ -39,7 +39,7 @@ create table Navigazione.CorsaSpecifica(
     cancellata boolean not null default 'false',
 
     primary key(idCorsa, data),
-    foreign key(idCorsa) references CorsaRegolare(idCorsa)
+    foreign key(idCorsa) references Navigazione.CorsaRegolare(idCorsa)
         on delete cascade       on update cascade
 );
 
@@ -57,10 +57,10 @@ create table Navigazione.AttivaIn (
     idPeriodo integer,
 
     primary key(idCorsa, idPeriodo),
-    foreign key(idCorsa) references CorsaRegolare(idCorsa)
+    foreign key(idCorsa) references Navigazione.CorsaRegolare(idCorsa)
         on delete cascade       on update cascade,
 
-    foreign key(idPeriodo) references Corsa(idPeriodo)
+    foreign key(idPeriodo) references Navigazione.Periodo(idPeriodo)
         on delete cascade       on update cascade
 );
 
@@ -107,7 +107,7 @@ create table Navigazione.Biglietto(
     dataAcquisto date not null,
     etaPasseggero integer not null check (etaPasseggero >= 0),
 
-    foreign key(idCorsa, data) references CorsaSpecifica(idCorsa, data)
+    foreign key(idCorsa, data) references Navigazione.CorsaSpecifica(idCorsa, data)
         on delete cascade       on update cascade
 );
 
@@ -136,74 +136,74 @@ create table Navigazione.Telefono(
 );
 
 /*alter Corsa*/
-alter table Corsa
+alter table Navigazione.CorsaRegolare
     add constraint corsaFKcompagnia 
-        foreign key (Compagnia) references Compagnia(login)
+        foreign key (Compagnia) references Navigazione.Compagnia(login)
             on delete cascade       on update cascade;
 
-alter table Corsa
+alter table Navigazione.CorsaRegolare
     add constraint corsaFKnatante
-        foreign key (Natante) references Natante(nome)
+        foreign key (Natante) references Navigazione.Natante(nome)
             on delete cascade   on update cascade;
 
-alter table Corsa
+alter table Navigazione.CorsaRegolare
     add constraint corsaFKportoPartenza
-        foreign key (PortoPartenza) references Porto(idPorto)
+        foreign key (PortoPartenza) references Navigazione.Porto(idPorto)
             on delete cascade       on update cascade;
 
-alter table Corsa
+alter table Navigazione.CorsaRegolare
     add constraint corsaFKportoArrivo
-        foreign key (PortoArrivo) references Porto(idPorto)
+        foreign key (PortoArrivo) references Navigazione.Porto(idPorto)
             on delete cascade       on update cascade;
 
 /*alter Scalo*/
-alter table Scalo
+alter table Navigazione.Scalo
     add constraint scaloFKcorsa
-        foreign key (idCorsa) references CorsaRegolare(idCorsa)
+        foreign key (idCorsa) references Navigazione.CorsaRegolare(idCorsa)
             on delete cascade       on update cascade;
 
-alter table Scalo
+alter table Navigazione.Scalo
     add constraint scaloFKporto
-        foreign key (Porto) references Porto(idPorto)
+        foreign key (Porto) references Navigazione.Porto(idPorto)
             on delete cascade       on update cascade;
 
 /*alter Natante*/
-alter table Natante
+alter table Navigazione.Natante
     add constraint natanteFKcompagnia
-        foreign key (Compagnia) references Compagnia(login)
+        foreign key (Compagnia) references Navigazione.Compagnia(login)
             on delete cascade       on update cascade;
 
 /*alter Biglietto*/
-alter table Biglietto
+alter table Navigazione.Biglietto
     add constraint bigliettoFKcliente
-        foreign key (Cliente) references Cliente(login)
+        foreign key (Cliente) references Navigazione.Cliente(login)
             on delete cascade       on update cascade;
 
-alter table Biglietto
+alter table Navigazione.Biglietto
     add constraint bigliettoFKveicolo
-        foreign key (Veicolo) references Veicolo(targa)
+        foreign key (Veicolo) references Navigazione.Veicolo(targa)
             on delete set null      on update cascade;
 
 /*alter Veicolo*/
-alter table Veicolo
+alter table Navigazione.Veicolo
     add constraint veicoloFKproprietario
-        foreign key (Proprietario) references Cliente(login)
+        foreign key (Proprietario) references Navigazione.Cliente(login)
             on delete cascade       on update cascade;
 
 /*alter AccountSocial*/
-alter table AccountSocial
+alter table Navigazione.AccountSocial
     add constraint accountFKcompagnia
-        foreign key (Compagnia) references Compagnia(login)
+        foreign key (Compagnia) references Navigazione.Compagnia(login)
             on delete cascade       on update cascade;
 
 /*alter Email*/
-alter table Email
+alter table Navigazione.Email
     add constraint emailFKcompagnia
-        foreign key (Compagnia) references Compagnia(login)
+        foreign key (Compagnia) references Navigazione.Compagnia(login)
             on delete cascade       on update cascade;
 
 /*alter Telefono*/
-alter table Telefono
+alter table Navigazione.Telefono
     add constraint telefonoFKcompagnia
-        foreign key (Compagnia) references Compagnia(login)
+        foreign key (Compagnia) references Navigazione.Compagnia(login)
             on delete cascade       on update cascade;
