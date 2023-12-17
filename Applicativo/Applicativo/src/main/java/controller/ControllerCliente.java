@@ -190,8 +190,8 @@ public class ControllerCliente {
         ArrayList<String> compagnia = new ArrayList<>();
         ArrayList<Integer> corsa = new ArrayList<>();
         ArrayList<Integer> idPeriodo = new ArrayList<>();
-        ArrayList<Date> dataInizio = new ArrayList<>();
-        ArrayList<Date> dataFine = new ArrayList<>();
+        ArrayList<LocalDate> dataInizio = new ArrayList<>();
+        ArrayList<LocalDate> dataFine = new ArrayList<>();
         ArrayList<String> giorni = new ArrayList<>();
         clienteDAO = new ClienteDAO();
         clienteDAO.fetchPeriodiAttivitaCorse(idPeriodo, dataInizio, dataFine, giorni, corsa, compagnia);

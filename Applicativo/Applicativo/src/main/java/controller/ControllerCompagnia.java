@@ -4,6 +4,7 @@ import model.*;
 import postgresqlDAO.CompagniaDAO;
 import unnamed.Pair;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -146,8 +147,8 @@ public class ControllerCompagnia {
         HashMap<Integer, Periodo> periodi = new HashMap<>();
         ArrayList<Integer> corsa = new ArrayList<>();
         ArrayList<Integer> idPeriodo = new ArrayList<>();
-        ArrayList<Date> dataInizio = new ArrayList<>();
-        ArrayList<Date> dataFine = new ArrayList<>();
+        ArrayList<LocalDate> dataInizio = new ArrayList<>();
+        ArrayList<LocalDate> dataFine = new ArrayList<>();
         ArrayList<String> giorni = new ArrayList<>();
         compagniaDAO.fetchPeriodiAttivitaCorse(loginCompagnia, idPeriodo, dataInizio, dataFine, giorni, corsa);
         //Assegno un periodo alla sua corsa.
@@ -221,15 +222,28 @@ public class ControllerCompagnia {
         return porto;
     }
 
-    /*
-    * boolean creaCorse (inizioPeriodo, finePeriodo, oraPart, oraArrivo, costo, scontoRidotto, costoBagaglio, costoVeicolo, nomeNatante)
-//dal natante prende i posti disponibili per le corse specifiche
-    *
-    * viewCorseCompagnia(data, portoPart, portoArrivo, ArrayL idCorsaSpec, ArrayL oraPart, ArrayL OraArrivo, nomeNatante)
-// gli passo la data e i porti per vedere le corse, me le restituisce negli arraylist che gli ho passato
-    *
-    * modificaCorsa(idCorsaSpec, int ritardo, boolean cancellata)
-//modifica la corsa specifica con ritardo e cancellata, se non c'è ritardo: ritardo=0;
-     */
+    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.aggiungeCorsa(idPortoPartenza, idPortoArrivo, giorni, inizioPeriodo, finePeriodo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagnia.getLogin(), nomeNatante);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        CorsaRegolare cr = new CorsaRegolare(-1, compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita);
+        compagnia.addCorsaRegolare(cr);
+        cr.addPeriodoAttivita(new Periodo(-1, inizioPeriodo, finePeriodo, StringToBitset(giorni)));
+        return true;
+    }
 
+    public void visualizzaCorseSpecifichePerData(LocalDate data, int idPortoPartenza, int idPortoArrivo, ArrayList<Integer> idCorsa, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<String> nomeNatante) {
+        for (Map.Entry<Pair, CorsaSpecifica> it : corseSpecifiche.entrySet()) {
+            if (it.getValue().getData().equals(data) && it.getValue().getCorsaRegolare().getPortoPartenza().equals(porti.get(idPortoPartenza)) && it.getValue().getCorsaRegolare().getPortoArrivo().equals(porti.get(idPortoArrivo))) {
+                idCorsa.add(it.getValue().getCorsaRegolare().getIdCorsa());
+                orarioPartenza.add(it.getValue().getCorsaRegolare().getOrarioPartenza());
+                orarioArrivo.add(it.getValue().getCorsaRegolare().getOrarioArrivo());
+                nomeNatante.add(it.getValue().getCorsaRegolare().getNatante().getNome());
+            }
+        }
+    }
 }

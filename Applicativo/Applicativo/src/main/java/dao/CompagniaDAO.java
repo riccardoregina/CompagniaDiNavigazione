@@ -1,5 +1,7 @@
 package dao;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -10,17 +12,7 @@ public interface CompagniaDAO extends UtenteDAO {
     /**
      * Aggiunge corsa.
      */
-    public void aggiungeCorsa(/*Attributi di corsaRegolare*/);
-
-    /**
-     * Modifica corsa regolare.
-     */
-    public void modificaCorsaRegolare(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, int idCorsa);
-
-    /**
-     * Modifica corsa specifica.
-     */
-    public void modificaCorsaSpecifica(/*Attributi di corsaRegolare*/);
+    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante) throws SQLException;
 
     /**
      * Cancella corsa regolare.

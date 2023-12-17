@@ -252,7 +252,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      * @param giorni         the giorni
      * @param corsa          the corsa
      */
-    public void fetchPeriodiAttivitaCorse(String loginCompagnia, ArrayList<Integer> idPeriodo, ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<String> giorni, ArrayList<Integer> corsa) {
+    public void fetchPeriodiAttivitaCorse(String loginCompagnia, ArrayList<Integer> idPeriodo, ArrayList<LocalDate> dataInizio, ArrayList<LocalDate> dataFine, ArrayList<String> giorni, ArrayList<Integer> corsa) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select * from navigazione.Periodo natural join navigazione.AttivaIn natural join navigazione.CorsaRegolare where Compagnia = ?";
@@ -264,8 +264,8 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             while (rs.next()) {
                 idPeriodo.add(rs.getInt("idPeriodo"));
-                dataInizio.add(rs.getDate("dataInizio"));
-                dataFine.add(rs.getDate("dataFine"));
+                dataInizio.add(rs.getDate("dataInizio").toLocalDate());
+                dataFine.add(rs.getDate("dataFine").toLocalDate());
                 giorni.add((rs.getString("giorni"))); //VEDI BENE COME CONVERTIRE
                 corsa.add(rs.getInt("idCorsa"));
             }
@@ -321,55 +321,11 @@ public class CompagniaDAO implements dao.CompagniaDAO {
     /**
      * Aggiungi corsa.
      */
-    public void aggiungeCorsa(/*Attributi di corsaRegolare*/) {
-        //deve chiamare una procedura
-
-        try {
-            //conn.executeProcedure(); //qualcosa del genere
-
-            connection.close();
-        } catch (SQLException e) {
-            System.out.println("Cancellazione fallita.");
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Modifica corsa regolare.
-     */
-    public void modificaCorsaRegolare(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, int idCorsa) {
-        PreparedStatement ps = null;
-        String query = "update navigazione.CorsaRegolare"
-        + " set portoPartenza = ?, portoArrivo = ?, orarioPartenza = ?, orarioArrivo = ?, costoIntero = ?, scontoRidotto = ?, costoBagaglio = ?, costoPrevendita = ?, costoVeicolo = ?"
-        + " where idCorsa = ?";
-
-        try {
-            ps = connection.prepareStatement(query);
-            ps.setInt(1, idPortoPartenza);
-            ps.setInt(2, idPortoArrivo);
-            ps.setTime(3, Time.valueOf(orarioPartenza));
-            ps.setTime(4, Time.valueOf(orarioArrivo));
-            ps.setFloat(5, costoIntero);
-            ps.setFloat(6, scontoRidotto);
-            ps.setFloat(7, costoBagaglio);
-            ps.setFloat(8, costoPrevendita);
-            ps.setFloat(9, costoVeicolo);
-            ps.setInt(10, idCorsa);
-            ps.executeUpdate();
-
-            ps.close();
-            connection.close();
-        } catch (SQLException e) {
-            System.out.println("Modifica fallita.");
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Modifica corsa specifica.
-     */
-    public void modificaCorsaSpecifica() {
-        //DI DUBBIA UTILITA': PROPONGO DI FAR INSERIRE UNA CORSA REGOLARE DI DURATA UN GIORNO E SEGNARE COME CANCELLATA LA CORSA SPECIFICA DA MODIFICARE
+    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante) throws SQLException {
+        /*
+         * Ci vuole una procedura del DB.
+         *
+         */
     }
 
     /**

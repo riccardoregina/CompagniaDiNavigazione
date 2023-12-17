@@ -281,7 +281,7 @@ public class ClienteDAO implements dao.ClienteDAO {
      * @param corsa      the corsa
      * @param compagnia  the compagnia
      */
-    public void fetchPeriodiAttivitaCorse(ArrayList<Integer> idPeriodo ,ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<String> giorni, ArrayList<Integer> corsa, ArrayList<String> compagnia) {
+    public void fetchPeriodiAttivitaCorse(ArrayList<Integer> idPeriodo ,ArrayList<LocalDate> dataInizio, ArrayList<LocalDate> dataFine, ArrayList<String> giorni, ArrayList<Integer> corsa, ArrayList<String> compagnia) {
         Statement s = null;
         ResultSet rs = null;
         String query = "select * from navigazione.Periodo natural join navigazione.AttivaIn natural join navigazione.CorsaRegolare";
@@ -293,9 +293,9 @@ public class ClienteDAO implements dao.ClienteDAO {
             while (rs.next()) {
                 compagnia.add(rs.getString("Compagnia"));
                 idPeriodo.add(rs.getInt("idPeriodo"));
-                dataInizio.add(rs.getDate("dataInizio"));
-                dataFine.add(rs.getDate("dataFine"));
-                giorni.add((rs.getString("giorni"))); //VEDI BENE COME CONVERTIRE
+                dataInizio.add(rs.getDate("dataInizio").toLocalDate());
+                dataFine.add(rs.getDate("dataFine").toLocalDate());
+                giorni.add((rs.getString("giorni")));
                 corsa.add(rs.getInt("idCorsa"));
             }
             rs.close();

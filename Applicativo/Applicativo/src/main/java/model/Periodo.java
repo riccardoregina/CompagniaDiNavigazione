@@ -1,5 +1,6 @@
 package model;
 
+import java.time.LocalDate;
 import java.util.BitSet;
 import java.util.Date;
 
@@ -8,8 +9,8 @@ import java.util.Date;
  */
 public class Periodo {
     private int idPeriodo;
-    private Date dataInizio;
-    private Date dataFine;
+    private LocalDate dataInizio;
+    private LocalDate dataFine;
     private BitSet giorni;
 
     /**
@@ -18,7 +19,7 @@ public class Periodo {
      * @param dataInizio the data inizio
      * @param dataFine   the data fine
      */
-    public Periodo(Date dataInizio, Date dataFine) {
+    public Periodo(LocalDate dataInizio, LocalDate dataFine) {
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
         giorni = new BitSet(7);
@@ -32,7 +33,7 @@ public class Periodo {
      * @param dataFine   the data fine
      * @param giorni     the giorni
      */
-    public Periodo(int idPeriodo, Date dataInizio, Date dataFine, BitSet giorni) {
+    public Periodo(int idPeriodo, LocalDate dataInizio, LocalDate dataFine, BitSet giorni) {
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
         this.giorni = giorni;
@@ -44,7 +45,7 @@ public class Periodo {
      *
      * @return the data inizio
      */
-    public Date getDataInizio() {
+    public LocalDate getDataInizio() {
         return dataInizio;
     }
 
@@ -53,7 +54,7 @@ public class Periodo {
      *
      * @param dataInizio the data inizio
      */
-    public void setDataInizio(Date dataInizio) {
+    public void setDataInizio(LocalDate dataInizio) {
         this.dataInizio = dataInizio;
     }
 
@@ -62,7 +63,7 @@ public class Periodo {
      *
      * @return the data fine
      */
-    public Date getDataFine() {
+    public LocalDate getDataFine() {
         return dataFine;
     }
 
@@ -71,7 +72,7 @@ public class Periodo {
      *
      * @param dataFine the data fine
      */
-    public void setDataFine(Date dataFine) {
+    public void setDataFine(LocalDate dataFine) {
         this.dataFine = dataFine;
     }
 
