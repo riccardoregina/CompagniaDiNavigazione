@@ -9,6 +9,8 @@ import java.util.*;
 
 import unnamed.Pair;
 
+import static unnamed.NonStandardConversions.StringToBitset;
+
 /**
  * The type Controller.
  */
@@ -190,14 +192,14 @@ public class ControllerCliente {
         ArrayList<Integer> idPeriodo = new ArrayList<>();
         ArrayList<Date> dataInizio = new ArrayList<>();
         ArrayList<Date> dataFine = new ArrayList<>();
-        ArrayList<BitSet> giorni = new ArrayList<>();
+        ArrayList<String> giorni = new ArrayList<>();
         clienteDAO = new ClienteDAO();
         clienteDAO.fetchPeriodiAttivitaCorse(idPeriodo, dataInizio, dataFine, giorni, corsa, compagnia);
         //Assegno un periodo alla sua corsa.
         for (int i = 0; i < dataInizio.size(); i++) {
             Compagnia c = compagnie.get(compagnia.get(i));
             CorsaRegolare cr = c.getCorseErogate().get(corsa.get(i));
-            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), giorni.get(i)));
+            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), StringToBitset(giorni.get(i))));
         }
 
         //Elementi delle corseSpecifiche
@@ -300,7 +302,7 @@ public class ControllerCliente {
     /**
      * Visualizza porti.
      *
-     * @param porto the porto
+     *
      */
     public ArrayList<Pair> visualizzaPorti() {
         ArrayList<Pair> porto = new ArrayList<>();

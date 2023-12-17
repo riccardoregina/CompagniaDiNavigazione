@@ -53,7 +53,7 @@ public class LoginCliente {
                 char[] pw =passwordCliente.getPassword();
                 String pwd = new String (pw);
 
-                if (login.equals("") || pwd.equals("")) {
+                if (login.isEmpty() || pwd.isEmpty()) {
                     JOptionPane.showMessageDialog(null,"inserisci le tue credenziali" );
                 return;
                 }

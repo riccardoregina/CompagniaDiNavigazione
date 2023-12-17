@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
+import static unnamed.NonStandardConversions.StringToBitset;
+
 /**
  * The type Controller compagnia.
  */
@@ -100,6 +102,7 @@ public class ControllerCompagnia {
         compagnia.setAccounts(accountSocial);
 
         //costruisco i natanti
+        compagniaDAO = new CompagniaDAO();
         ArrayList<String> nomeNatante = new ArrayList<>();
         ArrayList<Integer> capienzaPasseggeri = new ArrayList<>();
         ArrayList<Integer> capienzaVeicoli = new ArrayList<>();
@@ -110,6 +113,7 @@ public class ControllerCompagnia {
         }
 
         //costruisco le corse regolari
+        compagniaDAO = new CompagniaDAO();
         ArrayList<Integer> idCorsa = new ArrayList<>();
         ArrayList<Integer> idPortoPartenza = new ArrayList<>();
         ArrayList<Integer> idPortoArrivo = new ArrayList<>();
@@ -138,17 +142,18 @@ public class ControllerCompagnia {
         }
 
         //costruisco i periodi e li assegno alle corse
+        compagniaDAO = new CompagniaDAO();
         HashMap<Integer, Periodo> periodi = new HashMap<>();
         ArrayList<Integer> corsa = new ArrayList<>();
         ArrayList<Integer> idPeriodo = new ArrayList<>();
         ArrayList<Date> dataInizio = new ArrayList<>();
         ArrayList<Date> dataFine = new ArrayList<>();
-        ArrayList<BitSet> giorni = new ArrayList<>();
+        ArrayList<String> giorni = new ArrayList<>();
         compagniaDAO.fetchPeriodiAttivitaCorse(loginCompagnia, idPeriodo, dataInizio, dataFine, giorni, corsa);
         //Assegno un periodo alla sua corsa.
         for (int i = 0; i < dataInizio.size(); i++) {
             CorsaRegolare cr = compagnia.getCorseErogate().get(corsa.get(i));
-            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), giorni.get(i)));
+            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), StringToBitset(giorni.get(i))));
         }
     }
 
@@ -226,4 +231,5 @@ public class ControllerCompagnia {
     * modificaCorsa(idCorsaSpec, int ritardo, boolean cancellata)
 //modifica la corsa specifica con ritardo e cancellata, se non c'è ritardo: ritardo=0;
      */
+
 }

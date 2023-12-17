@@ -40,7 +40,7 @@ public class AggiungiVeicolo {
             public void actionPerformed(ActionEvent e) {
                 String tipoVeicolo = (String) cbTipoVeicolo.getSelectedItem();
                 String targa= tfTargaVeicolo.getText();
-                if (targa.equals("Targa") || targa.equals("")) {
+                if (targa.equals("Targa") || targa.isEmpty()) {
                     JOptionPane.showMessageDialog(null,"Inserisci la targa.");
                     return;
                 } else {

@@ -50,8 +50,20 @@ public class LoginCompagnia {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //prima di chiamare il nuovo frame bisogna controllare le credenziali, funzione booleana
-                HomeCompagnia homeCompagnia = new HomeCompagnia(frame, controllerCompagnia);
-                frame.dispose();
+                String login = loginCompagnia.getText();
+                char[] pw =passwordCompagnia.getPassword();
+                String pwd = new String (pw);
+
+                if (login.isEmpty() || pwd.isEmpty()) {
+                    JOptionPane.showMessageDialog(null,"inserisci le tue credenziali" );
+                    return;
+                }
+                else if (controllerCompagnia.compagniaAccede(login, pwd)) {
+                    HomeCompagnia homeCompagnia = new HomeCompagnia(frame, controllerCompagnia);
+                    frame.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "connessione al DB fallita/ credenziali errate");
+                }
             }
         });
     }

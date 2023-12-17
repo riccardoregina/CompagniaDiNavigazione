@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.Objects;
+
 import controller.ControllerCompagnia;
 
 /**
@@ -37,7 +39,7 @@ public class AggiungiNatante {
             cbTipoNatante.addItem(s);
         }
 
-        tfCapPasseggeri.setEnabled(false);
+        tfCapVeicoli.setEnabled(false);
         bAggiungiNatante.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -56,8 +58,8 @@ public class AggiungiNatante {
                 }
 
 
-                if (tipoNatante == "traghetto" || tipoNatante == "altro") {
-                    tfCapPasseggeri.setEnabled(true);
+                if (tipoNatante.equals("traghetto") || tipoNatante.equals("altro")) {
+                    tfCapVeicoli.setEnabled(true);
 
                     String temp = tfCapVeicoli.getText();
 
@@ -72,7 +74,7 @@ public class AggiungiNatante {
                 }
 
 
-                if (nome == "Nome Natante" || nome == "") {
+                if (nome.equals("Nome Natante") || nome.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "inserisci il nome correttamente.");
                     return;
                 } else {

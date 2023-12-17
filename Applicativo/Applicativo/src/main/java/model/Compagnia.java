@@ -24,7 +24,11 @@ public class Compagnia extends Utente{
      */
     public Compagnia(String login, String pw, String nome) {
         super(login, pw);
+        telefoni = new ArrayList<>();
+        emails = new ArrayList<>();
+        accounts = new ArrayList<>();
         natantiPosseduti = new HashMap<>();
+        corseErogate = new HashMap<>();
         this.nome = nome;
     }
 

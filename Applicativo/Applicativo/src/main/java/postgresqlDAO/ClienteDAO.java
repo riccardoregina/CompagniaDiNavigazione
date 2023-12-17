@@ -281,7 +281,7 @@ public class ClienteDAO implements dao.ClienteDAO {
      * @param corsa      the corsa
      * @param compagnia  the compagnia
      */
-    public void fetchPeriodiAttivitaCorse(ArrayList<Integer> idPeriodo ,ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<BitSet> giorni, ArrayList<Integer> corsa, ArrayList<String> compagnia) {
+    public void fetchPeriodiAttivitaCorse(ArrayList<Integer> idPeriodo ,ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<String> giorni, ArrayList<Integer> corsa, ArrayList<String> compagnia) {
         Statement s = null;
         ResultSet rs = null;
         String query = "select * from navigazione.Periodo natural join navigazione.AttivaIn natural join navigazione.CorsaRegolare";
@@ -295,7 +295,7 @@ public class ClienteDAO implements dao.ClienteDAO {
                 idPeriodo.add(rs.getInt("idPeriodo"));
                 dataInizio.add(rs.getDate("dataInizio"));
                 dataFine.add(rs.getDate("dataFine"));
-                //giorni.add((rs.getBytes("giorni"))); //VEDI BENE COME CONVERTIRE
+                giorni.add((rs.getString("giorni"))); //VEDI BENE COME CONVERTIRE
                 corsa.add(rs.getInt("idCorsa"));
             }
             rs.close();
@@ -337,8 +337,8 @@ public class ClienteDAO implements dao.ClienteDAO {
                 idCorsa.add(rs.getInt("idCorsa"));
                 idPortoPartenza.add(rs.getInt("idPortoPartenza"));
                 idPortoArrivo.add(rs.getInt("idPortoArrivo"));
-                //orarioPartenza.add(rs.getTime("orarioPartenza")); //VEDI CONVERSIONE
-                //orarioArrivo.add(rs.getTime("orarioArrivo")); //VEDI CONVERSIONE
+                orarioPartenza.add(rs.getTime("orarioPartenza").toLocalTime());
+                orarioArrivo.add(rs.getTime("orarioArrivo").toLocalTime());
                 costoIntero.add(rs.getFloat("costoIntero"));
                 scontoRidotto.add(rs.getFloat("scontoRidotto"));
                 costoBagaglio.add(rs.getFloat("costoBagaglio"));
@@ -380,7 +380,7 @@ public class ClienteDAO implements dao.ClienteDAO {
             while (rs.next()) {
                 compagniaCorsaS.add(rs.getString("Compagnia"));
                 corsaRegolare.add(rs.getInt("idCorsa"));
-                //data.add(rs.getDate("data")); //VEDI CONVERSIONE
+                data.add(rs.getDate("data").toLocalDate());
                 postiDispPass.add(rs.getInt("postiDispPass"));
                 postiDispVei.add(rs.getInt("postiDispVei"));
                 minutiRitardo.add(rs.getInt("minutiRitardo"));
@@ -424,8 +424,8 @@ public class ClienteDAO implements dao.ClienteDAO {
             while(rs.next()) {
                 idBiglietto.add(rs.getInt("idBiglietto"));
                 idCorsa.add(rs.getInt("idCorsa"));
-                //dataCorsa.add(rs.getDate("data")); //VEDI CASTING
-                //dataAcquisto.add(rs.getDate("dataAcquisto")); //VEDI CASTING
+                dataCorsa.add(rs.getDate("data").toLocalDate());
+                dataAcquisto.add(rs.getDate("dataAcquisto").toLocalDate());
                 targaVeicolo.add(rs.getString("Veicolo"));
                 prevendita.add(rs.getBoolean("prevendita"));
                 bagaglio.add(rs.getBoolean("bagaglio"));
@@ -464,13 +464,13 @@ public class ClienteDAO implements dao.ClienteDAO {
         try {
             ps = connection.prepareStatement(query);
             ps.setInt(1, idCorsa);
-            //ps.setDate(2, (java.sql.Date) data);
+            ps.setDate(2, java.sql.Date.valueOf(data));
             ps.setString(3, loginCliente);
             ps.setString(4, targaVeicolo);
             ps.setBoolean(5, prevendita);
             ps.setBoolean(6, bagaglio);
             ps.setFloat(7, prezzo);
-            //ps.setDate(8, (java.sql.Date) dataAcquisto);
+            ps.setDate(8, java.sql.Date.valueOf(dataAcquisto));
             ps.setInt(9, etaPasseggero);
             ps.executeUpdate();
 
@@ -491,7 +491,7 @@ public class ClienteDAO implements dao.ClienteDAO {
     public void aggiungeVeicolo(String tipo, String targa, String loginProprietario) {
         PreparedStatement ps = null;
         String query = "insert into navigazione.Veicolo" +
-                " values (?,?::tipoveicolo,?)";
+                " values (?,?::navigazione.tipoveicolo,?)";
 
         try {
             ps = connection.prepareStatement(query);

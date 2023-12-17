@@ -6,7 +6,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Date;
 
 /**
@@ -76,7 +75,8 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
         try {
             ps = connection.prepareStatement(query1);
-            rs = ps.executeQuery(query1);
+            ps.setString(1, loginCompagnia);
+            rs = ps.executeQuery();
 
             if (rs.next()) {
                 nome = rs.getString("nome");
@@ -86,7 +86,8 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
 
             ps = connection.prepareStatement(query2);
-            rs = ps.executeQuery(query2);
+            ps.setString(1, loginCompagnia);
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 nomeSocial.add(rs.getString("nomeSocial"));
@@ -96,7 +97,8 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
 
             ps = connection.prepareStatement(query3);
-            rs = ps.executeQuery(query3);
+            ps.setString(1, loginCompagnia);
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 email.add(rs.getString("indirizzo"));
@@ -105,7 +107,8 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
 
             ps = connection.prepareStatement(query4);
-            rs = ps.executeQuery(query4);
+            ps.setString(1, loginCompagnia);
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 telefono.add(rs.getString("numero"));
@@ -218,10 +221,10 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             while (rs.next()) {
                 idCorsa.add(rs.getInt("idCorsa"));
-                idPortoPartenza.add(rs.getInt("idPortoPartenza"));
-                idPortoArrivo.add(rs.getInt("idPortoArrivo"));
-                //orarioPartenza.add(rs.getTime("orarioPartenza")); //VEDI CONVERSIONE
-                //orarioArrivo.add(rs.getTime("orarioArrivo")); //VEDI CONVERSIONE
+                idPortoPartenza.add(rs.getInt("portopartenza"));
+                idPortoArrivo.add(rs.getInt("portoarrivo"));
+                orarioPartenza.add(rs.getTime("orarioPartenza").toLocalTime());
+                orarioArrivo.add(rs.getTime("orarioArrivo").toLocalTime());
                 costoIntero.add(rs.getFloat("costoIntero"));
                 scontoRidotto.add(rs.getFloat("scontoRidotto"));
                 costoBagaglio.add(rs.getFloat("costoBagaglio"));
@@ -249,7 +252,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      * @param giorni         the giorni
      * @param corsa          the corsa
      */
-    public void fetchPeriodiAttivitaCorse(String loginCompagnia, ArrayList<Integer> idPeriodo, ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<BitSet> giorni, ArrayList<Integer> corsa) {
+    public void fetchPeriodiAttivitaCorse(String loginCompagnia, ArrayList<Integer> idPeriodo, ArrayList<Date> dataInizio, ArrayList<Date> dataFine, ArrayList<String> giorni, ArrayList<Integer> corsa) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select * from navigazione.Periodo natural join navigazione.AttivaIn natural join navigazione.CorsaRegolare where Compagnia = ?";
@@ -263,7 +266,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
                 idPeriodo.add(rs.getInt("idPeriodo"));
                 dataInizio.add(rs.getDate("dataInizio"));
                 dataFine.add(rs.getDate("dataFine"));
-                //giorni.add((rs.getBytes("giorni"))); //VEDI BENE COME CONVERTIRE
+                giorni.add((rs.getString("giorni"))); //VEDI BENE COME CONVERTIRE
                 corsa.add(rs.getInt("idCorsa"));
             }
             rs.close();
@@ -299,7 +302,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             while (rs.next()) {
                 corsaRegolare.add(rs.getInt("idCorsa"));
-                //data.add(rs.getDate("data")); //VEDI CONVERSIONE
+                data.add(rs.getDate("data").toLocalDate());
                 postiDispPass.add(rs.getInt("postiDispPass"));
                 postiDispVei.add(rs.getInt("postiDispVei"));
                 minutiRitardo.add(rs.getInt("minutiRitardo"));
@@ -344,8 +347,8 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps = connection.prepareStatement(query);
             ps.setInt(1, idPortoPartenza);
             ps.setInt(2, idPortoArrivo);
-            //ps.setTime(3, orarioPartenza); //DA RISOLVERE LA CONVERSIONE
-            //ps.setTime(4, orarioArrivo);   //DA RISOLVERE LA CONVERSIONE
+            ps.setTime(3, Time.valueOf(orarioPartenza));
+            ps.setTime(4, Time.valueOf(orarioArrivo));
             ps.setFloat(5, costoIntero);
             ps.setFloat(6, scontoRidotto);
             ps.setFloat(7, costoBagaglio);
@@ -451,7 +454,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
     public void aggiungeNatante(String loginCompagnia, String nomeNatante, int capienzaPasseggeri, int capienzaVeicoli, String tipo) throws Exception {
         PreparedStatement ps = null;
         String query = "insert into navigazione.natante"
-        + " values (?,?,?,?,?::tiponatante)";
+        + " values (?,?,?,?,?::navigazione.tiponatante)";
 
         try {
             ps = connection.prepareStatement(query);
