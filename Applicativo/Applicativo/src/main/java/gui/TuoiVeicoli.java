@@ -40,6 +40,7 @@ public class TuoiVeicoli {
                 tableModel.addRow(new Object[]{tipi.get(i), targhe.get(i)});
 
         }
+        table1.setDefaultEditor(Object.class, null);
         bIndietro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

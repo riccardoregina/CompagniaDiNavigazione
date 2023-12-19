@@ -58,6 +58,7 @@ public class ContattiCompagnia {
         for (int i = 0; i < nomeSocial.size(); i++)
             tableModel.addRow(new Object[]{nomeSocial.get(i), tagSocial.get(i)});
 
+        table1.setDefaultEditor(Object.class, null);
 
         bChiudi.addActionListener(new ActionListener() {
             @Override

@@ -66,6 +66,7 @@ public class RimuoviNatante {
                 comboBox1.addItem(nome.get(i));
             }
         }
+        table1.setDefaultEditor(Object.class, null);
 
         buttonElimina.addActionListener(new ActionListener() {
             @Override

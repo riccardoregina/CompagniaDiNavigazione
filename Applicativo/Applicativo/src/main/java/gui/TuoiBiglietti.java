@@ -27,6 +27,7 @@ public class TuoiBiglietti {
         frame.setVisible(true);
 
         // popolare la tabella con i biglietti necessari
+        table1.setDefaultEditor(Object.class, null);
         bChiudi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
