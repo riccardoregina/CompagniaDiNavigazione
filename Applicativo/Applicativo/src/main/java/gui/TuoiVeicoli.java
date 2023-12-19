@@ -3,6 +3,8 @@ package gui;
 import javax.swing.*;
 import controller.ControllerCliente;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
@@ -12,6 +14,7 @@ public class TuoiVeicoli {
     private JPanel panel1;
     private JTable table1;
     private JLabel label1;
+    private JButton bIndietro;
     public JFrame frame;
     public JFrame frameChiamante;
     public ControllerCliente controllerCliente;
@@ -37,5 +40,12 @@ public class TuoiVeicoli {
                 tableModel.addRow(new Object[]{tipi.get(i), targhe.get(i)});
 
         }
+        bIndietro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frameChiamante.setVisible(true);
+                frame.dispose();
+            }
+        });
     }
 }

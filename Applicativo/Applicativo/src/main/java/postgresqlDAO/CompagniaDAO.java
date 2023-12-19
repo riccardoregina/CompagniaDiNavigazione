@@ -414,8 +414,8 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
         try {
             ps = connection.prepareStatement(query);
-            ps.setString(1, loginCompagnia);
-            ps.setString(2, nomeNatante);
+            ps.setString(1, nomeNatante);
+            ps.setString(2, loginCompagnia);
             ps.setInt(3, capienzaPasseggeri);
             ps.setInt(4, capienzaVeicoli);
             ps.setString(5, tipo);

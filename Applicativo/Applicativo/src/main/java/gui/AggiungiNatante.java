@@ -25,7 +25,7 @@ public class AggiungiNatante {
     public JFrame frameChiamante;
 
 
-    public AggiungiNatante(JFrame frameChiamnte, ControllerCompagnia controllerCompagnia) {
+    public AggiungiNatante(JFrame frameChiamante, ControllerCompagnia controllerCompagnia) {
 
         this.frameChiamante = frameChiamante;
         this.controllerCompagnia = controllerCompagnia;
@@ -39,7 +39,6 @@ public class AggiungiNatante {
             cbTipoNatante.addItem(s);
         }
 
-        tfCapVeicoli.setEnabled(false);
         bAggiungiNatante.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -59,8 +58,6 @@ public class AggiungiNatante {
 
 
                 if (tipoNatante.equals("traghetto") || tipoNatante.equals("altro")) {
-                    tfCapVeicoli.setEnabled(true);
-
                     String temp = tfCapVeicoli.getText();
 
                     try {
@@ -71,6 +68,7 @@ public class AggiungiNatante {
                     }
                 } else {
                     capVeicoli = 0;
+                    JOptionPane.showMessageDialog(null, "siccome il tipo selezionato non ha disponibilità di veicoli, la capienza è 0");
                 }
 
 

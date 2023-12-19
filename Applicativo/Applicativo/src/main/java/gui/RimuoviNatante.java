@@ -71,8 +71,11 @@ public class RimuoviNatante {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String nomeEliminato = (String) comboBox1.getSelectedItem();
-                controllerCompagnia.rimuoviNatante(nomeEliminato);
-                frame.dispose();
+                if(controllerCompagnia.rimuoviNatante(nomeEliminato)) {
+                    JOptionPane.showMessageDialog(null, "natante eliminato");
+                } else {
+                    JOptionPane.showMessageDialog(null, "non è stato possibile rimuovere il natante");
+                }
             }
         });
         bIndietro.addActionListener(new ActionListener() {

@@ -335,8 +335,8 @@ public class ClienteDAO implements dao.ClienteDAO {
 
             while (rs.next()) {
                 idCorsa.add(rs.getInt("idCorsa"));
-                idPortoPartenza.add(rs.getInt("idPortoPartenza"));
-                idPortoArrivo.add(rs.getInt("idPortoArrivo"));
+                idPortoPartenza.add(rs.getInt("PortoPartenza"));
+                idPortoArrivo.add(rs.getInt("PortoArrivo"));
                 orarioPartenza.add(rs.getTime("orarioPartenza").toLocalTime());
                 orarioArrivo.add(rs.getTime("orarioArrivo").toLocalTime());
                 costoIntero.add(rs.getFloat("costoIntero"));
