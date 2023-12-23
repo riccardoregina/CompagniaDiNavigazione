@@ -203,6 +203,13 @@ public class ControllerCompagnia {
         }
     }
 
+    public void visualizzaNatanti(ArrayList<String> nome) {
+        for (Map.Entry<String, Natante> it : compagnia.getNatantiPosseduti().entrySet()) {
+            Natante natante = it.getValue();
+            nome.add(natante.getNome());
+        }
+    }
+
     public boolean rimuoviNatante(String nomeNatante) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
@@ -214,9 +221,9 @@ public class ControllerCompagnia {
         return true;
     }
 
-    public ArrayList<Pair> visualizzaPorti() {
+    public ArrayList<Pair> visualizzaPorti(ArrayList<Pair> porti) {
         ArrayList<Pair> porto = new ArrayList<>();
-        for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
+        for (Map.Entry<Integer, Porto> it : this.porti.entrySet()) {
             porto.add(new Pair(it.getKey(), it.getValue()));
         }
         return porto;
