@@ -321,11 +321,53 @@ public class CompagniaDAO implements dao.CompagniaDAO {
     /**
      * Aggiungi corsa.
      */
-    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante) throws SQLException {
-        /*
-         * Ci vuole una procedura del DB.
-         *
-         */
+    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante, int idCorsa, ArrayList<Integer> idPeriodo) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String query1 = "insert into navigazione.CorsaRegolare (portopartenza, portoarrivo, orariopartenza, orarioarrivo, costointero, scontoridotto, costobagaglio, costoprevendita, costoveicolo, compagnia, natante) values (?,?,?,?,?,?,?,?,?,?,?) returning idcorsa";
+        String query2 = "insert into navigazione.Periodo (datainizio, datafine, giorni) values (?,?,?) returning idperiodo";
+        String query3 = "insert into navigazione.AttivaIn values (?,?)";
+
+        try {
+            ps = connection.prepareStatement(query1);
+            ps.setInt(1, idPortoPartenza);
+            ps.setInt(2, idPortoArrivo);
+            ps.setTime(3, Time.valueOf(orarioPartenza));
+            ps.setTime(4, Time.valueOf(orarioArrivo));
+            ps.setFloat(5, costoIntero);
+            ps.setFloat(6, scontoRidotto);
+            ps.setFloat(7, costoBagaglio);
+            ps.setFloat(8, costoPrevendita);
+            ps.setFloat(9, costoVeicolo);
+            ps.setString(10, loginCompagnia);
+            ps.setString(11, nomeNatante);
+            rs = ps.executeQuery();
+            idCorsa = rs.getInt("idCorsa");
+            rs.close();
+
+            for (int i = 0; i < giorni.size(); i++) {
+                ps = connection.prepareStatement(query2);
+                ps.setDate(1, java.sql.Date.valueOf(inizioPeriodo.get(i)));
+                ps.setDate(2, java.sql.Date.valueOf(finePeriodo.get(i)));
+                ps.setString(3, giorni.get(i));
+                rs = ps.executeQuery();
+                idPeriodo.add(rs.getInt("idPeriodo"));
+                rs.close();
+            }
+
+            for (int id : idPeriodo) {
+                ps = connection.prepareStatement(query3);
+                ps.setInt(1, idCorsa);
+                ps.setInt(2, id);
+            }
+
+            ps.close();
+            connection.close();
+
+        } catch(SQLException e) {
+            System.out.println("Richiesta al DB fallita.");
+            e.printStackTrace();
+        }
     }
 
     /**

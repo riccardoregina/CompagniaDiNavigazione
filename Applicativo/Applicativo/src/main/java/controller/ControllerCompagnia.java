@@ -222,17 +222,24 @@ public class ControllerCompagnia {
         return porto;
     }
 
-    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante) {
+    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
+        //Mi faccio restituire dal DAO gli id delle tuple inserite.
+        int idCorsa = -1;
+        ArrayList<Integer> idPeriodo = new ArrayList<>();
         try {
-            compagniaDAO.aggiungeCorsa(idPortoPartenza, idPortoArrivo, giorni, inizioPeriodo, finePeriodo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagnia.getLogin(), nomeNatante);
+            compagniaDAO.aggiungeCorsa(idPortoPartenza, idPortoArrivo, giorni, inizioPeriodo, finePeriodo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagnia.getLogin(), nomeNatante, idCorsa, idPeriodo);
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-        CorsaRegolare cr = new CorsaRegolare(-1, compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita);
-        compagnia.addCorsaRegolare(cr);
-        cr.addPeriodoAttivita(new Periodo(-1, inizioPeriodo, finePeriodo, StringToBitset(giorni)));
+
+        CorsaRegolare cr = new CorsaRegolare(idCorsa, compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita);
+        for (int i = 0; i < giorni.size(); i++) {
+            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), inizioPeriodo.get(i), finePeriodo.get(i), StringToBitset(giorni.get(i))));
+            compagnia.addCorsaRegolare(cr);
+        }
+
         return true;
     }
 
