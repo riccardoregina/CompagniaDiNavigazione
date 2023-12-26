@@ -13,7 +13,6 @@ public class CorsaRegolare {
     private Natante natante;
     private Porto portoPartenza;
     private Porto portoArrivo;
-    private Scalo scalo = null;
     private ArrayList<Periodo> periodiAttivita;
     private LocalTime orarioPartenza;
     private LocalTime orarioArrivo;
@@ -22,6 +21,7 @@ public class CorsaRegolare {
     private float costoBagaglio;
     private float costoVeicolo;
     private float costoPrevendita;
+    private ArrayList<Scalo> scali;
     private ArrayList<CorsaSpecifica> corseSpecifiche;
 
     /**
@@ -57,6 +57,7 @@ public class CorsaRegolare {
         this.costoVeicolo = costoVeicolo;
         periodiAttivita = new ArrayList<Periodo>();
         corseSpecifiche = new ArrayList<CorsaSpecifica>();
+        scali = new ArrayList<>();
     }
 
     /**
@@ -73,8 +74,8 @@ public class CorsaRegolare {
      *
      * @return the scalo
      */
-    public Scalo getScalo() {
-        return scalo;
+    public ArrayList<Scalo> getScalo() {
+        return scali;
     }
 
     /**
@@ -82,8 +83,8 @@ public class CorsaRegolare {
      *
      * @param scalo the scalo
      */
-    public void setScalo(Scalo scalo) {
-        this.scalo = scalo;
+    public void addScalo(Scalo scalo) {
+        this.scali.add(scalo);
     }
 
     /**

@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 /**
  * The type Compagnia db.
@@ -486,6 +487,29 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(1, nomeNatante);
             
             ps.executeUpdate();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Eliminazione fallita.");
+            e.printStackTrace();
+        }
+    }
+
+    public void aggiungeScali(int idCorsa, ArrayList<Integer> idPortoScalo, ArrayList<LocalTime> orarioAttracco, ArrayList<LocalTime> orarioRipartenza) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "insert into navigazione.Scalo"
+                + " values (?,?,?,?)";
+
+        try {
+            for (int i = 0; i < idPortoScalo.size(); i++) {
+                ps = connection.prepareStatement(query);
+                ps.setInt(1, idCorsa);
+                ps.setInt(2, idPortoScalo.get(i));
+                ps.setTime(3, Time.valueOf(orarioAttracco.get(i)));
+                ps.setTime(4, Time.valueOf(orarioRipartenza.get(i)));
+                ps.executeUpdate();
+                ps.close();
+            }
 
             connection.close();
         } catch (SQLException e) {

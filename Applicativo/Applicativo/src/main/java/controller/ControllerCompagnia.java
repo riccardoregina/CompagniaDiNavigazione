@@ -232,7 +232,7 @@ public class ControllerCompagnia {
     public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         //Mi faccio restituire dal DAO gli id delle tuple inserite.
-        int idCorsa = -1;
+        int idCorsa = -1; //solo una inizializzazione...
         ArrayList<Integer> idPeriodo = new ArrayList<>();
         try {
             compagniaDAO.aggiungeCorsa(idPortoPartenza, idPortoArrivo, giorni, inizioPeriodo, finePeriodo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagnia.getLogin(), nomeNatante, idCorsa, idPeriodo);
@@ -245,6 +245,27 @@ public class ControllerCompagnia {
         for (int i = 0; i < giorni.size(); i++) {
             cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), inizioPeriodo.get(i), finePeriodo.get(i), StringToBitset(giorni.get(i))));
             compagnia.addCorsaRegolare(cr);
+        }
+
+        return true;
+    }
+
+    public boolean aggiungiScali(int idCorsa, ArrayList<Integer> idPortoScalo, ArrayList<LocalTime> orarioAttracco, ArrayList<LocalTime> orarioRipartenza) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.aggiungeScali(idCorsa, idPortoScalo, orarioAttracco, orarioRipartenza);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
+        try {
+            for (int i = 0; i < idPortoScalo.size(); i++) {
+                cr.addScalo(new Scalo(porti.get(idPortoScalo.get(i)), orarioAttracco.get(i), orarioRipartenza.get(i)));
+            }
+        } catch (NoSuchElementException e) {
+            System.out.println("Elemento non trovato.");
+            e.printStackTrace();
         }
 
         return true;
