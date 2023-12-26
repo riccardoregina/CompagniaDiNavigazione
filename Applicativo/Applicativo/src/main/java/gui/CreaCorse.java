@@ -6,6 +6,7 @@ import unnamed.Pair;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -30,7 +31,15 @@ public class CreaCorse {
     private JTextField tfCostoPrevendita;
     private JTextField tfCostoVeicolo;
     private JTextField tfCostoBagaglio;
-    private JSpinner spinner1;
+    private SpinnerModel modelOre = new SpinnerNumberModel(0, 0, 24, 1);
+    private SpinnerModel modelMinuti = new SpinnerNumberModel(0, 0, 60,1);
+    private JPanel panel1_2;
+    private JSpinner spinnerOraPOre = new JSpinner(modelOre);
+    private JSpinner spinnerOraAOre = new JSpinner(modelOre);
+    private JSpinner spinnerOraPMin = new JSpinner(modelMinuti);
+    private JSpinner spinnerOraAMin =new JSpinner(modelMinuti);
+    private JTextField tfDataPart;
+    private JTextField tfDataArrivo;
 
     public JFrame frame;
 
@@ -50,7 +59,6 @@ public class CreaCorse {
         ArrayList<Pair> porti = new ArrayList<Pair>();
         ArrayList<String> natanti = new ArrayList<String>();
 
-
         controllerCompagnia.visualizzaPorti(porti);
         for (Pair porto : porti) {
             cbPortoPartenza.addItem(porto);
@@ -61,7 +69,6 @@ public class CreaCorse {
         for (String natante : natanti ) {
             cbNatante.addItem(natante);
         }
-
 
 
         bCrea.addActionListener(new ActionListener() {
@@ -86,11 +93,39 @@ public class CreaCorse {
                 String veicolo = tfCostoVeicolo.getText();
                 float costoVeicolo;
 
-
-
-
-
                 String nomeNatante = (String) cbNatante.getSelectedItem();
+
+                int oraPart = (int) spinnerOraPOre.getValue();
+                int oraArrivo= (int) spinnerOraAOre.getValue();
+                int minPart = (int) spinnerOraPMin.getValue();
+                int minArrivo = (int) spinnerOraAMin.getValue();
+                String dataP = tfDataPart.getText();
+                String dataA = tfDataArrivo.getText();
+                LocalDate dataPartenza;
+                LocalDate dataArrivo;
+                LocalTime orarioPartenza;
+                LocalTime orarioArrivo;
+
+                try {
+                    dataPartenza = LocalDate.parse(dataP);
+                    dataArrivo = LocalDate.parse(dataA);
+                    orarioPartenza = LocalTime.of(oraPart,minPart);
+                    orarioArrivo = LocalTime.of(oraArrivo,minArrivo);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "inserisci le date in maniera corretta (d-mm-yyyy)");
+                    return;
+                }
+                if ( dataPartenza.isAfter(dataArrivo) ) {
+                    JOptionPane.showMessageDialog(null, "La partenza non può essere dopo dell'arrivo");
+                    return;
+                } else if (dataPartenza.equals(dataArrivo) && orarioPartenza.isAfter(orarioArrivo)) {
+                    JOptionPane.showMessageDialog(null, "se le date coincidono l'arrivo deve avvenire dopo la partenza. Inserisci correttamente gli orari");
+                }
+
+
+
+
+                // controllare che le date siano giute e successivamente le ore anche
 
                 //creo il bitset giusto per i giorni di attivita
                 if (checkDom.isSelected())
@@ -146,7 +181,7 @@ public class CreaCorse {
                     return;
                 }
                 if (costoVeicolo<0) {
-                    JOptionPane.showMessageDialog(null, "inserisci in sconto un valore positivo in prevendita");
+                    JOptionPane.showMessageDialog(null, "inserisci un valore positivo in veicolo");
                     return;
                 }
 
@@ -157,11 +192,12 @@ public class CreaCorse {
                     return;
                 }
                 if (costoPrevendita<0) {
-                    JOptionPane.showMessageDialog(null, "inserisci in sconto un valore positivo in bagaglio");
+                    JOptionPane.showMessageDialog(null, "inserisci un valore positivo in prevendita");
                     return;
                 }
 
-                // fare periodi date e ore
+
+
             }
         });
 

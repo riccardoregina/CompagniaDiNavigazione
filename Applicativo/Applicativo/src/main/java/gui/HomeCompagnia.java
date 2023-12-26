@@ -59,5 +59,12 @@ public class HomeCompagnia {
                 frame.setVisible(false);
             }
         });
+        bCreaCorsa.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CreaCorse creaCorse = new CreaCorse(frame, controllerCompagnia);
+                frame.setVisible(false);
+            }
+        });
     }
 }
