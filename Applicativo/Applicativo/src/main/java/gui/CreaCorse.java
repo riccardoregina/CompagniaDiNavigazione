@@ -200,7 +200,7 @@ public class CreaCorse {
                     JOptionPane.showMessageDialog(null, "inserisci un valore positivo in prevendita");
                     return;
                 }
-                controllerCompagnia.creaCorsa()
+
             }
         });
 
