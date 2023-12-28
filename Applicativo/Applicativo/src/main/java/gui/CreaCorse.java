@@ -14,7 +14,6 @@ import java.util.BitSet;
 public class CreaCorse {
     private JPanel panel1;
     private JButton bCrea;
-    private JButton bPeriodo;
     private JComboBox cbPortoArrivo;
     private JComboBox cbPortoPartenza;
     private JComboBox cbNatante;
@@ -31,16 +30,23 @@ public class CreaCorse {
     private JTextField tfCostoPrevendita;
     private JTextField tfCostoVeicolo;
     private JTextField tfCostoBagaglio;
-    private SpinnerModel modelOre = new SpinnerNumberModel(0, 0, 24, 1);
-    private SpinnerModel modelMinuti = new SpinnerNumberModel(0, 0, 60,1);
+    private SpinnerNumberModel modelOreA = new SpinnerNumberModel(0, 0, 23, 1);
+    private SpinnerNumberModel modelOreP = new SpinnerNumberModel(0, 0, 23, 1);
+    private SpinnerNumberModel modelMinutiP = new SpinnerNumberModel(0, 0, 59,1);
+    private SpinnerNumberModel modelMinutiA = new SpinnerNumberModel(0, 0, 59,1);
     private JPanel panel1_2;
-    private JSpinner spinnerOraPOre = new JSpinner(modelOre);
-    private JSpinner spinnerOraAOre = new JSpinner(modelOre);
-    private JSpinner spinnerOraPMin = new JSpinner(modelMinuti);
-    private JSpinner spinnerOraAMin =new JSpinner(modelMinuti);
+    private JSpinner spinnerOraPOre;
+    private JSpinner spinnerOraAOre;
+    private JSpinner spinnerOraPMin;
+    private JSpinner spinnerOraAMin;
     private JTextField tfDataPart;
     private JTextField tfDataArrivo;
-
+    private JPanel panelPeriodo;
+    private JButton buttonCreaPeriodo;
+    private JLabel dip;
+    private JLabel dfp;
+    private JTextField tfDataFinePeriodo;
+    private JTextField tfDataInizioPeriodo;
     public JFrame frame;
 
     public JFrame frameChiamante;
@@ -56,13 +62,22 @@ public class CreaCorse {
         frame.pack();
         frame.setVisible(true);
 
+
+        spinnerOraAMin.setModel(modelMinutiA);
+        spinnerOraPMin.setModel(modelMinutiP);
+        spinnerOraPOre.setModel(modelOreP);
+        spinnerOraAOre.setModel(modelOreA);
+
+        ArrayList<LocalDate> inzioPer = new ArrayList<LocalDate>();
+        ArrayList<LocalDate> finePer = new ArrayList<LocalDate>();
+
         ArrayList<Pair> porti = new ArrayList<Pair>();
         ArrayList<String> natanti = new ArrayList<String>();
 
         controllerCompagnia.visualizzaPorti(porti);
         for (Pair porto : porti) {
-            cbPortoPartenza.addItem(porto);
-            cbPortoArrivo.addItem(porto);
+            cbPortoPartenza.addItem(porto.last);
+            cbPortoArrivo.addItem(porto.last);
         }
 
         controllerCompagnia.visualizzaNatanti(natanti);
@@ -121,8 +136,6 @@ public class CreaCorse {
                 } else if (dataPartenza.equals(dataArrivo) && orarioPartenza.isAfter(orarioArrivo)) {
                     JOptionPane.showMessageDialog(null, "se le date coincidono l'arrivo deve avvenire dopo la partenza. Inserisci correttamente gli orari");
                 }
-
-                // controllare che le date siano giute e successivamente le ore anche
 
                 //creo il bitset giusto per i giorni di attivita
                 if (checkDom.isSelected())
@@ -193,8 +206,24 @@ public class CreaCorse {
                     return;
                 }
 
+            }
+        });
 
 
+        buttonCreaPeriodo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String dataIP = tfDataInizioPeriodo.getText();
+                String dataFP = tfDataFinePeriodo.getText();
+                try {
+                    LocalDate dataInizioP = LocalDate.parse(dataIP);
+                    LocalDate dataFineP = LocalDate.parse(dataFP);
+                    inzioPer.add(dataFineP);
+                    finePer.add(dataFineP);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "inserisci le date del periodo in maniera corretta (d-mm-yyyy)");
+                    return;
+                }
             }
         });
 
