@@ -27,7 +27,6 @@ begin
     where nome = v_natante;
 
     v_day := extract(dow from v_data_inizio::timestamp);
-    --raise notice 'v_day = %', v_day;
     for i in 0..6 loop
         v_data_corrente := v_data_inizio;
         if get_bit(v_giorni, i) = 1 then
