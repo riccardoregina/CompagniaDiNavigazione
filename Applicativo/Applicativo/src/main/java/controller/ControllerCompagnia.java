@@ -221,12 +221,10 @@ public class ControllerCompagnia {
         return true;
     }
 
-    public ArrayList<Pair> visualizzaPorti(ArrayList<Pair> porti) {
-        ArrayList<Pair> porto = new ArrayList<>();
+    public void visualizzaPorti(ArrayList<Pair> porti) {
         for (Map.Entry<Integer, Porto> it : this.porti.entrySet()) {
-            porto.add(new Pair(it.getKey(), it.getValue()));
+            porti.add(new Pair(it.getKey(), it.getValue()));
         }
-        return porto;
     }
 
     public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante) {
