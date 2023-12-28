@@ -74,11 +74,11 @@ public class CreaCorse {
         bCrea.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Pair portoPartenza = (Pair) cbPortoPartenza.getSelectedItem();
-                int idPortoPartenza= (int) portoPartenza.first;
+                int idxPortoPartenza = cbPortoPartenza.getSelectedIndex();
+                int idPortoPartenza = (int) porti.get(idxPortoPartenza).first;
 
-                Pair portoArrivo = (Pair) cbPortoArrivo.getSelectedItem();
-                int idPortoArrivo= (int) portoArrivo.first;
+                int idxPortoArrivo = cbPortoArrivo.getSelectedIndex();
+                int idPortoArrivo = (int) porti.get(idxPortoArrivo).first;
 
                 String giorniAttivi;
                 BitSet giorniPeriodo = new BitSet(7);
@@ -121,9 +121,6 @@ public class CreaCorse {
                 } else if (dataPartenza.equals(dataArrivo) && orarioPartenza.isAfter(orarioArrivo)) {
                     JOptionPane.showMessageDialog(null, "se le date coincidono l'arrivo deve avvenire dopo la partenza. Inserisci correttamente gli orari");
                 }
-
-
-
 
                 // controllare che le date siano giute e successivamente le ore anche
 

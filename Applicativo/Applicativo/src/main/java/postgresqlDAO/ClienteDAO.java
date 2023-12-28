@@ -491,13 +491,13 @@ public class ClienteDAO implements dao.ClienteDAO {
     public void aggiungeVeicolo(String tipo, String targa, String loginProprietario) {
         PreparedStatement ps = null;
         String query = "insert into navigazione.Veicolo" +
-                " values (?,?::navigazione.tipoveicolo,?)";
+                " values (?,?,?::navigazione.tipoveicolo)";
 
         try {
             ps = connection.prepareStatement(query);
             ps.setString(1, targa);
-            ps.setString(2, tipo);
-            ps.setString(3, loginProprietario);
+            ps.setString(2, loginProprietario);
+            ps.setString(3, tipo);
             
             ps.executeUpdate();
 

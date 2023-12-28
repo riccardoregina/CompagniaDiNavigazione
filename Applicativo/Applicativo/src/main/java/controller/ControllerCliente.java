@@ -319,10 +319,10 @@ public class ControllerCliente {
      * @param tipoVeicolo the tipo veicolo
      * @return a boolean
      */
-    public boolean addVeicolo(String targa, String tipoVeicolo) {
+    public boolean addVeicolo(String tipoVeicolo, String targa) {
         ClienteDAO clienteDAO = new ClienteDAO();
         try {
-            clienteDAO.aggiungeVeicolo(targa, tipoVeicolo, cliente.getLogin());
+            clienteDAO.aggiungeVeicolo(tipoVeicolo, targa, cliente.getLogin());
         } catch(Exception e) {
             return false;
         }

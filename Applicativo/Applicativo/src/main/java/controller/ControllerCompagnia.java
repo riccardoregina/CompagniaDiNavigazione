@@ -223,7 +223,7 @@ public class ControllerCompagnia {
 
     public void visualizzaPorti(ArrayList<Pair> porti) {
         for (Map.Entry<Integer, Porto> it : this.porti.entrySet()) {
-            porti.add(new Pair(it.getKey(), it.getValue()));
+            porti.add(new Pair(it.getKey(), it.getValue().getComune()));
         }
     }
 
