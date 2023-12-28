@@ -1,48 +1,79 @@
 -- trigger per la generazione delle corse specifiche
-
-create or replace function navigazione.generacorsespecifiche() returns trigger
+create function navigazione.generacorsespecifiche() returns trigger
     language plpgsql
 as
 $$
 declare
-    startdate date;
-    enddate date;
-    thisPeriodo navigazione.periodo%rowtype;
-    capienzap navigazione.natante.capienzapasseggeri%type;
-    capienzav navigazione.natante.capienzaveicoli%type;
-    query text;
-    day integer;
+    v_data_inizio date;
+    v_data_corrente date;
+    v_data_fine date;
+    v_giorni bit(7);
+    v_natante navigazione.natante.nome%type;
+    v_cap_pass integer;
+    v_cap_veic integer;
+    v_day integer;
+    v_offset integer;
 begin
-
-    -- inizializzo start e end
-    select * into thisPeriodo
+    select dataInizio, dataFine, giorni into v_data_inizio, v_data_fine, v_giorni
     from navigazione.periodo
     where idperiodo = new.idperiodo;
 
-    -- prendo le informazioni di corsaregolare
-    select capienzapasseggeri, capienzaveicoli into capienzap, capienzav
-    from navigazione.corsaregolare join navigazione.natante on natante = nome
+    select natante into v_natante
+    from navigazione.corsaRegolare
     where idcorsa = new.idcorsa;
 
-    query := 'insert into navigazione.corsaspecifica' ||
-             'values (new.idCorsa, ?, capienzap, capienzav, 0, 0)';
-    loop
-        startdate := startdate + 1; --vado alla data successiva
-        day := EXTRACT(DOW FROM startdate::DATE); -- restituisce 0 se domenica, 1 se lunedi etc.
-        -- shiftare a dx di i e confrontare con 1 restituisce il valore del bit in posizione i
-        if ((thisPeriodo.giorni >> day) & 1) then
-            execute query using startdate;
+    select capienzaPasseggeri, capienzaVeicoli into v_cap_pass, v_cap_veic
+    from navigazione.natante
+    where nome = v_natante;
+
+    v_day := extract(dow from v_data_inizio::timestamp);
+    --raise notice 'v_day = %', v_day;
+    for i in 0..6 loop
+        v_data_corrente := v_data_inizio;
+        if get_bit(v_giorni, i) = 1 then
+            v_offset := (i - v_day) % 7;
+            v_data_corrente := v_data_corrente + v_offset;
+            while v_data_corrente <= v_data_fine loop
+                insert into navigazione.corsaSpecifica
+                values(new.idcorsa, v_data_corrente, v_cap_pass, v_cap_veic, 0, false);
+                v_data_corrente := v_data_corrente + 7;
+            end loop;
         end if;
-        exit when startdate = enddate;
     end loop;
+    
+    return new;
 end;
-$$
+$$;
 
 create trigger triggergeneracorsespecifiche
     after insert
     on navigazione.attivain
     for each row
 execute function navigazione.generacorsespecifiche();
+
+--trigger per cancellare le corse specifiche di una corsa regolare non più attiva in un periodo
+create function cancellacorseinperiodo() returns trigger
+    language plpgsql
+as
+$$
+declare
+    v_data_inizio navigazione.periodo.datainizio%type;
+    v_data_fine navigazione.periodo.dataFine%type;
+begin
+    select datainizio, datafine into v_data_inizio, v_data_fine
+    from navigazione.periodo
+    where idperiodo = old.idperiodo;
+
+    delete from navigazione.corsaspecifica
+    where idcorsa = old.idcorsa AND data between v_data_inizio and v_data_fine;
+end;
+$$;
+
+create trigger cancellacorse
+    after delete
+    on navigazione.attivain
+    for each row
+execute procedure navigazione.cancellacorseinperiodo();
 
 -- trigger per aggiornare i posti (per passeggeri) disponibili per una corsa specifica
 create function navigazione.aggiornapostipasseggero() returns trigger
