@@ -39,14 +39,13 @@ public class CreaCorse {
     private JSpinner spinnerOraAOre;
     private JSpinner spinnerOraPMin;
     private JSpinner spinnerOraAMin;
-    private JTextField tfDataPart;
-    private JTextField tfDataArrivo;
     private JPanel panelPeriodo;
     private JButton buttonCreaPeriodo;
     private JLabel dip;
     private JLabel dfp;
     private JTextField tfDataFinePeriodo;
     private JTextField tfDataInizioPeriodo;
+    private JButton bScalo;
     public JFrame frame;
 
     public JFrame frameChiamante;
@@ -68,7 +67,7 @@ public class CreaCorse {
         spinnerOraPOre.setModel(modelOreP);
         spinnerOraAOre.setModel(modelOreA);
 
-        ArrayList<LocalDate> inzioPer = new ArrayList<LocalDate>();
+        ArrayList<LocalDate> inizioPer = new ArrayList<LocalDate>();
         ArrayList<LocalDate> finePer = new ArrayList<LocalDate>();
 
         ArrayList<Pair> porti = new ArrayList<Pair>();
@@ -114,26 +113,17 @@ public class CreaCorse {
                 int oraArrivo= (int) spinnerOraAOre.getValue();
                 int minPart = (int) spinnerOraPMin.getValue();
                 int minArrivo = (int) spinnerOraAMin.getValue();
-                String dataP = tfDataPart.getText();
-                String dataA = tfDataArrivo.getText();
-                LocalDate dataPartenza;
-                LocalDate dataArrivo;
                 LocalTime orarioPartenza;
                 LocalTime orarioArrivo;
 
                 try {
-                    dataPartenza = LocalDate.parse(dataP);
-                    dataArrivo = LocalDate.parse(dataA);
                     orarioPartenza = LocalTime.of(oraPart,minPart);
                     orarioArrivo = LocalTime.of(oraArrivo,minArrivo);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "inserisci le date in maniera corretta (d-mm-yyyy)");
                     return;
                 }
-                if ( dataPartenza.isAfter(dataArrivo) ) {
-                    JOptionPane.showMessageDialog(null, "La partenza non può essere dopo dell'arrivo");
-                    return;
-                } else if (dataPartenza.equals(dataArrivo) && orarioPartenza.isAfter(orarioArrivo)) {
+                if (orarioPartenza.isAfter(orarioArrivo)) {
                     JOptionPane.showMessageDialog(null, "se le date coincidono l'arrivo deve avvenire dopo la partenza. Inserisci correttamente gli orari");
                 }
 
@@ -205,7 +195,10 @@ public class CreaCorse {
                     JOptionPane.showMessageDialog(null, "inserisci un valore positivo in prevendita");
                     return;
                 }
-
+                if ( inizioPer.isEmpty() || finePer.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "inserire almeno un periodo");
+                    return;
+                }
             }
         });
 
@@ -215,18 +208,34 @@ public class CreaCorse {
             public void actionPerformed(ActionEvent e) {
                 String dataIP = tfDataInizioPeriodo.getText();
                 String dataFP = tfDataFinePeriodo.getText();
+                LocalDate dataFineP;
+                LocalDate dataInizioP;
                 try {
-                    LocalDate dataInizioP = LocalDate.parse(dataIP);
-                    LocalDate dataFineP = LocalDate.parse(dataFP);
-                    inzioPer.add(dataFineP);
-                    finePer.add(dataFineP);
+                    dataInizioP = LocalDate.parse(dataIP);
+                    dataFineP = LocalDate.parse(dataFP);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "inserisci le date del periodo in maniera corretta (d-mm-yyyy)");
                     return;
                 }
+                if (dataFineP.isBefore(dataInizioP)) {
+                    JOptionPane.showMessageDialog(null, "inserisci le date di periodo correttamente");
+                    return;
+                }
+                inizioPer.add(dataFineP);
+                finePer.add(dataFineP);
+                tfDataInizioPeriodo.setText("yyyy-mm-dd");
+                tfDataFinePeriodo.setText("yyyy-mm-dd");
             }
+
         });
 
 
+        bScalo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AggiungiScalo aggiungiScalo = new AggiungiScalo (frame, controllerCompagnia);
+                frame.setVisible(false);
+            }
+        });
     }
 }
