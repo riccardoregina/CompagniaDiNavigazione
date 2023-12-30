@@ -250,25 +250,46 @@ public class ControllerCliente {
     }
 
     /**
-     * Visualizza corse.
+     * Visualizza le corse, salvate nel model, che rispettano i filtri comandati dalla gui
      *
-     * @param idPortoPartenza  the porto partenza
-     * @param idPortoArrivo    the porto arrivo
-     * @param data             the data
-     * @param etaPasseggero    the eta passeggero
-     * @param veicolo          the veicolo
-     * @param bagaglio         the bagaglio
-     * @param corseSelezionate the corse selezionate
+     * @param idPortoPartenzaSelezionato the porto partenza
+     * @param idPortoArrivoSelezionato   the porto arrivo
+     * @param dataSelezionata            the dataSelezionata
+     * @param orarioMinimoPartenza       the orario minimo partenza
+     * @param prezzoMax                  the prezzo max
+     * @param tipoNatanteSelezionato     the tipo natante selezionato
+     * @param etaPasseggero              the eta passeggero
+     * @param veicolo                    the veicolo
+     * @param bagaglio                   the bagaglio
+     * @param idCorsa                    output parameter
+     * @param data                       output parameter
+     * @param postiDispPass              output parameter
+     * @param postiDispVei               output parameter
+     * @param minutiRitardo              output parameter
+     * @param cancellata                 output parameter
+     * @param prezzo                     output parameter
      */
-    public void visualizzaCorse(int idPortoPartenza, int idPortoArrivo, Date data, int etaPasseggero, boolean veicolo, boolean bagaglio, ArrayList<Pair> corseSelezionate) {
-        corseSelezionate = new ArrayList<>();
-        Porto portoPartenza = porti.get(idPortoPartenza);
-        Porto portoArrivo = porti.get(idPortoArrivo);
+    public void visualizzaCorse(int idPortoPartenzaSelezionato, int idPortoArrivoSelezionato, LocalDate dataSelezionata, LocalTime orarioMinimoPartenza, Float prezzoMax, ArrayList<String> tipoNatanteSelezionato, int etaPasseggero, boolean veicolo, boolean bagaglio, ArrayList<Integer> idCorsa, ArrayList<LocalDate> data, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Integer> minutiRitardo, ArrayList<Boolean> cancellata, ArrayList<Float> prezzo) {
+        Porto portoPartenza = porti.get(idPortoPartenzaSelezionato);
+        Porto portoArrivo = porti.get(idPortoArrivoSelezionato);
 
         //un iteratore per scorrere la HashMap
         for (Map.Entry<Pair, CorsaSpecifica> it : corse.entrySet()) {
             CorsaSpecifica cs = it.getValue();
-            if (cs.getCorsaRegolare().getPortoPartenza().equals(portoPartenza) && cs.getCorsaRegolare().getPortoArrivo().equals(portoArrivo) && cs.getData().equals(data)) {
+            if (cs.getCorsaRegolare().getPortoPartenza().equals(portoPartenza) &&
+                    cs.getCorsaRegolare().getPortoArrivo().equals(portoArrivo) &&
+                    ((cs.getData().equals(dataSelezionata) && cs.getCorsaRegolare().getOrarioPartenza().isAfter(orarioMinimoPartenza)) || (cs.getData().equals(dataSelezionata.plusDays(1)) && cs.getCorsaRegolare().getOrarioPartenza().isBefore(orarioMinimoPartenza))) &&
+                    tipoNatanteSelezionato.contains(cs.getCorsaRegolare().getNatante().getTipo()) &&
+                    (cs.getCorsaRegolare().getCostoIntero() <= prezzoMax))
+            {
+                //aggiungo le informazioni da restituire alla gui
+                idCorsa.add(cs.getCorsaRegolare().getIdCorsa());
+                data.add(cs.getData());
+                postiDispPass.add(cs.getPostiDispPass());
+                postiDispVei.add(cs.getPostiDispVei());
+                minutiRitardo.add(cs.getMinutiRitardo());
+                cancellata.add(cs.isCancellata());
+                //calcolo il prezzo
                 float prezzoCalcolato = cs.getCorsaRegolare().getCostoIntero();
                 if (etaPasseggero < 12) {
                     prezzoCalcolato *= cs.getCorsaRegolare().getScontoRidotto();
@@ -277,7 +298,7 @@ public class ControllerCliente {
                 } else if (bagaglio == true) {
                     prezzoCalcolato += cs.getCorsaRegolare().getCostoBagaglio();
                 }
-                corseSelezionate.add(new Pair(cs, prezzoCalcolato));
+                prezzo.add(prezzoCalcolato);
             }
         }
     }
