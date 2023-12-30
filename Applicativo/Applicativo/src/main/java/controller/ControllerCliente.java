@@ -3,6 +3,7 @@ package controller;
 import model.*;
 import postgresqlDAO.ClienteDAO;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -62,7 +63,6 @@ public class ControllerCliente {
                 cliente.addVeicolo(new Veicolo(veicoliTipo.get(i), veicoliTarga.get(i)));
             }
 
-
             //crea il resto del contorno di cliente
             buildModel();
             return true;
@@ -97,7 +97,7 @@ public class ControllerCliente {
     }
 
     /**
-     * Build compagnie.
+     * Costruisce le compagnie del model a partire dai dati del DB
      */
     public void buildCompagnie() {
         ClienteDAO clienteDAO = new ClienteDAO();
@@ -228,7 +228,7 @@ public class ControllerCliente {
     }
 
     /**
-     * Build biglietti acquistati.
+     * Costruisce i biglietti acquistati dell'utente del model a partire dai dati del DB
      */
     public void buildBigliettiAcquistati() {
         ClienteDAO clienteDAO = new ClienteDAO();
@@ -252,25 +252,46 @@ public class ControllerCliente {
     }
 
     /**
-     * Visualizza corse.
+     * Visualizza le corse, salvate nel model, che rispettano i filtri comandati dalla gui
      *
-     * @param idPortoPartenza  the porto partenza
-     * @param idPortoArrivo    the porto arrivo
-     * @param data             the data
-     * @param etaPasseggero    the eta passeggero
-     * @param veicolo          the veicolo
-     * @param bagaglio         the bagaglio
-     * @param corseSelezionate the corse selezionate
+     * @param idPortoPartenzaSelezionato the porto partenza
+     * @param idPortoArrivoSelezionato   the porto arrivo
+     * @param dataSelezionata            the dataSelezionata
+     * @param orarioMinimoPartenza       the orario minimo partenza
+     * @param prezzoMax                  the prezzo max
+     * @param tipoNatanteSelezionato     the tipo natante selezionato
+     * @param etaPasseggero              the eta passeggero
+     * @param veicolo                    the veicolo
+     * @param bagaglio                   the bagaglio
+     * @param idCorsa                    output parameter
+     * @param data                       output parameter
+     * @param postiDispPass              output parameter
+     * @param postiDispVei               output parameter
+     * @param minutiRitardo              output parameter
+     * @param cancellata                 output parameter
+     * @param prezzo                     output parameter
      */
-    public void visualizzaCorse(int idPortoPartenza, int idPortoArrivo, Date data, int etaPasseggero, boolean veicolo, boolean bagaglio, ArrayList<Pair> corseSelezionate) {
-        corseSelezionate = new ArrayList<>();
-        Porto portoPartenza = porti.get(idPortoPartenza);
-        Porto portoArrivo = porti.get(idPortoArrivo);
+    public void visualizzaCorse(int idPortoPartenzaSelezionato, int idPortoArrivoSelezionato, LocalDate dataSelezionata, LocalTime orarioMinimoPartenza, Float prezzoMax, ArrayList<String> tipoNatanteSelezionato, int etaPasseggero, boolean veicolo, boolean bagaglio, ArrayList<Integer> idCorsa, ArrayList<LocalDate> data, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Integer> minutiRitardo, ArrayList<Boolean> cancellata, ArrayList<Float> prezzo) {
+        Porto portoPartenza = porti.get(idPortoPartenzaSelezionato);
+        Porto portoArrivo = porti.get(idPortoArrivoSelezionato);
 
         //un iteratore per scorrere la HashMap
         for (Map.Entry<Pair, CorsaSpecifica> it : corse.entrySet()) {
             CorsaSpecifica cs = it.getValue();
-            if (cs.getCorsaRegolare().getPortoPartenza().equals(portoPartenza) && cs.getCorsaRegolare().getPortoArrivo().equals(portoArrivo) && cs.getData().equals(data)) {
+            if (cs.getCorsaRegolare().getPortoPartenza().equals(portoPartenza) &&
+                    cs.getCorsaRegolare().getPortoArrivo().equals(portoArrivo) &&
+                    ((cs.getData().equals(dataSelezionata) && cs.getCorsaRegolare().getOrarioPartenza().isAfter(orarioMinimoPartenza)) || (cs.getData().equals(dataSelezionata.plusDays(1)) && cs.getCorsaRegolare().getOrarioPartenza().isBefore(orarioMinimoPartenza))) &&
+                    tipoNatanteSelezionato.contains(cs.getCorsaRegolare().getNatante().getTipo()) &&
+                    (cs.getCorsaRegolare().getCostoIntero() <= prezzoMax))
+            {
+                //aggiungo le informazioni da restituire alla gui
+                idCorsa.add(cs.getCorsaRegolare().getIdCorsa());
+                data.add(cs.getData());
+                postiDispPass.add(cs.getPostiDispPass());
+                postiDispVei.add(cs.getPostiDispVei());
+                minutiRitardo.add(cs.getMinutiRitardo());
+                cancellata.add(cs.isCancellata());
+                //calcolo il prezzo
                 float prezzoCalcolato = cs.getCorsaRegolare().getCostoIntero();
                 if (etaPasseggero < 12) {
                     prezzoCalcolato *= cs.getCorsaRegolare().getScontoRidotto();
@@ -279,7 +300,7 @@ public class ControllerCliente {
                 } else if (bagaglio == true) {
                     prezzoCalcolato += cs.getCorsaRegolare().getCostoBagaglio();
                 }
-                corseSelezionate.add(new Pair(cs, prezzoCalcolato));
+                prezzo.add(prezzoCalcolato);
             }
         }
     }
@@ -287,18 +308,27 @@ public class ControllerCliente {
     /**
      * Acquista biglietto.
      *
-     * @param cs            the cs
-     * @param v             the v
-     * @param prevendita    the prevendita
-     * @param bagaglio      the bagaglio
-     * @param etaPasseggero the eta passeggero
-     * @param prezzo        the prezzo
+     * @param idCorsa       l'identificativo della corsa
+     * @param data          la data della corsa
+     * @param veicolo       indica la presenza di un veicolo.
+     * @param prevendita    indica la presenza di una prevendita
+     * @param bagaglio      indica la presenza di un bagaglio
+     * @param etaPasseggero l'etá del passeggero per cui si vuole acquistare il biglietto
+     * @param prezzo        il prezzo
      */
-    public void acquistaBiglietto(CorsaSpecifica cs, Veicolo v, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
+    public boolean acquistaBiglietto(int idCorsa, LocalDate data, Veicolo veicolo, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        clienteDAO.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), v.getTarga(), prevendita, bagaglio, prezzo, LocalDate.now(), etaPasseggero);
-        //DISCUSSIONE SUGLI ID DEI BIGLIETTI APPENA ACQUISTATI (vedi idBiglietto, primo parametro del metodo immediatamente sotto)
-        cliente.addBiglietto(new Biglietto(-1, cliente, cs, etaPasseggero, v, prevendita, bagaglio, prezzo, LocalDate.now()));
+        CorsaSpecifica cs = corse.get(new Pair(idCorsa, data));
+        int idBiglietto = -1; //solo una inizializzazione..
+        LocalDate dataAcquisto = LocalDate.now();
+        try {
+            clienteDAO.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), veicolo.getTarga(), prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero, idBiglietto);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        cliente.addBiglietto(new Biglietto(idBiglietto, cliente, cs, etaPasseggero, veicolo, prevendita, bagaglio, prezzo, dataAcquisto));
+        return true;
     }
 
     /**
@@ -306,12 +336,11 @@ public class ControllerCliente {
      *
      *
      */
-    public ArrayList<Pair> visualizzaPorti() {
-        ArrayList<Pair> porto = new ArrayList<>();
+    public void visualizzaPorti(ArrayList<Integer> idPorto, ArrayList<String> comune) {
         for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
-            porto.add(new Pair(it.getKey(), it.getValue()));
+            idPorto.add(it.getKey());
+            comune.add(it.getValue().getComune());
         }
-        return porto;
     }
 
     /**
@@ -325,7 +354,7 @@ public class ControllerCliente {
         ClienteDAO clienteDAO = new ClienteDAO();
         try {
             clienteDAO.aggiungeVeicolo(tipoVeicolo, targa, cliente.getLogin());
-        } catch(Exception e) {
+        } catch(SQLException e) {
             return false;
         }
         cliente.addVeicolo(new Veicolo(targa, tipoVeicolo));
@@ -335,13 +364,13 @@ public class ControllerCliente {
     /**
      * Gets compagnie.
      *
-     * @param nomi the nomi
-     * @param id   the id
+     * @param login the login
+     * @param nome  the nome
      */
-    public void getCompagnie(ArrayList<String> nomi, ArrayList<String> id) {
+    public void getCompagnie(ArrayList<String> login, ArrayList<String> nome) {
         for (Map.Entry<String, Compagnia> it : compagnie.entrySet()) {
-            nomi.add(it.getValue().getNome());
-            id.add(it.getKey());
+            login.add(it.getKey());
+            nome.add(it.getValue().getNome());
         }
     }
 

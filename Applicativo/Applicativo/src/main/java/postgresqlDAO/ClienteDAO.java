@@ -453,13 +453,16 @@ public class ClienteDAO implements dao.ClienteDAO {
      * @param prezzo        the prezzo
      * @param dataAcquisto  the data acquisto
      * @param etaPasseggero the eta passeggero
+     * @param idBiglietto   output parameter
      */
-    public void acquistaBiglietto(int idCorsa, LocalDate data, String loginCliente, String targaVeicolo, boolean prevendita, boolean bagaglio, float prezzo, LocalDate dataAcquisto, int etaPasseggero) {
+    public void acquistaBiglietto(int idCorsa, LocalDate data, String loginCliente, String targaVeicolo, boolean prevendita, boolean bagaglio, float prezzo, LocalDate dataAcquisto, int etaPasseggero, Integer idBiglietto) throws SQLException{
         //l'aggiornamento dei posti disponibili sará effettuato dal DB
         
         PreparedStatement ps = null;
+        ResultSet rs = null;
         String query = "insert into navigazione.Biglietto (idCorsa, data, cliente, veicolo, prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero)" +
-                " values (?,?,?,?,?,?,?,?,?)";
+                " values (?,?,?,?,?,?,?,?,?)" +
+                "returning idbiglietto";
 
         try {
             ps = connection.prepareStatement(query);
@@ -472,12 +475,15 @@ public class ClienteDAO implements dao.ClienteDAO {
             ps.setFloat(7, prezzo);
             ps.setDate(8, java.sql.Date.valueOf(dataAcquisto));
             ps.setInt(9, etaPasseggero);
-            ps.executeUpdate();
+            rs = ps.executeQuery();
+            idBiglietto = rs.getInt("idBiglietto");
+            rs.close();
+            ps.close();
 
             connection.close();
         } catch (SQLException e) {
             System.out.println("Acquisto fallito.");
-            e.printStackTrace();
+            throw new SQLException();
         }
     }
 
@@ -488,7 +494,7 @@ public class ClienteDAO implements dao.ClienteDAO {
      * @param tipo              the tipo
      * @param loginProprietario the login proprietario
      */
-    public void aggiungeVeicolo(String tipo, String targa, String loginProprietario) {
+    public void aggiungeVeicolo(String tipo, String targa, String loginProprietario) throws SQLException{
         PreparedStatement ps = null;
         String query = "insert into navigazione.Veicolo" +
                 " values (?,?,?::navigazione.tipoveicolo)";
@@ -504,7 +510,7 @@ public class ClienteDAO implements dao.ClienteDAO {
             connection.close();
         } catch (SQLException e) {
             System.out.println("Aggiunta fallita.");
-            e.printStackTrace();
+            throw new SQLException();
         }
     }
 }
