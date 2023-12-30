@@ -77,6 +77,9 @@ public class CreaCorse {
 
         ArrayList<Pair> porti = new ArrayList<Pair>();
         ArrayList<String> natanti = new ArrayList<String>();
+        ArrayList<Integer> idPortiScalo = new ArrayList<Integer>();
+        ArrayList<LocalTime> oraAttracco = new ArrayList<LocalTime>();
+        ArrayList<LocalTime> oraRipartenza = new ArrayList<LocalTime>();
 
         controllerCompagnia.visualizzaPorti(porti);
         for (Pair porto : porti) {
@@ -124,6 +127,8 @@ public class CreaCorse {
                 LocalDate dataArrivo;
                 LocalTime orarioPartenza;
                 LocalTime orarioArrivo;
+
+                int idCorsa = 0;
 
                 try {
                     dataPartenza = LocalDate.parse(dataP);
@@ -210,6 +215,14 @@ public class CreaCorse {
                     return;
                 }
 
+                if (controllerCompagnia.creaCorsa(idPortoPartenza, idPortoArrivo, giorniAttivi, inzioPer, finePer, orarioPartenza, orarioArrivo,
+                        costoIntero, sconto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatante, idCorsa)) {
+                    controllerCompagnia.aggiungiScali(idCorsa,idPortiScalo, oraAttracco, oraRipartenza)
+                } else {
+                    JOptionPane.showMessageDialog(null, "non è stato possibile creare la corsa");
+                    return;
+                }
+
             }
         });
 
@@ -232,6 +245,13 @@ public class CreaCorse {
         });
 
 
+        bScalo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AggiungiScalo aggiungiScalo = new AggiungiScalo(frame, controllerCompagnia, idPortiScalo, oraAttracco, oraRipartenza);
+                frame.setVisible(false);
+            }
+        });
     }
 
     {
