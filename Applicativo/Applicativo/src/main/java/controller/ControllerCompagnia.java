@@ -248,9 +248,9 @@ public class ControllerCompagnia {
      * @param idCorsa output parameter
      * @return a boolean
      */
-    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante, int idCorsa) {
+    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante, Integer idCorsa) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
-        //Mi faccio restituire dal DAO gli id delle tuple inserite.
+        //Mi faccio restituire dal DAO l'id della tupla inserita.
         idCorsa = -1; //solo una inizializzazione...
         ArrayList<Integer> idPeriodo = new ArrayList<>();
         try {
