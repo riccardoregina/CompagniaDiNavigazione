@@ -24,12 +24,9 @@ public class ContattiCompagnia {
 
     public ControllerCliente controllerCliente;
 
-    private String nomeCompagnia;
-
     public ContattiCompagnia(JFrame frameChiamante, ControllerCliente controllerCliente, String idCompagnia) {
         this.frameChiamante = frameChiamante;
         this.controllerCliente = controllerCliente;
-        this.nomeCompagnia = nomeCompagnia;
         frame = new JFrame("contattiCompagnia");
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,10 +39,10 @@ public class ContattiCompagnia {
         ArrayList<String> tagSocial = new ArrayList<String>();
         ArrayList<String> email = new ArrayList<String>();
         ArrayList<String> telefono = new ArrayList<String>();
-        String sito = null;
+        ArrayList<String> sito = new ArrayList<>();
         controllerCliente.visualizzaContatti(idCompagnia, nomeSocial, tagSocial, email, telefono, sito);
-
-        lSito.setText("sito:" + sito);
+        System.out.println(sito.getFirst());
+        lSito.setText("sito:" + sito.getFirst());
 
         table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         DefaultTableModel tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"tipo", "contatto"});
