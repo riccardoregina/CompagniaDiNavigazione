@@ -3,6 +3,7 @@ package controller;
 import model.*;
 import postgresqlDAO.ClienteDAO;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -62,7 +63,6 @@ public class ControllerCliente {
                 cliente.addVeicolo(new Veicolo(veicoliTipo.get(i), veicoliTarga.get(i)));
             }
 
-
             //crea il resto del contorno di cliente
             buildModel();
             return true;
@@ -97,7 +97,7 @@ public class ControllerCliente {
     }
 
     /**
-     * Build compagnie.
+     * Costruisce le compagnie del model a partire dai dati del DB
      */
     public void buildCompagnie() {
         ClienteDAO clienteDAO = new ClienteDAO();
@@ -228,7 +228,7 @@ public class ControllerCliente {
     }
 
     /**
-     * Build biglietti acquistati.
+     * Costruisce i biglietti acquistati dell'utente del model a partire dai dati del DB
      */
     public void buildBigliettiAcquistati() {
         ClienteDAO clienteDAO = new ClienteDAO();
@@ -308,18 +308,27 @@ public class ControllerCliente {
     /**
      * Acquista biglietto.
      *
-     * @param cs            the cs
-     * @param v             the v
-     * @param prevendita    the prevendita
-     * @param bagaglio      the bagaglio
-     * @param etaPasseggero the eta passeggero
-     * @param prezzo        the prezzo
+     * @param idCorsa       l'identificativo della corsa
+     * @param data          la data della corsa
+     * @param veicolo       indica la presenza di un veicolo.
+     * @param prevendita    indica la presenza di una prevendita
+     * @param bagaglio      indica la presenza di un bagaglio
+     * @param etaPasseggero l'etá del passeggero per cui si vuole acquistare il biglietto
+     * @param prezzo        il prezzo
      */
-    public void acquistaBiglietto(CorsaSpecifica cs, Veicolo v, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
+    public boolean acquistaBiglietto(int idCorsa, LocalDate data, Veicolo veicolo, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        clienteDAO.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), v.getTarga(), prevendita, bagaglio, prezzo, LocalDate.now(), etaPasseggero);
-        //DISCUSSIONE SUGLI ID DEI BIGLIETTI APPENA ACQUISTATI (vedi idBiglietto, primo parametro del metodo immediatamente sotto)
-        cliente.addBiglietto(new Biglietto(-1, cliente, cs, etaPasseggero, v, prevendita, bagaglio, prezzo, LocalDate.now()));
+        CorsaSpecifica cs = corse.get(new Pair(idCorsa, data));
+        int idBiglietto = -1; //solo una inizializzazione..
+        LocalDate dataAcquisto = LocalDate.now();
+        try {
+            clienteDAO.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), veicolo.getTarga(), prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero, idBiglietto);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        cliente.addBiglietto(new Biglietto(idBiglietto, cliente, cs, etaPasseggero, veicolo, prevendita, bagaglio, prezzo, dataAcquisto));
+        return true;
     }
 
     /**
@@ -327,12 +336,11 @@ public class ControllerCliente {
      *
      *
      */
-    public ArrayList<Pair> visualizzaPorti() {
-        ArrayList<Pair> porto = new ArrayList<>();
+    public void visualizzaPorti(ArrayList<Integer> idPorto, ArrayList<String> comune) {
         for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
-            porto.add(new Pair(it.getKey(), it.getValue()));
+            idPorto.add(it.getKey());
+            comune.add(it.getValue().getComune());
         }
-        return porto;
     }
 
     /**
@@ -346,7 +354,7 @@ public class ControllerCliente {
         ClienteDAO clienteDAO = new ClienteDAO();
         try {
             clienteDAO.aggiungeVeicolo(tipoVeicolo, targa, cliente.getLogin());
-        } catch(Exception e) {
+        } catch(SQLException e) {
             return false;
         }
         cliente.addVeicolo(new Veicolo(targa, tipoVeicolo));
@@ -356,13 +364,13 @@ public class ControllerCliente {
     /**
      * Gets compagnie.
      *
-     * @param nomi the nomi
-     * @param id   the id
+     * @param login the login
+     * @param nome  the nome
      */
-    public void getCompagnie(ArrayList<String> nomi, ArrayList<String> id) {
+    public void getCompagnie(ArrayList<String> login, ArrayList<String> nome) {
         for (Map.Entry<String, Compagnia> it : compagnie.entrySet()) {
-            nomi.add(it.getValue().getNome());
-            id.add(it.getKey());
+            login.add(it.getKey());
+            nome.add(it.getValue().getNome());
         }
     }
 
