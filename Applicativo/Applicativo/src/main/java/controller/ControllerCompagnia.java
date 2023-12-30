@@ -300,4 +300,16 @@ public class ControllerCompagnia {
             }
         }
     }
+
+    public void visualizzaCorseRegolari(ArrayList<Integer> idCorsa, ArrayList<String> portoPartenza, ArrayList<String> portoArrivo, ArrayList<String> natante, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo) {
+        HashMap<Integer, CorsaRegolare> cr = compagnia.getCorseErogate();
+        for(Map.Entry<Integer, CorsaRegolare> it : cr.entrySet()) {
+            idCorsa.add(it.getValue().getIdCorsa());
+            portoPartenza.add(it.getValue().getPortoPartenza().getComune());
+            portoArrivo.add(it.getValue().getPortoArrivo().getComune());
+            natante.add(it.getValue().getNatante().getNome());
+            orarioPartenza.add(it.getValue().getOrarioPartenza());
+            orarioArrivo.add(it.getValue().getOrarioArrivo());
+        }
+    }
 }
