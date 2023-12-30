@@ -1,22 +1,38 @@
 package gui;
 
-import controller.ControllerCliente;
 import controller.ControllerCompagnia;
+import unnamed.Pair;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class AggiungiScalo {
     private JPanel panel1;
     private JComboBox cbPortoScalo;
-    private JTextField tfDataArrivo;
-    private JTextField tfDataRipartenza;
+    private JLabel label1;
+    private JLabel label2;
+    private JPanel panel1_1;
+    private JPanel panel2_2;
+    private JSpinner spinnerOraAOre;
+    private JSpinner spinnerOraAMin;
+    private JSpinner spinnerOraPOre;
+    private JSpinner spinnerOraPMin;
+    private JButton bAggiungi;
+    private JButton bIndietro;
 
-    JFrame frame;
-    JFrame frameChiamante;
-    ControllerCompagnia controllerCompagnia;
+    public JFrame frame;
+    public JFrame frameChiamante;
+    public ControllerCompagnia controllerCompagnia;
+    private SpinnerNumberModel modelOreA = new SpinnerNumberModel(0, 0, 23, 1);
+    private SpinnerNumberModel modelOreP = new SpinnerNumberModel(0, 0, 23, 1);
+    private SpinnerNumberModel modelMinutiP = new SpinnerNumberModel(0, 0, 59, 1);
+    private SpinnerNumberModel modelMinutiA = new SpinnerNumberModel(0, 0, 59, 1);
 
-    public AggiungiScalo(JFrame frameChiamante, ControllerCompagnia controllerCompagnia) {
+    public AggiungiScalo(JFrame frameChiamante, ControllerCompagnia controllerCompagnia, ArrayList<Integer> idPortiScalo, ArrayList<LocalTime> oraAttracco, ArrayList<LocalTime> oraPartenza) {
         this.frameChiamante = frameChiamante;
         this.controllerCompagnia = controllerCompagnia;
         frame = new JFrame("crea Corsa");
@@ -26,6 +42,48 @@ public class AggiungiScalo {
         frame.setSize((int) (screenSize.width / 1.5), (int) (screenSize.height / 1.8));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        ArrayList<Pair> porti = new ArrayList<Pair>();
+
+        controllerCompagnia.visualizzaPorti(porti);
+        for (Pair porto : porti) {
+            cbPortoScalo.addItem(porto.last);
+        }
+
+        spinnerOraAMin.setModel(modelMinutiA);
+        spinnerOraPMin.setModel(modelMinutiP);
+        spinnerOraPOre.setModel(modelOreP);
+        spinnerOraAOre.setModel(modelOreA);
+        bAggiungi.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int oraPart = (int) spinnerOraPOre.getValue();
+                int oraArrivo = (int) spinnerOraAOre.getValue();
+                int minPart = (int) spinnerOraPMin.getValue();
+                int minArrivo = (int) spinnerOraAMin.getValue();
+                LocalTime orarioPartenza;
+                LocalTime orarioArrivo;
+                orarioPartenza = LocalTime.of(oraPart, minPart);
+                orarioArrivo = LocalTime.of(oraArrivo, minArrivo);
+
+                int idxPortoScalo = cbPortoScalo.getSelectedIndex();
+                int idPortoScalo = (int) porti.get(idxPortoScalo).first;
+
+                idPortiScalo.add(idPortoScalo);
+                oraAttracco.add(orarioArrivo);
+                oraPartenza.add(orarioArrivo);
+
+                frameChiamante.setVisible(true);
+                frame.dispose();
+            }
+        });
+        bIndietro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frameChiamante.setVisible(true);
+                frame.dispose();
+            }
+        });
     }
 
     {
@@ -44,21 +102,41 @@ public class AggiungiScalo {
      */
     private void $$$setupUI$$$() {
         panel1 = new JPanel();
-        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(8, 3, new Insets(0, 0, 0, 0), -1, -1));
         cbPortoScalo = new JComboBox();
         panel1.add(cbPortoScalo, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
-        panel1.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel1.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(7, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
         panel1.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
         panel1.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        tfDataArrivo = new JTextField();
-        tfDataArrivo.setText("yyyy-mm-dd");
-        panel1.add(tfDataArrivo, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        tfDataRipartenza = new JTextField();
-        tfDataRipartenza.setText("yyyy-mm-dd");
-        panel1.add(tfDataRipartenza, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        label1 = new JLabel();
+        label1.setText("Orario Attracco");
+        panel1.add(label1, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        label2 = new JLabel();
+        label2.setText("Orario RIpartenza");
+        panel1.add(label2, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1_1 = new JPanel();
+        panel1_1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel1_1, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        spinnerOraAOre = new JSpinner();
+        panel1_1.add(spinnerOraAOre, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        spinnerOraAMin = new JSpinner();
+        panel1_1.add(spinnerOraAMin, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2_2 = new JPanel();
+        panel2_2.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel2_2, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        spinnerOraPOre = new JSpinner();
+        panel2_2.add(spinnerOraPOre, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        spinnerOraPMin = new JSpinner();
+        panel2_2.add(spinnerOraPMin, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        bAggiungi = new JButton();
+        bAggiungi.setText("Aggiungi");
+        panel1.add(bAggiungi, new com.intellij.uiDesigner.core.GridConstraints(5, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        bIndietro = new JButton();
+        bIndietro.setText("Button");
+        panel1.add(bIndietro, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -67,4 +145,5 @@ public class AggiungiScalo {
     public JComponent $$$getRootComponent$$$() {
         return panel1;
     }
+
 }

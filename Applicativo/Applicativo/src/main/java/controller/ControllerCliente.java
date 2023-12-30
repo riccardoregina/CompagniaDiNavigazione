@@ -117,7 +117,9 @@ public class ControllerCliente {
         ArrayList<String> numeroTelefono = new ArrayList<>();
         clienteDAO.fetchCompagnie(login, nomeCompagnia, sitoWeb, compagniaSocial, nomeSocial, tagSocial, compagniaEmail, indirizzoEmail, compagniaTelefono, numeroTelefono);
         for (int i = 0; i < login.size(); i++) {
-            compagnie.put(login.get(i), new Compagnia(login.get(i), nomeCompagnia.get(i), sitoWeb.get(i)));
+            Compagnia c = new Compagnia(login.get(i), null, nomeCompagnia.get(i));
+            c.setSitoWeb(sitoWeb.get(i));
+            compagnie.put(login.get(i), c);
         }
 
         //Aggiungo a ciascuna compagnia i suoi contatti
@@ -374,7 +376,7 @@ public class ControllerCliente {
      * @param telefono    the telefono
      * @param sitoWeb     the sito web
      */
-    public void visualizzaContatti(String idCompagnia, ArrayList<String> nomeSocial, ArrayList<String> tag, ArrayList<String> email, ArrayList<String> telefono, String sitoWeb) {
+    public void visualizzaContatti(String idCompagnia, ArrayList<String> nomeSocial, ArrayList<String> tag, ArrayList<String> email, ArrayList<String> telefono, ArrayList<String> sitoWeb) {
         Compagnia c = compagnie.get(idCompagnia);
         for (AccountSocial x : c.getAccounts()) {
             nomeSocial.add(x.getNomeSocial());
@@ -382,7 +384,7 @@ public class ControllerCliente {
         }
         email = c.getEmails();
         telefono = c.getTelefoni();
-        sitoWeb = c.getSitoWeb();
+        sitoWeb.add(c.getSitoWeb());
     }
 
     /**
