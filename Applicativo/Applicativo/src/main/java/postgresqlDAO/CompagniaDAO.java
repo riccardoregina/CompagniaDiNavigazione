@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.NoSuchElementException;
 
 /**
  * The type Compagnia db.
@@ -322,7 +321,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
     /**
      * Aggiungi corsa.
      */
-    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante, int idCorsa, ArrayList<Integer> idPeriodo) throws SQLException {
+    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, String giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante, int idCorsa, ArrayList<Integer> idPeriodo) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query1 = "insert into navigazione.CorsaRegolare (portopartenza, portoarrivo, orariopartenza, orarioarrivo, costointero, scontoridotto, costobagaglio, costoprevendita, costoveicolo, compagnia, natante) values (?,?,?,?,?,?,?,?,?,?,?) returning idcorsa";
@@ -346,11 +345,11 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             idCorsa = rs.getInt("idCorsa");
             rs.close();
 
-            for (int i = 0; i < giorni.size(); i++) {
+            for (int i = 0; i < inizioPeriodo.size(); i++) {
                 ps = connection.prepareStatement(query2);
                 ps.setDate(1, java.sql.Date.valueOf(inizioPeriodo.get(i)));
                 ps.setDate(2, java.sql.Date.valueOf(finePeriodo.get(i)));
-                ps.setString(3, giorni.get(i));
+                ps.setString(3, giorni);
                 rs = ps.executeQuery();
                 idPeriodo.add(rs.getInt("idPeriodo"));
                 rs.close();

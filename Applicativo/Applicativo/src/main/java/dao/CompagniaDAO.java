@@ -14,7 +14,7 @@ public interface CompagniaDAO extends UtenteDAO {
      * Aggiunge corsa.
      */
 
-    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante, int idCorsa, ArrayList<Integer> idPeriodo) throws SQLException;
+    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, String giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante, int idCorsa, ArrayList<Integer> idPeriodo) throws SQLException;
 
     /**
      * Cancella corsa regolare.
