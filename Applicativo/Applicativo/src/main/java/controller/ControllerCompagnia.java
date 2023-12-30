@@ -248,7 +248,7 @@ public class ControllerCompagnia {
      * @param idCorsa output parameter
      * @return a boolean
      */
-    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante, Integer idCorsa) {
+    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, String giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante, Integer idCorsa) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         //Mi faccio restituire dal DAO l'id della tupla inserita.
         idCorsa = -1; //solo una inizializzazione...
@@ -261,8 +261,8 @@ public class ControllerCompagnia {
         }
 
         CorsaRegolare cr = new CorsaRegolare(idCorsa, compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita);
-        for (int i = 0; i < giorni.size(); i++) {
-            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), inizioPeriodo.get(i), finePeriodo.get(i), StringToBitset(giorni.get(i))));
+        for (int i = 0; i < inizioPeriodo.size(); i++) {
+            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), inizioPeriodo.get(i), finePeriodo.get(i), StringToBitset(giorni)));
             compagnia.addCorsaRegolare(cr);
         }
 
