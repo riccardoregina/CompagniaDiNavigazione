@@ -217,7 +217,7 @@ public class CreaCorse {
 
                 if (controllerCompagnia.creaCorsa(idPortoPartenza, idPortoArrivo, giorniAttivi, inzioPer, finePer, orarioPartenza, orarioArrivo,
                         costoIntero, sconto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatante, idCorsa)) {
-                    controllerCompagnia.aggiungiScali(idCorsa,idPortiScalo, oraAttracco, oraRipartenza)
+                    controllerCompagnia.aggiungiScali(idCorsa, idPortiScalo, oraAttracco, oraRipartenza);
                 } else {
                     JOptionPane.showMessageDialog(null, "non è stato possibile creare la corsa");
                     return;
