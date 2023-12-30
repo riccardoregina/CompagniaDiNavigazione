@@ -227,10 +227,31 @@ public class ControllerCompagnia {
         }
     }
 
-    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante) {
+    /**
+     * tenta di creare una corsa sul DB mediante un metodo di CompagniaDAO.
+     * Se riesce, setta il suo idCorsa (parametro di output), la aggiunge nel Model, restituisce true.
+     * Se non riesce, idCorsa resta pari a -1, viene restituito false.
+     *
+     * @param idPortoPartenza
+     * @param idPortoArrivo
+     * @param giorni
+     * @param inizioPeriodo
+     * @param finePeriodo
+     * @param orarioPartenza
+     * @param orarioArrivo
+     * @param costoIntero
+     * @param scontoRidotto
+     * @param costoBagaglio
+     * @param costoPrevendita
+     * @param costoVeicolo
+     * @param nomeNatante
+     * @param idCorsa output parameter
+     * @return a boolean
+     */
+    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, ArrayList<String> giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante, int idCorsa) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         //Mi faccio restituire dal DAO gli id delle tuple inserite.
-        int idCorsa = -1; //solo una inizializzazione...
+        idCorsa = -1; //solo una inizializzazione...
         ArrayList<Integer> idPeriodo = new ArrayList<>();
         try {
             compagniaDAO.aggiungeCorsa(idPortoPartenza, idPortoArrivo, giorni, inizioPeriodo, finePeriodo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagnia.getLogin(), nomeNatante, idCorsa, idPeriodo);
