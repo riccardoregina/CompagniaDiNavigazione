@@ -70,18 +70,8 @@ public class HomeCliente {
         bVediInfoCompagnia.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nomeComp = (String) comboBox1.getSelectedItem();
-
-                int posTrovato = 0;
-                for (int i = 0; i < compagnie.size(); i++) {
-                    if (nomeComp.equals(compagnie.get(i))) {
-                        posTrovato = i;
-                        break;
-                    }
-                }
-
-                String nomeCompagnia = (String) comboBox1.getSelectedItem();
-                String idCompagnia = idsCompagnie.get(posTrovato);
+                int idxCompagnia = comboBox1.getSelectedIndex();
+                String idCompagnia = idsCompagnie.get(idxCompagnia);
                 ContattiCompagnia contattiCompagnia = new ContattiCompagnia(frame, controllerCliente, idCompagnia);
                 frame.setVisible(false);
             }
