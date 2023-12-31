@@ -58,7 +58,7 @@ public class ControllerCliente {
             cliente = new Cliente(login, password, nome, cognome);
 
             clienteDAO = new ClienteDAO();
-            clienteDAO.fetchVeicoliCliente(login, veicoliTipo, veicoliTarga);
+            clienteDAO.fetchVeicoliCliente(login, veicoliTarga, veicoliTipo);
             for (int i = 0; i < veicoliTarga.size(); i++) {
                 cliente.addVeicolo(new Veicolo(veicoliTipo.get(i), veicoliTarga.get(i)));
             }
