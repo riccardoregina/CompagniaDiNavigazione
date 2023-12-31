@@ -41,7 +41,6 @@ public class ContattiCompagnia {
         ArrayList<String> telefono = new ArrayList<String>();
         ArrayList<String> sito = new ArrayList<>();
         controllerCliente.visualizzaContatti(idCompagnia, nomeSocial, tagSocial, email, telefono, sito);
-        System.out.println(sito.getFirst());
         lSito.setText("sito:" + sito.getFirst());
 
         table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
