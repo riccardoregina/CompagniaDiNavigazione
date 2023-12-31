@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -81,7 +82,11 @@ public class HomeCliente {
         frame.setSize((int) (screenSize.width / 1.1), (int) (screenSize.height / 1.1));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
         textData.setEditable(false);
+        textData.setText(String.valueOf(LocalDate.now().format(formatter)));
         checkBoxAliscafo.setSelected(true);
         checkBoxTraghetto.setSelected(true);
         checkBoxAltro.setSelected(true);
@@ -89,7 +94,9 @@ public class HomeCliente {
 
         spinnerEta.setModel(modelEta);
         spinnerOre.setModel(modelOre);
+        spinnerOre.setValue(LocalTime.now().getHour());
         spinnerMinuti.setModel(modelMinuti);
+        spinnerMinuti.setValue(LocalTime.now().getMinute());
 
         ArrayList<String> targhe = new ArrayList<String>();
         ArrayList<String> tipi = new ArrayList<String>();
@@ -115,7 +122,12 @@ public class HomeCliente {
                 Integer idPortoPart = idPorti.get(portoPartenza);
                 Integer idPortoDest = idPorti.get(portoDestinazione);
 
-                LocalDate dataSelezionata = LocalDate.parse((CharSequence) textData.getText());
+                if (textData.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Inserire una data");
+                    return;
+                }
+
+                LocalDate dataSelezionata = LocalDate.parse(textData.getText(), formatter);
                 LocalTime orarioSelezionato = LocalTime.of((int) spinnerOre.getValue(), (int) spinnerMinuti.getValue());
 
                 int etaPass = (int) spinnerEta.getValue();
