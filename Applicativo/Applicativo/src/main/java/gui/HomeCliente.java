@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 /**
@@ -29,7 +30,7 @@ public class HomeCliente {
     private JScrollPane scrollPaneCorse;
     private SpinnerNumberModel modelOre = new SpinnerNumberModel(0, 0, 23, 1);
     private SpinnerNumberModel modelMinuti = new SpinnerNumberModel(0, 0, 59, 1);
-    private SpinnerNumberModel modelEta = new SpinnerNumberModel(0, 0, 200, 1);
+    private SpinnerNumberModel modelEta = new SpinnerNumberModel(1, 1, 200, 1);
     private JSpinner spinnerMinuti;
     private JSpinner spinnerOre;
     private JCheckBox checkBoxBagaglio;
@@ -81,6 +82,10 @@ public class HomeCliente {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         textData.setEditable(false);
+        checkBoxAliscafo.setSelected(true);
+        checkBoxTraghetto.setSelected(true);
+        checkBoxAltro.setSelected(true);
+        checkBoxMotonave.setSelected(true);
 
         spinnerEta.setModel(modelEta);
         spinnerOre.setModel(modelOre);
@@ -89,6 +94,7 @@ public class HomeCliente {
         ArrayList<String> targhe = new ArrayList<String>();
         ArrayList<String> tipi = new ArrayList<String>();
         controllerCliente.visualizzaVeicoli(targhe, tipi);
+        comboBoxVeicoli.addItem("Nessuno");
         for (int i = 0; i < targhe.size(); i++) {
             comboBoxVeicoli.addItem(tipi.get(i) + " " + targhe.get(i));
         }
@@ -109,7 +115,60 @@ public class HomeCliente {
                 Integer idPortoPart = idPorti.get(portoPartenza);
                 Integer idPortoDest = idPorti.get(portoDestinazione);
 
-                //LocalDate dataSelezionata = LocalDate.parse();
+                LocalDate dataSelezionata = LocalDate.parse((CharSequence) textData.getText());
+                LocalTime orarioSelezionato = LocalTime.of((int) spinnerOre.getValue(), (int) spinnerMinuti.getValue());
+
+                int etaPass = (int) spinnerEta.getValue();
+
+                boolean bagaglio = checkBoxBagaglio.isSelected();
+                boolean veicolo = false;
+                if (!(comboBoxVeicoli.getSelectedItem().equals("Nessuno"))) {
+                    if (etaPass >= 18) {
+                        veicolo = true;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Un minorenne non può portare con sè un veicolo");
+                        return;
+                    }
+                }
+
+                String inputCostoMax = textCostoMax.getText();
+                float prezzoMax;
+                try {
+                    int costo = Integer.parseInt(inputCostoMax);
+                    prezzoMax = (float) costo;
+                } catch (NumberFormatException e1) {
+                    try {
+                        prezzoMax = Float.parseFloat(inputCostoMax);
+                    } catch (NumberFormatException e2) {
+                        JOptionPane.showMessageDialog(null, "Inserisci un prezzo massimo");
+                        return;
+                    }
+                }
+
+                ArrayList<String> tipoNatanteSelezionato = new ArrayList<String>();
+                if (checkBoxTraghetto.isSelected()) {
+                    tipoNatanteSelezionato.add(checkBoxTraghetto.getText().toLowerCase());
+                }
+                if (checkBoxAliscafo.isSelected()) {
+                    tipoNatanteSelezionato.add(checkBoxAliscafo.getText().toLowerCase());
+                }
+                if (checkBoxMotonave.isSelected()) {
+                    tipoNatanteSelezionato.add(checkBoxMotonave.getText().toLowerCase());
+                }
+                if (checkBoxAltro.isSelected()) {
+                    tipoNatanteSelezionato.add(checkBoxAltro.getText().toLowerCase());
+                }
+
+                ArrayList<Integer> idCorse = new ArrayList<Integer>();
+                ArrayList<LocalDate> dateCor = new ArrayList<LocalDate>();
+                ArrayList<Integer> postiDispPass = new ArrayList<Integer>();
+                ArrayList<Integer> postiDispVei = new ArrayList<Integer>();
+                ArrayList<Integer> minutiRitardo = new ArrayList<Integer>();
+                ArrayList<Boolean> cancellata = new ArrayList<Boolean>();
+                ArrayList<Float> prezzo = new ArrayList<Float>();
+
+                controllerCliente.visualizzaCorse(idPortoPart, idPortoDest, dataSelezionata, orarioSelezionato, prezzoMax, tipoNatanteSelezionato, etaPass, veicolo, bagaglio, idCorse, dateCor, postiDispPass, postiDispVei, minutiRitardo, cancellata, prezzo);
+
             }
         });
 
@@ -157,8 +216,6 @@ public class HomeCliente {
                 frame.setVisible(false);
             }
         });
-
-        //controllerCliente.visualizzaCorse();
     }
 
     {
