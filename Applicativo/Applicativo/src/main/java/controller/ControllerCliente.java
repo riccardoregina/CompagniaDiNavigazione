@@ -278,23 +278,14 @@ public class ControllerCliente {
         //un iteratore per scorrere la HashMap
         for (Map.Entry<Pair, CorsaSpecifica> it : corse.entrySet()) {
             CorsaSpecifica cs = it.getValue();
-            if (cs.getCorsaRegolare().getPortoPartenza().equals(portoPartenza) &&
+            System.out.println(orarioMinimoPartenza.minusMinutes(1));
+            if (    cs.getCorsaRegolare().getPortoPartenza().equals(portoPartenza) &&
                     cs.getCorsaRegolare().getPortoArrivo().equals(portoArrivo) &&
-                    ((cs.getData().equals(dataSelezionata) && cs.getCorsaRegolare().getOrarioPartenza().isAfter(orarioMinimoPartenza)) || (cs.getData().equals(dataSelezionata.plusDays(1)) && cs.getCorsaRegolare().getOrarioPartenza().isBefore(orarioMinimoPartenza))) &&
-                    tipoNatanteSelezionato.contains(cs.getCorsaRegolare().getNatante().getTipo()) &&
-                    (cs.getCorsaRegolare().getCostoIntero() <= prezzoMax))
+                    (cs.getData().equals(dataSelezionata) && (cs.getCorsaRegolare().getOrarioPartenza().equals(orarioMinimoPartenza) || cs.getCorsaRegolare().getOrarioPartenza().isAfter(orarioMinimoPartenza))) ||
+                        (cs.getData().equals(dataSelezionata.plusDays(1)) && (cs.getCorsaRegolare().getOrarioPartenza().isBefore(orarioMinimoPartenza) || cs.getCorsaRegolare().getOrarioPartenza().equals(orarioMinimoPartenza))) &&
+                    tipoNatanteSelezionato.contains(cs.getCorsaRegolare().getNatante().getTipo())
+                )
             {
-                //aggiungo le informazioni da restituire alla gui
-                idCorsa.add(cs.getCorsaRegolare().getIdCorsa());
-                nomeCompagnia.add(cs.getCorsaRegolare().getCompagnia().getNome());
-                data.add(cs.getData());
-                orePart.add(cs.getCorsaRegolare().getOrarioPartenza());
-                oreDest.add(cs.getCorsaRegolare().getOrarioArrivo());
-                postiDispPass.add(cs.getPostiDispPass());
-                postiDispVei.add(cs.getPostiDispVei());
-                minutiRitardo.add(cs.getMinutiRitardo());
-                natanti.add(cs.getCorsaRegolare().getNatante().getNome());
-                cancellata.add(cs.isCancellata());
                 //calcolo il prezzo
                 float prezzoCalcolato = cs.getCorsaRegolare().getCostoIntero();
                 if (etaPasseggero < 12) {
@@ -304,7 +295,20 @@ public class ControllerCliente {
                 } else if (bagaglio == true) {
                     prezzoCalcolato += cs.getCorsaRegolare().getCostoBagaglio();
                 }
-                prezzo.add(prezzoCalcolato);
+                if (prezzoCalcolato <= prezzoMax) {
+                    //aggiungo le informazioni sulla corsa da restituire alla gui
+                    prezzo.add(prezzoCalcolato);
+                    idCorsa.add(cs.getCorsaRegolare().getIdCorsa());
+                    nomeCompagnia.add(cs.getCorsaRegolare().getCompagnia().getNome());
+                    data.add(cs.getData());
+                    orePart.add(cs.getCorsaRegolare().getOrarioPartenza());
+                    oreDest.add(cs.getCorsaRegolare().getOrarioArrivo());
+                    postiDispPass.add(cs.getPostiDispPass());
+                    postiDispVei.add(cs.getPostiDispVei());
+                    minutiRitardo.add(cs.getMinutiRitardo());
+                    natanti.add(cs.getCorsaRegolare().getNatante().getNome());
+                    cancellata.add(cs.isCancellata());
+                }
             }
         }
     }
