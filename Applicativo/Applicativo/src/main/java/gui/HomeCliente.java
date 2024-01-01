@@ -4,6 +4,7 @@ import controller.ControllerCliente;
 import unnamed.DatePicker;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,6 +52,7 @@ public class HomeCliente {
     private JLabel labelVeicolo;
     private JLabel labelEta;
     private JPanel panelDate;
+    private JTable tableCorse;
 
     /**
      * The Controller cliente.
@@ -172,15 +174,43 @@ public class HomeCliente {
                 }
 
                 ArrayList<Integer> idCorse = new ArrayList<Integer>();
+                ArrayList<String> nomeCompagnia = new ArrayList<String>();
                 ArrayList<LocalDate> dateCor = new ArrayList<LocalDate>();
+                ArrayList<LocalTime> orePart = new ArrayList<LocalTime>();
+                ArrayList<LocalTime> oreDest = new ArrayList<LocalTime>();
                 ArrayList<Integer> postiDispPass = new ArrayList<Integer>();
                 ArrayList<Integer> postiDispVei = new ArrayList<Integer>();
                 ArrayList<Integer> minutiRitardo = new ArrayList<Integer>();
+                ArrayList<String> natanti = new ArrayList<String>();
                 ArrayList<Boolean> cancellata = new ArrayList<Boolean>();
                 ArrayList<Float> prezzo = new ArrayList<Float>();
 
-                controllerCliente.visualizzaCorse(idPortoPart, idPortoDest, dataSelezionata, orarioSelezionato, prezzoMax, tipoNatanteSelezionato, etaPass, veicolo, bagaglio, idCorse, dateCor, postiDispPass, postiDispVei, minutiRitardo, cancellata, prezzo);
+                controllerCliente.visualizzaCorse(idPortoPart, idPortoDest, dataSelezionata, orarioSelezionato, prezzoMax, tipoNatanteSelezionato, etaPass, veicolo, bagaglio, idCorse, nomeCompagnia, dateCor, orePart, oreDest, postiDispPass, postiDispVei, minutiRitardo, natanti, cancellata, prezzo);
+                System.out.println(idCorse);
+                String[] col = new String[]{"Compagnia", "Partenza", "Ore", "Arrivo", "Ore", "Prezzo", "Posti Passeggeri", "Posti Veicoli", "Ritardo", "Natante", "Data"};
+                Object[][] data = new Object[idCorse.size()][10];
+                for (int i = 0; i < idCorse.size(); i++) {
+                    data[i][0] = nomeCompagnia.get(i);
+                    data[i][1] = comboBoxPart.getSelectedItem();
+                    data[i][2] = orePart.get(i);
+                    data[i][3] = comboBoxDest.getSelectedItem();
+                    data[i][4] = oreDest.get(i);
+                    data[i][5] = prezzo.get(i);
+                    data[i][6] = postiDispPass.get(i);
+                    data[i][7] = postiDispVei.get(i);
+                    data[i][8] = minutiRitardo.get(i) + "'";
+                    data[i][9] = natanti.get(i);
+                    data[i][10] = dateCor.get(i);
+                }
+                DefaultTableModel model = new DefaultTableModel(data, col) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                };
 
+                tableCorse = new JTable(model);
+                scrollPaneCorse.setViewportView(tableCorse);
             }
         });
 

@@ -271,7 +271,7 @@ public class ControllerCliente {
      * @param cancellata                 output parameter
      * @param prezzo                     output parameter
      */
-    public void visualizzaCorse(int idPortoPartenzaSelezionato, int idPortoArrivoSelezionato, LocalDate dataSelezionata, LocalTime orarioMinimoPartenza, Float prezzoMax, ArrayList<String> tipoNatanteSelezionato, int etaPasseggero, boolean veicolo, boolean bagaglio, ArrayList<Integer> idCorsa, ArrayList<LocalDate> data, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Integer> minutiRitardo, ArrayList<Boolean> cancellata, ArrayList<Float> prezzo) {
+    public void visualizzaCorse(int idPortoPartenzaSelezionato, int idPortoArrivoSelezionato, LocalDate dataSelezionata, LocalTime orarioMinimoPartenza, Float prezzoMax, ArrayList<String> tipoNatanteSelezionato, int etaPasseggero, boolean veicolo, boolean bagaglio, ArrayList<Integer> idCorsa, ArrayList<String> nomeCompagnia, ArrayList<LocalDate> data, ArrayList<LocalTime> orePart, ArrayList<LocalTime> oreDest, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Integer> minutiRitardo, ArrayList<String> natanti, ArrayList<Boolean> cancellata, ArrayList<Float> prezzo) {
         Porto portoPartenza = porti.get(idPortoPartenzaSelezionato);
         Porto portoArrivo = porti.get(idPortoArrivoSelezionato);
 
@@ -286,10 +286,14 @@ public class ControllerCliente {
             {
                 //aggiungo le informazioni da restituire alla gui
                 idCorsa.add(cs.getCorsaRegolare().getIdCorsa());
+                nomeCompagnia.add(cs.getCorsaRegolare().getCompagnia().getNome());
                 data.add(cs.getData());
+                orePart.add(cs.getCorsaRegolare().getOrarioPartenza());
+                oreDest.add(cs.getCorsaRegolare().getOrarioArrivo());
                 postiDispPass.add(cs.getPostiDispPass());
                 postiDispVei.add(cs.getPostiDispVei());
                 minutiRitardo.add(cs.getMinutiRitardo());
+                natanti.add(cs.getCorsaRegolare().getNatante().getNome());
                 cancellata.add(cs.isCancellata());
                 //calcolo il prezzo
                 float prezzoCalcolato = cs.getCorsaRegolare().getCostoIntero();
