@@ -32,7 +32,7 @@ public class HomeCliente {
     private JScrollPane scrollPaneCorse;
     private SpinnerNumberModel modelOre = new SpinnerNumberModel(0, 0, 23, 1);
     private SpinnerNumberModel modelMinuti = new SpinnerNumberModel(0, 0, 59, 1);
-    private SpinnerNumberModel modelEta = new SpinnerNumberModel(1, 1, 200, 1);
+    private SpinnerNumberModel modelEta = new SpinnerNumberModel(18, 1, 200, 1);
     private JSpinner spinnerMinuti;
     private JSpinner spinnerOre;
     private JCheckBox checkBoxBagaglio;
@@ -186,14 +186,13 @@ public class HomeCliente {
                 ArrayList<Float> prezzo = new ArrayList<Float>();
 
                 controllerCliente.visualizzaCorse(idPortoPart, idPortoDest, dataSelezionata, orarioSelezionato, prezzoMax, tipoNatanteSelezionato, etaPass, veicolo, bagaglio, idCorse, nomeCompagnia, dateCor, orePart, oreDest, postiDispPass, postiDispVei, minutiRitardo, natanti, cancellata, prezzo);
-                System.out.println(idCorse);
                 String[] col = new String[]{"Compagnia", "Partenza", "Ore", "Arrivo", "Ore", "Prezzo", "Posti Passeggeri", "Posti Veicoli", "Ritardo", "Natante", "Data"};
-                Object[][] data = new Object[idCorse.size()][10];
+                Object[][] data = new Object[idCorse.size()][11];
                 for (int i = 0; i < idCorse.size(); i++) {
                     data[i][0] = nomeCompagnia.get(i);
-                    data[i][1] = comboBoxPart.getSelectedItem();
+                    data[i][1] = porti.get(portoPartenza);
                     data[i][2] = orePart.get(i);
-                    data[i][3] = comboBoxDest.getSelectedItem();
+                    data[i][3] = porti.get(portoDestinazione);
                     data[i][4] = oreDest.get(i);
                     data[i][5] = prezzo.get(i);
                     data[i][6] = postiDispPass.get(i);
@@ -210,6 +209,7 @@ public class HomeCliente {
                 };
 
                 tableCorse = new JTable(model);
+                tableCorse.getTableHeader().setReorderingAllowed(false);
                 scrollPaneCorse.setViewportView(tableCorse);
             }
         });

@@ -57,7 +57,7 @@ public class HomeCompagnia {
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setSize((int) screenSize.width / 2, (int) (screenSize.height / 2));
+        frame.setSize((int) (screenSize.width / 1.2), (int) (screenSize.height / 1.2));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         DefaultTableModel model;
@@ -91,6 +91,7 @@ public class HomeCompagnia {
         };
 
         tableCorse = new JTable(model);
+        tableCorse.getTableHeader().setReorderingAllowed(false);
         scrollPaneCorse.setViewportView(tableCorse);
 
         ArrayList<String> nome = new ArrayList<String>();
@@ -117,6 +118,7 @@ public class HomeCompagnia {
         };
 
         tableNatanti = new JTable(model);
+        tableNatanti.getTableHeader().setReorderingAllowed(false);
         scrollPaneNatanti.setViewportView(tableNatanti);
 
         bRimuoviNatante.addActionListener(new ActionListener() {

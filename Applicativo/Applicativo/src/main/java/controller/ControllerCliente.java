@@ -184,7 +184,7 @@ public class ControllerCliente {
             float cBagaglio = costoBagaglio.get(i);
             float cPrev = costoPrevendita.get(i);
             float cVei = costoVeicolo.get(i);
-            c.addCorsaRegolare(new CorsaRegolare(id, c, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cPrev, cVei));
+            c.addCorsaRegolare(new CorsaRegolare(id, c, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cVei, cPrev));
         }
 
         //Elementi dei periodi
@@ -278,21 +278,22 @@ public class ControllerCliente {
         //un iteratore per scorrere la HashMap
         for (Map.Entry<Pair, CorsaSpecifica> it : corse.entrySet()) {
             CorsaSpecifica cs = it.getValue();
-            System.out.println(orarioMinimoPartenza.minusMinutes(1));
             if (    cs.getCorsaRegolare().getPortoPartenza().equals(portoPartenza) &&
                     cs.getCorsaRegolare().getPortoArrivo().equals(portoArrivo) &&
-                    (cs.getData().equals(dataSelezionata) && (cs.getCorsaRegolare().getOrarioPartenza().equals(orarioMinimoPartenza) || cs.getCorsaRegolare().getOrarioPartenza().isAfter(orarioMinimoPartenza))) ||
-                        (cs.getData().equals(dataSelezionata.plusDays(1)) && (cs.getCorsaRegolare().getOrarioPartenza().isBefore(orarioMinimoPartenza) || cs.getCorsaRegolare().getOrarioPartenza().equals(orarioMinimoPartenza))) &&
+                    ((cs.getData().equals(dataSelezionata) && (cs.getCorsaRegolare().getOrarioPartenza().equals(orarioMinimoPartenza) || cs.getCorsaRegolare().getOrarioPartenza().isAfter(orarioMinimoPartenza))) ||
+                        (cs.getData().equals(dataSelezionata.plusDays(1)) && (cs.getCorsaRegolare().getOrarioPartenza().isBefore(orarioMinimoPartenza) || cs.getCorsaRegolare().getOrarioPartenza().equals(orarioMinimoPartenza)))) &&
                     tipoNatanteSelezionato.contains(cs.getCorsaRegolare().getNatante().getTipo())
                 )
             {
                 //calcolo il prezzo
                 float prezzoCalcolato = cs.getCorsaRegolare().getCostoIntero();
                 if (etaPasseggero < 12) {
-                    prezzoCalcolato *= cs.getCorsaRegolare().getScontoRidotto();
-                } else if (veicolo == true) { //si suppone che la GUI abbia giá verificato che un minorenne non sia associato ad un veicolo!
+                    prezzoCalcolato *= (1 - cs.getCorsaRegolare().getScontoRidotto()/100);
+                }
+                if (veicolo == true) { //si suppone che la GUI abbia giá verificato che un minorenne non sia associato ad un veicolo!
                     prezzoCalcolato += cs.getCorsaRegolare().getCostoVeicolo();
-                } else if (bagaglio == true) {
+                }
+                if (bagaglio == true) {
                     prezzoCalcolato += cs.getCorsaRegolare().getCostoBagaglio();
                 }
                 if (prezzoCalcolato <= prezzoMax) {
