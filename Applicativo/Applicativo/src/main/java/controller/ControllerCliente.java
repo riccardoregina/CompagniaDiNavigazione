@@ -319,23 +319,24 @@ public class ControllerCliente {
      *
      * @param idCorsa       l'identificativo della corsa
      * @param data          la data della corsa
-     * @param veicolo       indica la presenza di un veicolo.
+     * @param targaVeicolo  indica la presenza di un veicolo.
      * @param prevendita    indica la presenza di una prevendita
      * @param bagaglio      indica la presenza di un bagaglio
      * @param etaPasseggero l'etá del passeggero per cui si vuole acquistare il biglietto
      * @param prezzo        il prezzo
      */
-    public boolean acquistaBiglietto(int idCorsa, LocalDate data, Veicolo veicolo, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
+    public boolean acquistaBiglietto(int idCorsa, LocalDate data, String targaVeicolo, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
         ClienteDAO clienteDAO = new ClienteDAO();
         CorsaSpecifica cs = corse.get(new Pair(idCorsa, data));
         int idBiglietto = -1; //solo una inizializzazione..
         LocalDate dataAcquisto = LocalDate.now();
         try {
-            clienteDAO.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), veicolo.getTarga(), prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero, idBiglietto);
+            clienteDAO.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), targaVeicolo, prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero, idBiglietto);
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
+        Veicolo veicolo = cliente.getVeicoliPosseduti().get(targaVeicolo);
         cliente.addBiglietto(new Biglietto(idBiglietto, cliente, cs, etaPasseggero, veicolo, prevendita, bagaglio, prezzo, dataAcquisto));
         return true;
     }

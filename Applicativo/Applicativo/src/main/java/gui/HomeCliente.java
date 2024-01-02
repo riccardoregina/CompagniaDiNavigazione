@@ -67,6 +67,16 @@ public class HomeCliente {
      */
     public JFrame frame;
 
+    private boolean veicolo = false;
+    private boolean bagaglio = false;
+    private int etaPass;
+    private ArrayList<Integer> idCorse = new ArrayList<Integer>();
+    private ArrayList<LocalDate> dateCor = new ArrayList<LocalDate>();
+    private ArrayList<Integer> postiDispPass = new ArrayList<Integer>();
+    private ArrayList<Integer> postiDispVei = new ArrayList<Integer>();
+    private ArrayList<Boolean> cancellata = new ArrayList<Boolean>();
+    private ArrayList<Float> prezzo = new ArrayList<Float>();
+
     /**
      * Instantiates a new Home cliente.
      *
@@ -84,6 +94,7 @@ public class HomeCliente {
         frame.setSize((int) (screenSize.width / 1.1), (int) (screenSize.height / 1.1));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        acquistaButton.setEnabled(false);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -132,10 +143,8 @@ public class HomeCliente {
                 LocalDate dataSelezionata = LocalDate.parse(textData.getText(), formatter);
                 LocalTime orarioSelezionato = LocalTime.of((int) spinnerOre.getValue(), (int) spinnerMinuti.getValue());
 
-                int etaPass = (int) spinnerEta.getValue();
-
-                boolean bagaglio = checkBoxBagaglio.isSelected();
-                boolean veicolo = false;
+                etaPass = (int) spinnerEta.getValue();
+                bagaglio = checkBoxBagaglio.isSelected();
                 if (!(comboBoxVeicoli.getSelectedItem().equals("Nessuno"))) {
                     if (etaPass >= 18) {
                         veicolo = true;
@@ -173,21 +182,15 @@ public class HomeCliente {
                     tipoNatanteSelezionato.add(checkBoxAltro.getText().toLowerCase());
                 }
 
-                ArrayList<Integer> idCorse = new ArrayList<Integer>();
                 ArrayList<String> nomeCompagnia = new ArrayList<String>();
-                ArrayList<LocalDate> dateCor = new ArrayList<LocalDate>();
                 ArrayList<LocalTime> orePart = new ArrayList<LocalTime>();
                 ArrayList<LocalTime> oreDest = new ArrayList<LocalTime>();
-                ArrayList<Integer> postiDispPass = new ArrayList<Integer>();
-                ArrayList<Integer> postiDispVei = new ArrayList<Integer>();
                 ArrayList<Integer> minutiRitardo = new ArrayList<Integer>();
                 ArrayList<String> natanti = new ArrayList<String>();
-                ArrayList<Boolean> cancellata = new ArrayList<Boolean>();
-                ArrayList<Float> prezzo = new ArrayList<Float>();
 
                 controllerCliente.visualizzaCorse(idPortoPart, idPortoDest, dataSelezionata, orarioSelezionato, prezzoMax, tipoNatanteSelezionato, etaPass, veicolo, bagaglio, idCorse, nomeCompagnia, dateCor, orePart, oreDest, postiDispPass, postiDispVei, minutiRitardo, natanti, cancellata, prezzo);
-                String[] col = new String[]{"Compagnia", "Partenza", "Ore", "Arrivo", "Ore", "Prezzo", "Posti Passeggeri", "Posti Veicoli", "Ritardo", "Natante", "Data"};
-                Object[][] data = new Object[idCorse.size()][11];
+                String[] col = new String[]{"Compagnia", "Partenza", "Ore", "Arrivo", "Ore", "Prezzo", "Posti Passeggeri", "Posti Veicoli", "Ritardo", "Natante", "Data", "ID"};
+                Object[][] data = new Object[idCorse.size()][12];
                 for (int i = 0; i < idCorse.size(); i++) {
                     data[i][0] = nomeCompagnia.get(i);
                     data[i][1] = porti.get(portoPartenza);
@@ -200,6 +203,7 @@ public class HomeCliente {
                     data[i][8] = minutiRitardo.get(i) + "'";
                     data[i][9] = natanti.get(i);
                     data[i][10] = dateCor.get(i);
+                    data[i][11] = idCorse.get(i);
                 }
                 DefaultTableModel model = new DefaultTableModel(data, col) {
                     @Override
@@ -210,7 +214,54 @@ public class HomeCliente {
 
                 tableCorse = new JTable(model);
                 tableCorse.getTableHeader().setReorderingAllowed(false);
+                ListSelectionModel selectionModel = tableCorse.getSelectionModel();
+                selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 scrollPaneCorse.setViewportView(tableCorse);
+
+                acquistaButton.setEnabled(true);
+            }
+        });
+
+        acquistaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (tableCorse.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(null, "Non esistono corse in questa data e questo orario");
+                    return;
+                }
+
+                int selectedRow = tableCorse.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "Selezionare una corsa dal tabellone");
+                    return;
+                }
+
+                if (cancellata.get(selectedRow)) {
+                    JOptionPane.showMessageDialog(null, "La corsa selezionata è stata cancellata!");
+                    return;
+                }
+
+                if (postiDispPass.get(selectedRow) <= 0) {
+                    JOptionPane.showMessageDialog(null, "Biglietti esauriti!");
+                    return;
+                }
+
+                String targaVeicolo = null;
+
+                if (veicolo && postiDispVei.get(selectedRow) <= 0) {
+                    JOptionPane.showMessageDialog(null, "I posti per veicoli sono esauriti!");
+                    return;
+                } else if (veicolo) {
+                    String[] str = ((String) comboBoxVeicoli.getSelectedItem()).split(" ");
+                    targaVeicolo = str[1];
+                }
+
+                if (controllerCliente.acquistaBiglietto(idCorse.get(selectedRow), dateCor.get(selectedRow), targaVeicolo, false, bagaglio, etaPass, prezzo.get(selectedRow))) {
+                    JOptionPane.showMessageDialog(null, "Biglietto acquistato!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Errore :(");
+                }
+
             }
         });
 
