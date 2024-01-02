@@ -269,6 +269,16 @@ public class ControllerCompagnia {
         return true;
     }
 
+    public boolean eliminaCorsaRegolare(int idCorsa) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        compagniaDAO.cancellaCorsaRegolare(idCorsa);
+        compagnia.getCorseErogate().remove(idCorsa);
+        //aggiorno le corse specifiche
+        corseSpecifiche.clear();
+        buildCorseSpecifiche();
+        return true;
+    }
+
     public boolean aggiungiScali(int idCorsa, ArrayList<Integer> idPortoScalo, ArrayList<LocalTime> orarioAttracco, ArrayList<LocalTime> orarioRipartenza) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {

@@ -9,6 +9,8 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -29,6 +31,7 @@ public class HomeCompagnia {
     private JScrollPane scrollPaneNatanti;
     private JLabel corseErogateLabel;
     private JLabel natantiDisponibiliLabel;
+    private JButton buttonEliminaCorsa;
     private JTable tableNatanti;
     /**
      * The Controller compagnia.
@@ -60,7 +63,70 @@ public class HomeCompagnia {
         frame.setSize((int) (screenSize.width / 1.2), (int) (screenSize.height / 1.2));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        DefaultTableModel model;
+
+        bRimuoviNatante.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int idxNatante = tableNatanti.getSelectedRow();
+                if (idxNatante == -1) {
+                    JOptionPane.showMessageDialog(null, "Seleziona il natante da eliminare");
+                    return;
+                }
+
+                String nat = (String) tableNatanti.getValueAt(idxNatante, 0);
+                controllerCompagnia.rimuoviNatante(nat);
+                aggiornaTabellaNatanti();
+                aggiornaTabellaCorse();
+            }
+        });
+        bAggiungiNatante.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AggiungiNatante aggiungiNatante = new AggiungiNatante(frame, controllerCompagnia);
+                frame.setVisible(false);
+            }
+        });
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowActivated(WindowEvent e) {
+                aggiornaTabellaNatanti();
+                aggiornaTabellaCorse();
+            }
+        });
+        bCreaCorsa.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CreaCorse creaCorse = new CreaCorse(frame, controllerCompagnia);
+                frame.setVisible(false);
+            }
+        });
+        bModificaCorsa.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ModificaCorsa modificaCorsa = new ModificaCorsa(frame, controllerCompagnia);
+                frame.setVisible(false);
+            }
+        });
+
+        buttonEliminaCorsa.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = tableCorse.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "Seleziona la corsa da eliminare");
+                    return;
+                }
+
+                int idCorsaDaEliminare = (int) tableCorse.getValueAt(selectedRow, 0);
+                controllerCompagnia.eliminaCorsaRegolare(idCorsaDaEliminare);
+                aggiornaTabellaCorse();
+            }
+        });
+    }
+
+    private void aggiornaTabellaCorse() {
+        DefaultTableModel modelCorse;
         String[] col;
         Object[][] data;
 
@@ -83,16 +149,24 @@ public class HomeCompagnia {
             data[i][4] = orarioArrivo.get(i);
             data[i][5] = natante.get(i);
         }
-        model = new DefaultTableModel(data, col) {
+        modelCorse = new DefaultTableModel(data, col) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        tableCorse = new JTable(model);
+        tableCorse = new JTable(modelCorse);
         tableCorse.getTableHeader().setReorderingAllowed(false);
+        ListSelectionModel selectionModel = tableCorse.getSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollPaneCorse.setViewportView(tableCorse);
+    }
+
+    private void aggiornaTabellaNatanti() {
+        DefaultTableModel modelNatanti;
+        String[] col;
+        Object[][] data;
 
         ArrayList<String> nome = new ArrayList<String>();
         ArrayList<Integer> capPasseggeri = new ArrayList<Integer>();
@@ -110,45 +184,18 @@ public class HomeCompagnia {
             data[i][3] = capVeicoli.get(i);
         }
 
-        model = new DefaultTableModel(data, col) {
+        modelNatanti = new DefaultTableModel(data, col) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        tableNatanti = new JTable(model);
+        tableNatanti = new JTable(modelNatanti);
         tableNatanti.getTableHeader().setReorderingAllowed(false);
+        ListSelectionModel selectionModel = tableNatanti.getSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollPaneNatanti.setViewportView(tableNatanti);
-
-        bRimuoviNatante.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                RimuoviNatante rimuoviNatante = new RimuoviNatante(frame, controllerCompagnia);
-                frame.setVisible(false);
-            }
-        });
-        bAggiungiNatante.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AggiungiNatante aggiungiNatante = new AggiungiNatante(frame, controllerCompagnia);
-                frame.setVisible(false);
-            }
-        });
-        bCreaCorsa.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CreaCorse creaCorse = new CreaCorse(frame, controllerCompagnia);
-                frame.setVisible(false);
-            }
-        });
-        bModificaCorsa.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ModificaCorsa modificaCorsa = new ModificaCorsa(frame, controllerCompagnia);
-                frame.setVisible(false);
-            }
-        });
     }
 
     {
@@ -167,7 +214,7 @@ public class HomeCompagnia {
      */
     private void $$$setupUI$$$() {
         panel1 = new JPanel();
-        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(8, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(9, 3, new Insets(0, 0, 0, 0), -1, -1));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
         panel1.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
@@ -207,7 +254,13 @@ public class HomeCompagnia {
         scrollPaneCorse = new JScrollPane();
         panel1.add(scrollPaneCorse, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer4 = new com.intellij.uiDesigner.core.Spacer();
-        panel1.add(spacer4, new com.intellij.uiDesigner.core.GridConstraints(7, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel1.add(spacer4, new com.intellij.uiDesigner.core.GridConstraints(8, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JLabel label1 = new JLabel();
+        label1.setText("");
+        panel1.add(label1, new com.intellij.uiDesigner.core.GridConstraints(7, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonEliminaCorsa = new JButton();
+        buttonEliminaCorsa.setText("EliminaCorsa");
+        panel1.add(buttonEliminaCorsa, new com.intellij.uiDesigner.core.GridConstraints(2, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTHWEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(140, -1), new Dimension(140, -1), 0, false));
     }
 
     /**

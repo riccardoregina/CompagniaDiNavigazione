@@ -377,7 +377,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      *
      * @param idCorsa the id corsa
      */
-    public void cancellaCorsaRegolare(int idCorsa) {
+    public void cancellaCorsaRegolare(int idCorsa){
         PreparedStatement ps = null;
         String query = "delete from navigazione.CorsaRegolare where idCorsa = ?";
 

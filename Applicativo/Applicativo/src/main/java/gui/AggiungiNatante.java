@@ -87,8 +87,6 @@ public class AggiungiNatante {
                     }
                     frameChiamante.setVisible(true);
                     frame.dispose();
-
-
                 }
             }
         });
