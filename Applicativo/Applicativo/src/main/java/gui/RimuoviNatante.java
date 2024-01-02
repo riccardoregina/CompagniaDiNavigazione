@@ -61,7 +61,7 @@ public class RimuoviNatante {
         controllerCompagnia.visualizzaNatanti(nome, capPasseggeri, capVeicoli, tipo);
 
         table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        DefaultTableModel tableModel = new DefaultTableModel(new Object[][][][]{}, new String[]{"nome", "Tipo", "num Passeggeri", "num Veicoli"});
+        DefaultTableModel tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"nome", "Tipo", "num Passeggeri", "num Veicoli"});
         table1.setModel(tableModel);
         if (tipo != null) {
             for (int i = 0; i < tipo.size(); i++) {
