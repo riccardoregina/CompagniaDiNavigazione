@@ -342,6 +342,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(10, loginCompagnia);
             ps.setString(11, nomeNatante);
             rs = ps.executeQuery();
+            rs.next();
             idCorsa = rs.getInt("idCorsa");
             rs.close();
 
@@ -351,6 +352,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
                 ps.setDate(2, java.sql.Date.valueOf(finePeriodo.get(i)));
                 ps.setString(3, giorni);
                 rs = ps.executeQuery();
+                rs.next();
                 idPeriodo.add(rs.getInt("idPeriodo"));
                 rs.close();
             }

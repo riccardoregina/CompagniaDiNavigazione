@@ -290,9 +290,9 @@ public class ControllerCompagnia {
         return true;
     }
 
-    public void visualizzaCorseSpecifichePerData(LocalDate data, int idPortoPartenza, int idPortoArrivo, ArrayList<Integer> idCorsa, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<String> nomeNatante) {
+    public void visualizzaCorseSpecifichePerData(LocalDate data, ArrayList<Integer> idCorsa, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<String> nomeNatante) {
         for (Map.Entry<Pair, CorsaSpecifica> it : corseSpecifiche.entrySet()) {
-            if (it.getValue().getData().equals(data) && it.getValue().getCorsaRegolare().getPortoPartenza().equals(porti.get(idPortoPartenza)) && it.getValue().getCorsaRegolare().getPortoArrivo().equals(porti.get(idPortoArrivo))) {
+            if (it.getValue().getData().equals(data)) {
                 idCorsa.add(it.getValue().getCorsaRegolare().getIdCorsa());
                 orarioPartenza.add(it.getValue().getCorsaRegolare().getOrarioPartenza());
                 orarioArrivo.add(it.getValue().getCorsaRegolare().getOrarioArrivo());
