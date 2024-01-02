@@ -142,6 +142,13 @@ public class HomeCompagnia {
                 frame.setVisible(false);
             }
         });
+        bModificaCorsa.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ModificaCorsa modificaCorsa = new ModificaCorsa(frame, controllerCompagnia);
+                frame.setVisible(false);
+            }
+        });
     }
 
     {
