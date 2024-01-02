@@ -1,6 +1,7 @@
 package gui;
 
 import controller.ControllerCliente;
+import unnamed.CustomRenderer;
 import unnamed.DatePicker;
 
 import javax.swing.*;
@@ -70,12 +71,12 @@ public class HomeCliente {
     private boolean veicolo = false;
     private boolean bagaglio = false;
     private int etaPass;
-    private ArrayList<Integer> idCorse = new ArrayList<Integer>();
-    private ArrayList<LocalDate> dateCor = new ArrayList<LocalDate>();
-    private ArrayList<Integer> postiDispPass = new ArrayList<Integer>();
-    private ArrayList<Integer> postiDispVei = new ArrayList<Integer>();
-    private ArrayList<Boolean> cancellata = new ArrayList<Boolean>();
-    private ArrayList<Float> prezzo = new ArrayList<Float>();
+    private ArrayList<Integer> idCorse;
+    private ArrayList<LocalDate> dateCor;
+    private ArrayList<Integer> postiDispPass;
+    private ArrayList<Integer> postiDispVei;
+    private ArrayList<Boolean> cancellata;
+    private ArrayList<Float> prezzo;
 
     /**
      * Instantiates a new Home cliente.
@@ -182,6 +183,12 @@ public class HomeCliente {
                     tipoNatanteSelezionato.add(checkBoxAltro.getText().toLowerCase());
                 }
 
+                idCorse = new ArrayList<Integer>();
+                dateCor = new ArrayList<LocalDate>();
+                postiDispPass = new ArrayList<Integer>();
+                postiDispVei = new ArrayList<Integer>();
+                cancellata = new ArrayList<Boolean>();
+                prezzo = new ArrayList<Float>();
                 ArrayList<String> nomeCompagnia = new ArrayList<String>();
                 ArrayList<LocalTime> orePart = new ArrayList<LocalTime>();
                 ArrayList<LocalTime> oreDest = new ArrayList<LocalTime>();
@@ -214,6 +221,7 @@ public class HomeCliente {
 
                 tableCorse = new JTable(model);
                 tableCorse.getTableHeader().setReorderingAllowed(false);
+                tableCorse.setDefaultRenderer(Object.class, new CustomRenderer(cancellata));
                 ListSelectionModel selectionModel = tableCorse.getSelectionModel();
                 selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 scrollPaneCorse.setViewportView(tableCorse);
