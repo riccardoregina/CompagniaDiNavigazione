@@ -476,6 +476,7 @@ public class ClienteDAO implements dao.ClienteDAO {
             ps.setDate(8, java.sql.Date.valueOf(dataAcquisto));
             ps.setInt(9, etaPasseggero);
             rs = ps.executeQuery();
+            rs.next();
             idBiglietto = rs.getInt("idBiglietto");
             rs.close();
             ps.close();
