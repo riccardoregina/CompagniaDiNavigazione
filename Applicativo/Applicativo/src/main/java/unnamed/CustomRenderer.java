@@ -23,6 +23,11 @@ public class CustomRenderer extends DefaultTableCellRenderer {
             comp.setForeground(table.getForeground());
         }
 
+        if(isSelected) {
+            comp.setBackground(table.getSelectionBackground());
+            comp.setForeground(table.getSelectionForeground());
+        }
+
         return comp;
     }
 }

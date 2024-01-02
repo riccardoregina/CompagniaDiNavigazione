@@ -37,7 +37,7 @@ public class DatePicker {
             p1.add(button[x]);
         }
         JPanel p2 = new JPanel(new GridLayout(1, 3));
-        JButton previous = new JButton("<< Previous");
+        JButton previous = new JButton("<< Precedente");
         previous.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 month--;
@@ -46,7 +46,7 @@ public class DatePicker {
         });
         p2.add(previous);
         p2.add(l);
-        JButton next = new JButton("Next >>");
+        JButton next = new JButton("Prossimo >>");
         next.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 month++;

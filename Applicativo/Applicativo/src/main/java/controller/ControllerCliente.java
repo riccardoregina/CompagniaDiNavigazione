@@ -417,4 +417,25 @@ public class ControllerCliente {
             tipo.add(it.getValue().getTipo());
         }
     }
+
+    public void visualizzaBigliettiAcquistati(ArrayList<Integer> idBiglietti, ArrayList<Integer> idCorse, ArrayList<LocalDate> dataCor, ArrayList<LocalTime> orePart, ArrayList<Integer> minutiRitardo, ArrayList<String> portoPar, ArrayList<String> portoDest, ArrayList<Boolean> bagagli, ArrayList<String> targaVeicolo, ArrayList<Integer> etaPass, ArrayList<LocalDate> dataAcquisto, ArrayList<Float> prezzi) {
+        for (Biglietto b : cliente.getBigliettiAcquistati()) {
+            idBiglietti.add(b.getIdBiglietto());
+            idCorse.add(b.getCorsa().getCorsaRegolare().getIdCorsa());
+            dataCor.add(b.getCorsa().getData());
+            orePart.add(b.getCorsa().getCorsaRegolare().getOrarioPartenza());
+            minutiRitardo.add(b.getCorsa().getMinutiRitardo());
+            portoPar.add(b.getCorsa().getCorsaRegolare().getPortoPartenza().getComune());
+            portoDest.add(b.getCorsa().getCorsaRegolare().getPortoArrivo().getComune());
+            bagagli.add(b.isBagaglio());
+            if (b.getVeicolo() != null) {
+                targaVeicolo.add(b.getVeicolo().getTarga());
+            } else {
+                targaVeicolo.add("-");
+            }
+            etaPass.add(b.getEtaPasseggero());
+            dataAcquisto.add(b.getDataAcquisto());
+            prezzi.add(b.getPrezzo());
+        }
+    }
 }

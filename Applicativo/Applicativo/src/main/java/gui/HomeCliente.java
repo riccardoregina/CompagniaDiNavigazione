@@ -77,6 +77,8 @@ public class HomeCliente {
     private ArrayList<Integer> postiDispVei;
     private ArrayList<Boolean> cancellata;
     private ArrayList<Float> prezzo;
+    private ArrayList<LocalTime> orePart;
+    private ArrayList<Integer> minutiRitardo;
 
     /**
      * Instantiates a new Home cliente.
@@ -189,11 +191,11 @@ public class HomeCliente {
                 postiDispVei = new ArrayList<Integer>();
                 cancellata = new ArrayList<Boolean>();
                 prezzo = new ArrayList<Float>();
-                ArrayList<String> nomeCompagnia = new ArrayList<String>();
-                ArrayList<LocalTime> orePart = new ArrayList<LocalTime>();
+                orePart = new ArrayList<LocalTime>();
+                minutiRitardo = new ArrayList<Integer>();
                 ArrayList<LocalTime> oreDest = new ArrayList<LocalTime>();
-                ArrayList<Integer> minutiRitardo = new ArrayList<Integer>();
                 ArrayList<String> natanti = new ArrayList<String>();
+                ArrayList<String> nomeCompagnia = new ArrayList<String>();
 
                 controllerCliente.visualizzaCorse(idPortoPart, idPortoDest, dataSelezionata, orarioSelezionato, prezzoMax, tipoNatanteSelezionato, etaPass, veicolo, bagaglio, idCorse, nomeCompagnia, dateCor, orePart, oreDest, postiDispPass, postiDispVei, minutiRitardo, natanti, cancellata, prezzo);
                 String[] col = new String[]{"Compagnia", "Partenza", "Ore", "Arrivo", "Ore", "Prezzo", "Posti Passeggeri", "Posti Veicoli", "Ritardo", "Natante", "Data", "ID"};
@@ -241,6 +243,11 @@ public class HomeCliente {
                 int selectedRow = tableCorse.getSelectedRow();
                 if (selectedRow == -1) {
                     JOptionPane.showMessageDialog(null, "Selezionare una corsa dal tabellone");
+                    return;
+                }
+
+                if (dateCor.get(selectedRow).isBefore(LocalDate.now()) || (dateCor.get(selectedRow).isEqual(LocalDate.now()) && orePart.get(selectedRow).plusMinutes(minutiRitardo.get(selectedRow)).isBefore(LocalTime.now()))) {
+                    JOptionPane.showMessageDialog(null, "Non puoi più comprare biglietti per questa corsa");
                     return;
                 }
 
