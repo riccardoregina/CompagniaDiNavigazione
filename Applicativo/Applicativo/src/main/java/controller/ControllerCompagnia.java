@@ -127,7 +127,7 @@ public class ControllerCompagnia {
         ArrayList<Float> costoVeicolo = new ArrayList<>();
         ArrayList<String> nomeNatanteCorsa = new ArrayList<>();
         ArrayList<Integer> corsaSup = new ArrayList<>();
-        compagniaDAO.fetchCorseRegolari(loginCompagnia, idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatanteCorsa);
+        compagniaDAO.fetchCorseRegolari(loginCompagnia, idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatanteCorsa, corsaSup);
         for (int i = 0; i < costoIntero.size(); i++) {
             int id = idCorsa.get(i);
             Natante n = compagnia.getNatantiPosseduti().get(nomeNatanteCorsa.get(i));

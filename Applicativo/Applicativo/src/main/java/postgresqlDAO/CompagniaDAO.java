@@ -208,8 +208,9 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      * @param costoPrevendita the costo prevendita
      * @param costoVeicolo    the costo veicolo
      * @param nomeNatante     the nome natante
+     * @param corsaSup
      */
-    public void fetchCorseRegolari(String loginCompagnia, ArrayList<Integer> idCorsa, ArrayList<Integer> idPortoPartenza, ArrayList<Integer> idPortoArrivo, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<String> nomeNatante) {
+    public void fetchCorseRegolari(String loginCompagnia, ArrayList<Integer> idCorsa, ArrayList<Integer> idPortoPartenza, ArrayList<Integer> idPortoArrivo, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<String> nomeNatante, ArrayList<Integer> corsaSup) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select * from navigazione.CorsaRegolare where Compagnia = ?";
@@ -231,6 +232,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
                 costoPrevendita.add(rs.getFloat("costoPrevendita"));
                 costoVeicolo.add(rs.getFloat("costoVeicolo"));
                 nomeNatante.add(rs.getString("Natante"));
+                corsaSup.add(rs.getInt("corsaSup"));
             }
             rs.close();
             ps.close();
