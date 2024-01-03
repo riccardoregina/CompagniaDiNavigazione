@@ -10,7 +10,7 @@
     <children>
       <component id="78d7f" class="javax.swing.JComboBox" binding="cbPortoArrivo">
         <constraints>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
       </component>
@@ -150,7 +150,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="22f4e" class="javax.swing.JSpinner" binding="spinnerOraPOre">
+          <component id="22f4e" class="javax.swing.JSpinner" binding="spinnerOraP">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -163,19 +163,19 @@
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="fb91c" class="javax.swing.JSpinner" binding="spinnerOraAOre">
+          <component id="fb91c" class="javax.swing.JSpinner" binding="spinnerOraA">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
           </component>
-          <component id="a4ad7" class="javax.swing.JSpinner" binding="spinnerOraPMin">
+          <component id="a4ad7" class="javax.swing.JSpinner" binding="spinnerMinP">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
           </component>
-          <component id="51744" class="javax.swing.JSpinner" binding="spinnerOraAMin">
+          <component id="51744" class="javax.swing.JSpinner" binding="spinnerMinA">
             <constraints>
               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -201,11 +201,11 @@
       </grid>
       <component id="d5f14" class="javax.swing.JComboBox" binding="cbPortoPartenza">
         <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
       </component>
-      <grid id="82131" binding="panelPeriodo" layout-manager="GridLayoutManager" row-count="6" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="82131" binding="panelPeriodo" layout-manager="GridLayoutManager" row-count="7" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -225,7 +225,7 @@
           </component>
           <vspacer id="7b3a8">
             <constraints>
-              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
           <component id="c2b6a" class="javax.swing.JTextField" binding="tfDataFinePeriodo">
@@ -262,6 +262,30 @@
               <text value="Aggiungi Periodo"/>
             </properties>
           </component>
+          <component id="fab5b" class="javax.swing.JButton" binding="bCal1">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="..."/>
+            </properties>
+          </component>
+          <component id="61e7" class="javax.swing.JButton" binding="bCal2">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="..."/>
+            </properties>
+          </component>
+          <component id="5071e" class="javax.swing.JButton" binding="bSelPeriodo">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Seleziona Periodo"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <component id="ed4d8" class="javax.swing.JButton" binding="bCrea">
@@ -279,7 +303,7 @@
       </vspacer>
       <component id="d9965" class="javax.swing.JButton" binding="bScalo">
         <constraints>
-          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Aggiungi Scalo"/>
