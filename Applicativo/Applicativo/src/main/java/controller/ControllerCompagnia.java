@@ -18,14 +18,15 @@ public class ControllerCompagnia {
     private Compagnia compagnia;
     private HashMap<Integer, Porto> porti;
     private HashMap<Pair, CorsaSpecifica> corseSpecifiche;
+    private HashMap<Integer, Periodo> periodiNonCollegatiACorse;
 
     /**
      * Instantiates a new Controller compagnia.
      */
-//Metodi per Compagnia
     public ControllerCompagnia() {
         porti = new HashMap<>();
         corseSpecifiche = new HashMap<>();
+        periodiNonCollegatiACorse = new HashMap<>();
     }
 
     /**
@@ -267,6 +268,78 @@ public class ControllerCompagnia {
             cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), inizioPeriodo.get(i), finePeriodo.get(i), StringToBitset(giorni)));
             compagnia.addCorsaRegolare(cr);
         }
+
+        return true;
+    }
+
+    /**
+     * Overloading di creaCorsa. Permette di creare una corsa regolare senza attaccarla ad alcun periodo.
+     * Il parametro idCorsa viene aggiornato se la tupla
+     * viene inserita con successo nel DB. Restituisce true se vi riesce, false altrimenti.
+     *
+     * @param idPortoPartenza
+     * @param idPortoArrivo
+     * @param orarioPartenza
+     * @param orarioArrivo
+     * @param costoIntero
+     * @param scontoRidotto
+     * @param costoBagaglio
+     * @param costoPrevendita
+     * @param costoVeicolo
+     * @param nomeNatante
+     * @param idCorsa - output parameter
+     * @return
+     */
+    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante, Integer idCorsa) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        //Mi faccio restituire dal DAO l'id della tupla inserita.
+        idCorsa = -1; //solo una inizializzazione...
+        try {
+            compagniaDAO.aggiungeCorsa(idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagnia.getLogin(), nomeNatante, idCorsa);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        CorsaRegolare cr = new CorsaRegolare(idCorsa, compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita, null);
+        compagnia.addCorsaRegolare(cr);
+
+        return true;
+    }
+
+    /**
+     * aggiunge un periodo senza attaccarlo ad una corsa regolare.
+     *
+     * @param giorni
+     * @param inizioPeriodo
+     * @param finePeriodo
+     * @param idPeriodo - output parameter
+     * @return a boolean
+     */
+    public boolean aggiungiPeriodo(String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, Integer idPeriodo) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        idPeriodo = -1;
+        try {
+            compagniaDAO.aggiungePeriodo(giorni, inizioPeriodo, finePeriodo, idPeriodo);
+        } catch (SQLException e) {
+            return false;
+        }
+        periodiNonCollegatiACorse.put(idPeriodo, new Periodo(idPeriodo, inizioPeriodo, finePeriodo, StringToBitset(giorni)));
+
+        return true;
+    }
+
+    public boolean attivaCorsaInPeriodo(int idCorsa, int idPeriodo) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.attivaCorsaInPeriodo(idCorsa, idPeriodo);
+        } catch (SQLException e) {
+            return false;
+        }
+        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
+        Periodo p = periodiNonCollegatiACorse.get(idPeriodo);
+        cr.addPeriodoAttivita(p);
+        //se il periodo non era collegato ad una corsa, adesso lo é.
+        periodiNonCollegatiACorse.remove(idPeriodo);
 
         return true;
     }

@@ -370,7 +370,55 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
         } catch(SQLException e) {
             System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            throw new SQLException();
+        }
+    }
+
+    /**
+     * Overload di aggiungeCorsa. Prova ad aggiungere una corsa nel DB. Se riesce, restituisce l'id
+     * della tupla inserita, altrimenti viene lanciata un'eccezione.
+     *
+     * @param idPortoPartenza
+     * @param idPortoArrivo
+     * @param orarioPartenza
+     * @param orarioArrivo
+     * @param costoIntero
+     * @param scontoRidotto
+     * @param costoBagaglio
+     * @param costoPrevendita
+     * @param costoVeicolo
+     * @param nomeNatante
+     * @param idCorsa - output parameter
+     */
+    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante, Integer idCorsa) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String query = "insert into navigazione.CorsaRegolare (portopartenza, portoarrivo, orariopartenza, orarioarrivo, costointero, scontoridotto, costobagaglio, costoprevendita, costoveicolo, compagnia, natante) values (?,?,?,?,?,?,?,?,?,?,?) returning idcorsa";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, idPortoPartenza);
+            ps.setInt(2, idPortoArrivo);
+            ps.setTime(3, Time.valueOf(orarioPartenza));
+            ps.setTime(4, Time.valueOf(orarioArrivo));
+            ps.setFloat(5, costoIntero);
+            ps.setFloat(6, scontoRidotto);
+            ps.setFloat(7, costoBagaglio);
+            ps.setFloat(8, costoPrevendita);
+            ps.setFloat(9, costoVeicolo);
+            ps.setString(10, loginCompagnia);
+            ps.setString(11, nomeNatante);
+            rs = ps.executeQuery();
+            rs.next();
+            idCorsa = rs.getInt("idCorsa");
+            rs.close();
+
+            ps.close();
+            connection.close();
+
+        } catch(SQLException e) {
+            System.out.println("Richiesta al DB fallita.");
+            throw new SQLException();
         }
     }
 
@@ -517,7 +565,50 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             connection.close();
         } catch (SQLException e) {
             System.out.println("Eliminazione fallita.");
-            e.printStackTrace();
+            throw new SQLException();
+        }
+    }
+
+    public void aggiungePeriodo(String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, Integer idPeriodo) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String query = "insert into navigazione.Periodo (datainizio, datafine, giorni)"
+                + " values (?,?,?)" +
+                " returning idPeriodo";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setDate(1, java.sql.Date.valueOf(inizioPeriodo));
+            ps.setDate(2, java.sql.Date.valueOf(finePeriodo));
+            ps.setString(3, giorni);
+
+            ps.executeQuery();
+
+            rs.next();
+            rs.getInt("idPeriodo");
+            rs.close();
+
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
+
+    public void attivaCorsaInPeriodo(int idCorsa, int idPeriodo) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "insert into navigazione.attivain values (?,?)";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, idCorsa);
+            ps.setInt(2, idPeriodo);
+            ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
         }
     }
 }
