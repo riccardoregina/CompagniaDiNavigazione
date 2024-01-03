@@ -23,6 +23,7 @@ public class CorsaRegolare {
     private float costoPrevendita;
     private ArrayList<Scalo> scali;
     private ArrayList<CorsaSpecifica> corseSpecifiche;
+    private CorsaRegolare corsaSup;
 
     /**
      * Instantiates a new Corsa regolare.
@@ -42,7 +43,7 @@ public class CorsaRegolare {
      */
     public CorsaRegolare(int idCorsa, Compagnia compagnia, Natante natante, Porto portoPartenza, Porto portoArrivo,
                          LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto,
-                         float costoBagaglio, float costoVeicolo, float costoPrevendita) {
+                         float costoBagaglio, float costoVeicolo, float costoPrevendita, CorsaRegolare corsaSup) {
         this.idCorsa = idCorsa;
         this.compagnia = compagnia;
         this.natante = natante;
@@ -55,6 +56,7 @@ public class CorsaRegolare {
         this.costoBagaglio = costoBagaglio;
         this.costoPrevendita = costoPrevendita;
         this.costoVeicolo = costoVeicolo;
+        this.corsaSup = corsaSup;
         periodiAttivita = new ArrayList<Periodo>();
         corseSpecifiche = new ArrayList<CorsaSpecifica>();
         scali = new ArrayList<>();
@@ -67,15 +69,6 @@ public class CorsaRegolare {
      */
     public int getIdCorsa() {
         return idCorsa;
-    }
-
-    /**
-     * Gets scalo.
-     *
-     * @return the scalo
-     */
-    public ArrayList<Scalo> getScalo() {
-        return scali;
     }
 
     /**
@@ -355,5 +348,17 @@ public class CorsaRegolare {
      */
     public void removeCorsaSpecifica(CorsaSpecifica corsaSpecifica) {
         corseSpecifiche.remove(corsaSpecifica);
+    }
+
+    public ArrayList<Scalo> getScali() {
+        return scali;
+    }
+
+    public CorsaRegolare getCorsaSup() {
+        return corsaSup;
+    }
+
+    public void setCorsaSup(CorsaRegolare corsaSup) {
+        this.corsaSup = corsaSup;
     }
 }

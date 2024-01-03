@@ -169,8 +169,9 @@ public class ControllerCliente {
         ArrayList<Float> costoVeicolo = new ArrayList<>();
         ArrayList<String> compagniaCorsa = new ArrayList<>();
         ArrayList<String> nomeNatante = new ArrayList<>();
+        ArrayList<Integer> corsaSup = new ArrayList<>();
         clienteDAO = new ClienteDAO();
-        clienteDAO.fetchCorseRegolari(idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagniaCorsa, nomeNatante);
+        clienteDAO.fetchCorseRegolari(idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagniaCorsa, nomeNatante, corsaSup);
         for (int i = 0; i < costoIntero.size(); i++) {
             int id = idCorsa.get(i);
             Compagnia c = compagnie.get(compagniaCorsa.get(i));
@@ -184,7 +185,8 @@ public class ControllerCliente {
             float cBagaglio = costoBagaglio.get(i);
             float cPrev = costoPrevendita.get(i);
             float cVei = costoVeicolo.get(i);
-            c.addCorsaRegolare(new CorsaRegolare(id, c, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cVei, cPrev));
+            CorsaRegolare crSup = c.getCorseErogate().get(corsaSup.get(i));
+            c.addCorsaRegolare(new CorsaRegolare(id, c, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cVei, cPrev, crSup));
         }
 
         //Elementi dei periodi

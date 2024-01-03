@@ -126,6 +126,7 @@ public class ControllerCompagnia {
         ArrayList<Float> costoPrevendita = new ArrayList<>();
         ArrayList<Float> costoVeicolo = new ArrayList<>();
         ArrayList<String> nomeNatanteCorsa = new ArrayList<>();
+        ArrayList<Integer> corsaSup = new ArrayList<>();
         compagniaDAO.fetchCorseRegolari(loginCompagnia, idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatanteCorsa);
         for (int i = 0; i < costoIntero.size(); i++) {
             int id = idCorsa.get(i);
@@ -139,7 +140,8 @@ public class ControllerCompagnia {
             float cBagaglio = costoBagaglio.get(i);
             float cPrev = costoPrevendita.get(i);
             float cVei = costoVeicolo.get(i);
-            compagnia.addCorsaRegolare(new CorsaRegolare(id, compagnia, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cPrev, cVei));
+            CorsaRegolare crSup = compagnia.getCorseErogate().get(corsaSup.get(i));
+            compagnia.addCorsaRegolare(new CorsaRegolare(id, compagnia, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cPrev, cVei, crSup));
         }
 
         //costruisco i periodi e li assegno alle corse
@@ -260,7 +262,7 @@ public class ControllerCompagnia {
             return false;
         }
 
-        CorsaRegolare cr = new CorsaRegolare(idCorsa, compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita);
+        CorsaRegolare cr = new CorsaRegolare(idCorsa, compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita, null);
         for (int i = 0; i < inizioPeriodo.size(); i++) {
             cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), inizioPeriodo.get(i), finePeriodo.get(i), StringToBitset(giorni)));
             compagnia.addCorsaRegolare(cr);

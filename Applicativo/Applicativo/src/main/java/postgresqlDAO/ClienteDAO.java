@@ -6,8 +6,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Date;
 
 /**
  * The type Cliente db.
@@ -323,11 +321,17 @@ public class ClienteDAO implements dao.ClienteDAO {
      * @param costoVeicolo    the costo veicolo
      * @param compagniaCorsa  the compagnia corsa
      * @param nomeNatante     the nome natante
+     * @param corsaSup
      */
-    public void fetchCorseRegolari(ArrayList<Integer> idCorsa, ArrayList<Integer> idPortoPartenza, ArrayList<Integer> idPortoArrivo, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<String> compagniaCorsa, ArrayList<String> nomeNatante) {
+    public void fetchCorseRegolari(ArrayList<Integer> idCorsa, ArrayList<Integer> idPortoPartenza, ArrayList<Integer> idPortoArrivo, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<String> compagniaCorsa, ArrayList<String> nomeNatante, ArrayList<Integer> corsaSup) {
         Statement s = null;
         ResultSet rs = null;
-        String query = "select * from navigazione.CorsaRegolare";
+        String query = "select * from navigazione.CorsaRegolare order by idCorsa";
+        /*
+         * La order by ci consente di riempire correttamente, per ogni corsa regolare da costruire nel model,
+         * il campo corsaSup: la corsaSup avrá sicuramente idCorsa < in quanto viene creata prima delle sue
+         * sottocorse.
+         */
 
         try {
             s = connection.createStatement();
@@ -346,6 +350,7 @@ public class ClienteDAO implements dao.ClienteDAO {
                 costoVeicolo.add(rs.getFloat("costoVeicolo"));
                 compagniaCorsa.add(rs.getString("Compagnia"));
                 nomeNatante.add(rs.getString("Natante"));
+                corsaSup.add(rs.getInt("CorsaSup"));
             }
             rs.close();
             s.close();
