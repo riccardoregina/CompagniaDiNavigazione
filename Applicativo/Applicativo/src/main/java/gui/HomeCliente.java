@@ -242,7 +242,6 @@ public class HomeCliente {
                 ListSelectionModel selectionModel = tableCorse.getSelectionModel();
                 selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 scrollPaneCorse.setViewportView(tableCorse);
-                System.out.println(tableCorse.getBackground().getRed() + ", " + tableCorse.getBackground().getGreen() + ", " + tableCorse.getBackground().getBlue());
 
                 acquistaButton.setEnabled(true);
             }

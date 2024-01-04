@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static unnamed.NonStandardConversions.StringToBitset;
 
@@ -213,6 +214,16 @@ public class ControllerCompagnia {
         }
     }
 
+    public boolean isTraghetto(String nomeNatante) {
+        boolean ret = false;
+
+        if (compagnia.getNatantiPosseduti().get(nomeNatante).getTipo().equals("traghetto")) {
+            ret = true;
+        }
+
+        return ret;
+    }
+
     public boolean rimuoviNatante(String nomeNatante) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
@@ -290,17 +301,17 @@ public class ControllerCompagnia {
      * @param idCorsa - output parameter
      * @return
      */
-    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante, Integer idCorsa) {
+    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante, AtomicInteger idCorsa) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         //Mi faccio restituire dal DAO l'id della tupla inserita.
-        idCorsa = -1; //solo una inizializzazione...
+        idCorsa.set(-1); //solo una inizializzazione...
         try {
             compagniaDAO.aggiungeCorsa(idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagnia.getLogin(), nomeNatante, idCorsa);
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-        CorsaRegolare cr = new CorsaRegolare(idCorsa, compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita, null);
+        CorsaRegolare cr = new CorsaRegolare(idCorsa.get(), compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita, null);
         compagnia.addCorsaRegolare(cr);
 
         return true;
@@ -315,16 +326,15 @@ public class ControllerCompagnia {
      * @param idPeriodo - output parameter
      * @return a boolean
      */
-    public boolean aggiungiPeriodo(String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, Integer idPeriodo) {
+    public boolean aggiungiPeriodo(String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, AtomicInteger idPeriodo) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
-        idPeriodo = -1;
+        idPeriodo.set(-1);
         try {
             compagniaDAO.aggiungePeriodo(giorni, inizioPeriodo, finePeriodo, idPeriodo);
         } catch (SQLException e) {
             return false;
         }
-        periodiNonCollegatiACorse.put(idPeriodo, new Periodo(idPeriodo, inizioPeriodo, finePeriodo, StringToBitset(giorni)));
-
+        periodiNonCollegatiACorse.put(idPeriodo.get(), new Periodo(idPeriodo.get(), inizioPeriodo, finePeriodo, StringToBitset(giorni)));
         return true;
     }
 

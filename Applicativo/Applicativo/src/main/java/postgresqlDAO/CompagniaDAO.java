@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The type Compagnia db.
@@ -390,7 +391,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      * @param nomeNatante
      * @param idCorsa - output parameter
      */
-    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante, Integer idCorsa) throws SQLException {
+    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante, AtomicInteger idCorsa) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "insert into navigazione.CorsaRegolare (portopartenza, portoarrivo, orariopartenza, orarioarrivo, costointero, scontoridotto, costobagaglio, costoprevendita, costoveicolo, compagnia, natante) values (?,?,?,?,?,?,?,?,?,?,?) returning idcorsa";
@@ -410,7 +411,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(11, nomeNatante);
             rs = ps.executeQuery();
             rs.next();
-            idCorsa = rs.getInt("idCorsa");
+            idCorsa.set((int) rs.getInt("idCorsa"));
             rs.close();
 
             ps.close();
@@ -569,7 +570,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
         }
     }
 
-    public void aggiungePeriodo(String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, Integer idPeriodo) throws SQLException {
+    public void aggiungePeriodo(String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, AtomicInteger idPeriodo) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "insert into navigazione.Periodo (datainizio, datafine, giorni)"
@@ -582,10 +583,10 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setDate(2, java.sql.Date.valueOf(finePeriodo));
             ps.setString(3, giorni);
 
-            ps.executeQuery();
+            rs = ps.executeQuery();
 
             rs.next();
-            rs.getInt("idPeriodo");
+            idPeriodo.set(rs.getInt("idPeriodo"));
             rs.close();
 
             ps.close();
