@@ -32,6 +32,7 @@ public class HomeCompagnia {
     private JLabel corseErogateLabel;
     private JLabel natantiDisponibiliLabel;
     private JButton buttonEliminaCorsa;
+    private JButton buttonLogout;
     private JTable tableNatanti;
     /**
      * The Controller compagnia.
@@ -121,6 +122,13 @@ public class HomeCompagnia {
                 int idCorsaDaEliminare = (int) tableCorse.getValueAt(selectedRow, 0);
                 controllerCompagnia.eliminaCorsaRegolare(idCorsaDaEliminare);
                 aggiornaTabellaCorse();
+            }
+        });
+        buttonLogout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                HomeMain homeMain = new HomeMain();
+                frame.dispose();
             }
         });
     }
@@ -261,6 +269,10 @@ public class HomeCompagnia {
         buttonEliminaCorsa = new JButton();
         buttonEliminaCorsa.setText("EliminaCorsa");
         panel1.add(buttonEliminaCorsa, new com.intellij.uiDesigner.core.GridConstraints(2, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTHWEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(140, -1), new Dimension(140, -1), 0, false));
+        buttonLogout = new JButton();
+        buttonLogout.setEnabled(true);
+        buttonLogout.setText("Logout");
+        panel1.add(buttonLogout, new com.intellij.uiDesigner.core.GridConstraints(6, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTHWEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(140, -1), new Dimension(140, -1), 0, false));
     }
 
     /**

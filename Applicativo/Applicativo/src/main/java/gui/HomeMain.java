@@ -29,11 +29,17 @@ public class HomeMain {
      * The Controller compagnia.
      */
     public ControllerCompagnia controllerCompagnia;
-
     /**
      * Instantiates a new Home main.
      */
     public HomeMain() {
+        frame = new JFrame("homeMain");
+        frame.setContentPane(this.panel1);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setSize((int) screenSize.width / 4, (int) (screenSize.height / 2));
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
         buttonCompagnia.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -60,13 +66,7 @@ public class HomeMain {
      * @param args the input arguments
      */
     public static void main(String[] args) {
-        frame = new JFrame("homeMain");
-        frame.setContentPane(new HomeMain().panel1);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setSize((int) screenSize.width / 4, (int) (screenSize.height / 2));
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        HomeMain homeMain = new HomeMain();
     }
 
 
