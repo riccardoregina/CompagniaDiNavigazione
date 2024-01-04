@@ -232,22 +232,20 @@ public class CreaCorse {
 
                 AtomicInteger idCorsa = new AtomicInteger(-1);
 
-                if (controllerCompagnia.creaCorsa(idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, sconto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatante, idCorsa)) {
-                    JOptionPane.showMessageDialog(null, "Corsa creata!");
-                    System.out.println("idCorsa" + idCorsa.get());
-                    //controllerCompagnia.aggiungiScali(idCorsa, idPortiScalo, oraAttracco, oraRipartenza);
-                } else {
+                if (!controllerCompagnia.creaCorsa(idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, sconto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatante, idCorsa)) {
                     JOptionPane.showMessageDialog(null, "Non è stato possibile creare la corsa");
                     return;
                 }
 
-                System.out.println("Parte dei periodi " + listaInizioPer.size());
                 if (!listaInizioPer.isEmpty()) {
                     for (int i = 0; i < listaInizioPer.size(); i++) {
                         AtomicInteger idPeriodo = new AtomicInteger(-1);
                         if (controllerCompagnia.aggiungiPeriodo(listaGiorniAttivi.get(i), listaInizioPer.get(i), listaFinePer.get(i), idPeriodo)) {
-                            System.out.println("idPeriodo " + idPeriodo);
-                            controllerCompagnia.attivaCorsaInPeriodo(idCorsa.get(), idPeriodo.get());
+                            if (controllerCompagnia.attivaCorsaInPeriodo(idCorsa.get(), idPeriodo.get())) {
+                                JOptionPane.showMessageDialog(null, "Corsa creata!");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Non è stato possibile creare la corsa");
+                            }
                         }
                     }
                 }

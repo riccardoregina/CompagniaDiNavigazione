@@ -242,51 +242,11 @@ public class ControllerCompagnia {
     }
 
     /**
-     * tenta di creare una corsa sul DB mediante un metodo di CompagniaDAO.
-     * Se riesce, setta il suo idCorsa (parametro di output), la aggiunge nel Model, restituisce true.
-     * Se non riesce, idCorsa resta pari a -1, viene restituito false.
-     *
-     * @param idPortoPartenza
-     * @param idPortoArrivo
-     * @param giorni
-     * @param inizioPeriodo
-     * @param finePeriodo
-     * @param orarioPartenza
-     * @param orarioArrivo
-     * @param costoIntero
-     * @param scontoRidotto
-     * @param costoBagaglio
-     * @param costoPrevendita
-     * @param costoVeicolo
-     * @param nomeNatante
-     * @param idCorsa output parameter
-     * @return a boolean
-     */
-    public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, String giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante, Integer idCorsa) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        //Mi faccio restituire dal DAO l'id della tupla inserita.
-        idCorsa = -1; //solo una inizializzazione...
-        ArrayList<Integer> idPeriodo = new ArrayList<>();
-        try {
-            compagniaDAO.aggiungeCorsa(idPortoPartenza, idPortoArrivo, giorni, inizioPeriodo, finePeriodo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagnia.getLogin(), nomeNatante, idCorsa, idPeriodo);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        CorsaRegolare cr = new CorsaRegolare(idCorsa, compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita, null);
-        for (int i = 0; i < inizioPeriodo.size(); i++) {
-            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), inizioPeriodo.get(i), finePeriodo.get(i), StringToBitset(giorni)));
-            compagnia.addCorsaRegolare(cr);
-        }
-
-        return true;
-    }
-
-    /**
-     * Overloading di creaCorsa. Permette di creare una corsa regolare senza attaccarla ad alcun periodo.
-     * Il parametro idCorsa viene aggiornato se la tupla
-     * viene inserita con successo nel DB. Restituisce true se vi riesce, false altrimenti.
+     * Tenta di inserire una corsaRegolare nel DB.
+     * Se vi riesce, aggiorna il parametro idCorsa, inserisce nel model
+     * una nuova corsaRegolare, restituisce true.
+     * Altrimenti, il parametro idCorsa resta pari a -1, viene restituito false
+     * senza creare la corsaRegolare nel model.
      *
      * @param idPortoPartenza
      * @param idPortoArrivo
