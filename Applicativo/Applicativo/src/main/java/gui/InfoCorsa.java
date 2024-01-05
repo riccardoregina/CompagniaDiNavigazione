@@ -79,17 +79,17 @@ public class InfoCorsa {
         for (int i = 0; i < idSottoCorse.size(); i++) {
             ArrayList<Integer> tmp = new ArrayList<>();
             controllerCompagnia.visualizzaInfoCorsa(idSottoCorse.get(i), portoPartenza, portoArrivo, natante, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, inizioPer, finePer, giorniAttivi, tmp);
-            data[i+1][0] = idSottoCorse;
-            data[i+1][1] = portoPartenza.getFirst();
-            data[i+1][2] = orarioPartenza.getFirst();
-            data[i+1][3] = portoArrivo.getFirst();
-            data[i+1][4] = orarioArrivo.getFirst();
-            data[i+1][5] = costoIntero.getFirst();
-            data[i+1][6] = scontoRidotto.getFirst();
-            data[i+1][7] = costoBagaglio.getFirst();
-            data[i+1][8] = costoPrevendita.getFirst();
-            data[i+1][9] = costoVeicolo.getFirst();
-            data[i+1][10] = natante.getFirst();
+            data[i + 1][0] = idSottoCorse;
+            data[i + 1][1] = portoPartenza.getFirst();
+            data[i + 1][2] = orarioPartenza.getFirst();
+            data[i + 1][3] = portoArrivo.getFirst();
+            data[i + 1][4] = orarioArrivo.getFirst();
+            data[i + 1][5] = costoIntero.getFirst();
+            data[i + 1][6] = scontoRidotto.getFirst();
+            data[i + 1][7] = costoBagaglio.getFirst();
+            data[i + 1][8] = costoPrevendita.getFirst();
+            data[i + 1][9] = costoVeicolo.getFirst();
+            data[i + 1][10] = natante.getFirst();
         }
         DefaultTableModel model = new DefaultTableModel(data, col) {
             @Override
@@ -179,4 +179,5 @@ public class InfoCorsa {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }

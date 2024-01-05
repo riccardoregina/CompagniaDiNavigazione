@@ -48,11 +48,11 @@ public class RegistrazioneCliente {
         buttonRegistrazione.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String login = username.getText();
+                String login = textFieldUsername.getText();
                 char[] pw1 = passwordField1.getPassword();
-                char[] pw2 = passwordField1.getPassword();
+                char[] pw2 = passwordField2.getPassword();
                 String pwd1 = new String(pw1);
-                String pwd2 = new String(pw1);
+                String pwd2 = new String(pw2);
                 String nome = textFieldNome.getText();
                 String cognome = textFieldCognome.getText();
                 if (nome.isEmpty() || cognome.isEmpty() || login.isEmpty() || pwd1.isEmpty() || pwd2.isEmpty()) {
