@@ -519,4 +519,24 @@ public class ClienteDAO implements dao.ClienteDAO {
             throw new SQLException();
         }
     }
+
+    public void siRegistra(String nome, String cognome, String login, String pwd) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "insert into navigazione.cliente" +
+                " values (?,?,?,?)";
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, login);
+            ps.setString(2, pwd);
+            ps.setString(3, nome);
+            ps.setString(4, cognome);
+
+            ps.executeUpdate();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Aggiunta fallita.");
+            throw new SQLException();
+        }
+    }
 }

@@ -440,4 +440,14 @@ public class ControllerCliente {
             prezzi.add(b.getPrezzo());
         }
     }
+
+    public boolean clienteSiRegistra(String nome, String cognome, String login, String pwd1) {
+        ClienteDAO clienteDAO = new ClienteDAO();
+        try {
+            clienteDAO.siRegistra(nome, cognome, login, pwd1);
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
 }
