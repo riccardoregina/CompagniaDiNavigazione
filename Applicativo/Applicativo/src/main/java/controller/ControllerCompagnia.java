@@ -390,4 +390,43 @@ public class ControllerCompagnia {
     public String getLoginCompagnia() {
         return compagnia.getLogin();
     }
+
+    public boolean isSottoCorsa(Integer idCorsa) {
+        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
+        return cr.getCorsaSup() != null;
+    }
+
+    public Integer getCorsaSup(Integer idCorsa) {
+        if (isSottoCorsa(idCorsa)) {
+            return getCorsaSup(compagnia.getCorseErogate().get(idCorsa).getCorsaSup().getIdCorsa());
+        } else {
+            return idCorsa;
+        }
+    }
+
+    public void visualizzaInfoCorsa(int idCorsa, ArrayList<String> portoPartenza, ArrayList<String> portoArrivo, ArrayList<String> natante, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<LocalDate> inizioPer, ArrayList<LocalDate> finePer, ArrayList<String> giorniAttivi, ArrayList<Integer> idSottoCorse) {
+        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
+        for (Periodo p : cr.getPeriodiAttivita()) {
+            inizioPer.add(p.getDataInizio());
+            finePer.add(p.getDataFine());
+            giorniAttivi.add(p.getGiorni().toString());
+        }
+
+        for (Map.Entry<Integer, CorsaRegolare> it : compagnia.getCorseErogate().entrySet()) {
+            if (it.getValue().getCorsaSup().getIdCorsa() == cr.getIdCorsa()) {
+                idSottoCorse.add(it.getValue().getIdCorsa());
+            }
+        }
+
+        portoPartenza.addFirst(cr.getPortoPartenza().getComune());
+        portoArrivo.addFirst(cr.getPortoArrivo().getComune());
+        natante.addFirst(cr.getNatante().getNome());
+        orarioPartenza.addFirst(cr.getOrarioPartenza());
+        orarioArrivo.addFirst(cr.getOrarioArrivo());
+        costoIntero.addFirst(cr.getCostoIntero());
+        scontoRidotto.addFirst(cr.getScontoRidotto());
+        costoBagaglio.addFirst(cr.getCostoBagaglio());
+        costoPrevendita.addFirst(cr.getCostoPrevendita());
+        costoVeicolo.addFirst(cr.getCostoVeicolo());
+    }
 }
