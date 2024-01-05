@@ -271,8 +271,10 @@ public class ControllerCompagnia {
             e.printStackTrace();
             return false;
         }
-        CorsaRegolare cr = new CorsaRegolare(idCorsa.get(), compagnia, compagnia.getNatantiPosseduti().get(nomeNatante), porti.get(idPortoPartenza), porti.get(idPortoArrivo), orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoVeicolo, costoPrevendita, null);
-        compagnia.addCorsaRegolare(cr);
+
+        buildCorseRegolari(compagnia.getLogin());
+        buildPeriodi(compagnia.getLogin());
+        buildCorseSpecifiche();
 
         return true;
     }
@@ -310,6 +312,9 @@ public class ControllerCompagnia {
         cr.addPeriodoAttivita(p);
         //se il periodo non era collegato ad una corsa, adesso lo é.
         periodiNonCollegatiACorse.remove(idPeriodo);
+
+        buildPeriodi(compagnia.getLogin());
+        buildCorseSpecifiche();
 
         return true;
     }
@@ -362,6 +367,10 @@ public class ControllerCompagnia {
             System.out.println("Elemento non trovato.");
             e.printStackTrace();
         }
+
+        buildCorseRegolari(compagnia.getLogin());
+        buildPeriodi(compagnia.getLogin());
+        buildCorseSpecifiche();
 
         return true;
     }
