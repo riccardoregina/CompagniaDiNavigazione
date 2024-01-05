@@ -11,19 +11,7 @@ public class Periodo {
     private int idPeriodo;
     private LocalDate dataInizio;
     private LocalDate dataFine;
-    private BitSet giorni;
-
-    /**
-     * Instantiates a new Periodo.
-     *
-     * @param dataInizio the data inizio
-     * @param dataFine   the data fine
-     */
-    public Periodo(LocalDate dataInizio, LocalDate dataFine) {
-        this.dataInizio = dataInizio;
-        this.dataFine = dataFine;
-        giorni = new BitSet(7);
-    }
+    private String giorni;
 
     /**
      * Instantiates a new Periodo.
@@ -33,7 +21,7 @@ public class Periodo {
      * @param dataFine   the data fine
      * @param giorni     the giorni
      */
-    public Periodo(int idPeriodo, LocalDate dataInizio, LocalDate dataFine, BitSet giorni) {
+    public Periodo(int idPeriodo, LocalDate dataInizio, LocalDate dataFine, String giorni) {
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
         this.giorni = giorni;
@@ -81,7 +69,7 @@ public class Periodo {
      *
      * @return the giorni
      */
-    public BitSet getGiorni() {
+    public String getGiorni() {
         return giorni;
     }
 
@@ -90,29 +78,7 @@ public class Periodo {
      *
      * @param giorni the giorni
      */
-    public void setGiorni(BitSet giorni) {
+    public void setGiorni(String giorni) {
         this.giorni = giorni;
-    }
-
-    /**
-     * Add giorno.
-     *
-     * @param index the index
-     */
-    public void addGiorno(int index) {
-        if(index < 7 && index >= 0) {
-            giorni.set(index);
-        }
-    }
-
-    /**
-     * Remove giorno.
-     *
-     * @param index the index
-     */
-    public void removeGiorno(int index) {
-        if(index < 7 && index >= 0) {
-            giorni.clear(index);
-        }
     }
 }
