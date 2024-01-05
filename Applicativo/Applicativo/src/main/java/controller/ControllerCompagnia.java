@@ -59,6 +59,9 @@ public class ControllerCompagnia {
     public void buildModel(String login, String password) {
         buildPorti();
         buildCompagnia(login, password);
+        buildNatantiCompagnia(login);
+        buildCorseRegolari(login);
+        buildPeriodi(login);
         buildCorseSpecifiche();
     }
 
@@ -77,12 +80,6 @@ public class ControllerCompagnia {
         }
     }
 
-    /**
-     * Build compagnia.
-     *
-     * @param loginCompagnia the login compagnia
-     * @param password       the password
-     */
     public void buildCompagnia(String loginCompagnia, String password) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         String nomeCompagnia = null;
@@ -103,9 +100,10 @@ public class ControllerCompagnia {
             accountSocial.add(new AccountSocial(compagnia, nomeSocial.get(i), tagSocial.get(i)));
         }
         compagnia.setAccounts(accountSocial);
+    }
 
-        //costruisco i natanti
-        compagniaDAO = new CompagniaDAO();
+    public void buildNatantiCompagnia(String loginCompagnia) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
         ArrayList<String> nomeNatante = new ArrayList<>();
         ArrayList<Integer> capienzaPasseggeri = new ArrayList<>();
         ArrayList<Integer> capienzaVeicoli = new ArrayList<>();
@@ -114,9 +112,10 @@ public class ControllerCompagnia {
         for (int i = 0; i < nomeNatante.size(); i++) {
             compagnia.addNatante(new Natante(compagnia, nomeNatante.get(i), capienzaPasseggeri.get(i), capienzaVeicoli.get(i), tipo.get(i)));
         }
+    }
 
-        //costruisco le corse regolari
-        compagniaDAO = new CompagniaDAO();
+    public void buildCorseRegolari(String loginCompagnia) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
         ArrayList<Integer> idCorsa = new ArrayList<>();
         ArrayList<Integer> idPortoPartenza = new ArrayList<>();
         ArrayList<Integer> idPortoArrivo = new ArrayList<>();
@@ -145,9 +144,10 @@ public class ControllerCompagnia {
             CorsaRegolare crSup = compagnia.getCorseErogate().get(corsaSup.get(i));
             compagnia.addCorsaRegolare(new CorsaRegolare(id, compagnia, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cPrev, cVei, crSup));
         }
+    }
 
-        //costruisco i periodi e li assegno alle corse
-        compagniaDAO = new CompagniaDAO();
+    public void buildPeriodi(String loginCompagnia) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
         HashMap<Integer, Periodo> periodi = new HashMap<>();
         ArrayList<Integer> corsa = new ArrayList<>();
         ArrayList<Integer> idPeriodo = new ArrayList<>();
@@ -385,6 +385,10 @@ public class ControllerCompagnia {
             orarioPartenza.add(it.getValue().getOrarioPartenza());
             orarioArrivo.add(it.getValue().getOrarioArrivo());
         }
+    }
+
+    public String getLoginCompagnia() {
+        return compagnia.getLogin();
     }
 
     public boolean isSottoCorsa(Integer idCorsa) {
