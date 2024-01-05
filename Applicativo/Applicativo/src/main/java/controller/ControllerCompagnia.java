@@ -272,6 +272,8 @@ public class ControllerCompagnia {
             return false;
         }
 
+        compagnia.getCorseErogate().clear();
+        corseSpecifiche.clear();
         buildCorseRegolari(compagnia.getLogin());
         buildPeriodi(compagnia.getLogin());
         buildCorseSpecifiche();
@@ -313,6 +315,9 @@ public class ControllerCompagnia {
         //se il periodo non era collegato ad una corsa, adesso lo é.
         periodiNonCollegatiACorse.remove(idPeriodo);
 
+        compagnia.getCorseErogate().clear();
+        corseSpecifiche.clear();
+        buildCorseRegolari(compagnia.getLogin());
         buildPeriodi(compagnia.getLogin());
         buildCorseSpecifiche();
 
@@ -324,9 +329,9 @@ public class ControllerCompagnia {
         compagniaDAO.cancellaCorsaRegolare(idCorsa);
         //aggiorno le corse regolari e le corse specifiche
         compagnia.getCorseErogate().clear();
+        corseSpecifiche.clear();
         buildCorseRegolari(compagnia.getLogin());
         buildPeriodi(compagnia.getLogin());
-        corseSpecifiche.clear();
         buildCorseSpecifiche();
         return true;
     }
@@ -368,6 +373,8 @@ public class ControllerCompagnia {
             e.printStackTrace();
         }
 
+        compagnia.getCorseErogate().clear();
+        corseSpecifiche.clear();
         buildCorseRegolari(compagnia.getLogin());
         buildPeriodi(compagnia.getLogin());
         buildCorseSpecifiche();
