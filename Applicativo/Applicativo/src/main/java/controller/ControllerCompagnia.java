@@ -142,7 +142,7 @@ public class ControllerCompagnia {
             float cPrev = costoPrevendita.get(i);
             float cVei = costoVeicolo.get(i);
             CorsaRegolare crSup = compagnia.getCorseErogate().get(corsaSup.get(i));
-            compagnia.addCorsaRegolare(new CorsaRegolare(id, compagnia, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cPrev, cVei, crSup));
+            compagnia.addCorsaRegolare(new CorsaRegolare(id, compagnia, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cVei, cPrev, crSup));
         }
     }
 
@@ -158,7 +158,7 @@ public class ControllerCompagnia {
         //Assegno un periodo alla sua corsa.
         for (int i = 0; i < dataInizio.size(); i++) {
             CorsaRegolare cr = compagnia.getCorseErogate().get(corsa.get(i));
-            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), StringToBitset(giorni.get(i))));
+            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), giorni.get(i)));
         }
     }
 
@@ -294,7 +294,7 @@ public class ControllerCompagnia {
         } catch (SQLException e) {
             return false;
         }
-        periodiNonCollegatiACorse.put(idPeriodo.get(), new Periodo(idPeriodo.get(), inizioPeriodo, finePeriodo, StringToBitset(giorni)));
+        periodiNonCollegatiACorse.put(idPeriodo.get(), new Periodo(idPeriodo.get(), inizioPeriodo, finePeriodo, giorni));
         return true;
     }
 
@@ -317,8 +317,10 @@ public class ControllerCompagnia {
     public boolean eliminaCorsaRegolare(int idCorsa) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         compagniaDAO.cancellaCorsaRegolare(idCorsa);
-        compagnia.getCorseErogate().remove(idCorsa);
-        //aggiorno le corse specifiche
+        //aggiorno le corse regolari e le corse specifiche
+        compagnia.getCorseErogate().clear();
+        buildCorseRegolari(compagnia.getLogin());
+        buildPeriodi(compagnia.getLogin());
         corseSpecifiche.clear();
         buildCorseSpecifiche();
         return true;
@@ -404,18 +406,12 @@ public class ControllerCompagnia {
         }
     }
 
-    public void visualizzaInfoCorsa(int idCorsa, ArrayList<String> portoPartenza, ArrayList<String> portoArrivo, ArrayList<String> natante, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<LocalDate> inizioPer, ArrayList<LocalDate> finePer, ArrayList<String> giorniAttivi, ArrayList<Integer> idSottoCorse) {
+    public void visualizzaInfoCorsa(int idCorsa, ArrayList<String> portoPartenza, ArrayList<String> portoArrivo, ArrayList<String> natante, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<LocalDate> inizioPer, ArrayList<LocalDate> finePer, ArrayList<String> giorniAttivi) {
         CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
         for (Periodo p : cr.getPeriodiAttivita()) {
             inizioPer.add(p.getDataInizio());
             finePer.add(p.getDataFine());
             giorniAttivi.add(p.getGiorni().toString());
-        }
-
-        for (Map.Entry<Integer, CorsaRegolare> it : compagnia.getCorseErogate().entrySet()) {
-            if (it.getValue().getCorsaSup().getIdCorsa() == cr.getIdCorsa()) {
-                idSottoCorse.add(it.getValue().getIdCorsa());
-            }
         }
 
         portoPartenza.addFirst(cr.getPortoPartenza().getComune());
@@ -428,5 +424,18 @@ public class ControllerCompagnia {
         costoBagaglio.addFirst(cr.getCostoBagaglio());
         costoPrevendita.addFirst(cr.getCostoPrevendita());
         costoVeicolo.addFirst(cr.getCostoVeicolo());
+    }
+
+    public void visualizzaInfoCorsa(int idCorsa, ArrayList<String> portoPartenza, ArrayList<String> portoArrivo, ArrayList<String> natante, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<LocalDate> inizioPer, ArrayList<LocalDate> finePer, ArrayList<String> giorniAttivi, ArrayList<Integer> idSottoCorse) {
+        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
+        visualizzaInfoCorsa(idCorsa, portoPartenza, portoArrivo, natante, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, inizioPer, finePer, giorniAttivi);
+
+        for (Map.Entry<Integer, CorsaRegolare> it : compagnia.getCorseErogate().entrySet()) {
+            if (it.getValue().getCorsaSup() != null) {
+                if (it.getValue().getCorsaSup().getIdCorsa() == cr.getIdCorsa()) {
+                    idSottoCorse.add(it.getValue().getIdCorsa());
+                }
+            }
+        }
     }
 }
