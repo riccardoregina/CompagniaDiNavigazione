@@ -65,8 +65,31 @@ public class InfoCorsa {
 
         String[] col = new String[]{"ID", "Partenza", "Ore", "Arrivo", "Ore", "C. Intero", "Sconto", "C. Bagaglio", "C. Prevendita", "C. Veicolo", "Natante"};
         Object[][] data = new Object[idSottoCorse.size()][11];
+        data[0][0] = idCorsa;
+        data[0][1] = portoPartenza.getFirst();
+        data[0][2] = orarioPartenza.getFirst();
+        data[0][3] = portoArrivo.getFirst();
+        data[0][4] = orarioArrivo.getFirst();
+        data[0][5] = costoIntero.getFirst();
+        data[0][6] = scontoRidotto.getFirst();
+        data[0][7] = costoBagaglio.getFirst();
+        data[0][8] = costoPrevendita.getFirst();
+        data[0][9] = costoVeicolo.getFirst();
+        data[0][10] = natante.getFirst();
         for (int i = 0; i < idSottoCorse.size(); i++) {
-            data[i][0] = idSottoCorse;
+            ArrayList<Integer> tmp = new ArrayList<>();
+            controllerCompagnia.visualizzaInfoCorsa(idSottoCorse.get(i), portoPartenza, portoArrivo, natante, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, inizioPer, finePer, giorniAttivi, tmp);
+            data[i+1][0] = idSottoCorse;
+            data[i+1][1] = portoPartenza.getFirst();
+            data[i+1][2] = orarioPartenza.getFirst();
+            data[i+1][3] = portoArrivo.getFirst();
+            data[i+1][4] = orarioArrivo.getFirst();
+            data[i+1][5] = costoIntero.getFirst();
+            data[i+1][6] = scontoRidotto.getFirst();
+            data[i+1][7] = costoBagaglio.getFirst();
+            data[i+1][8] = costoPrevendita.getFirst();
+            data[i+1][9] = costoVeicolo.getFirst();
+            data[i+1][10] = natante.getFirst();
         }
         DefaultTableModel model = new DefaultTableModel(data, col) {
             @Override
