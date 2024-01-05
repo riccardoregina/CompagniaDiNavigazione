@@ -203,7 +203,7 @@ public class ControllerCliente {
         for (int i = 0; i < dataInizio.size(); i++) {
             Compagnia c = compagnie.get(compagnia.get(i));
             CorsaRegolare cr = c.getCorseErogate().get(corsa.get(i));
-            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), StringToBitset(giorni.get(i))));
+            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), giorni.get(i)));
         }
 
         //Elementi delle corseSpecifiche
