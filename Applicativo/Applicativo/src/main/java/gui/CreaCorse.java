@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -230,6 +231,11 @@ public class CreaCorse {
                     return;
                 }
 
+                if (getNumberOfOverlap(listaInizioPer, listaFinePer, listaGiorniAttivi) > 1) {
+                    JOptionPane.showMessageDialog(null, "Non è possibile inserire periodi che si intersecano");
+                    return;
+                }
+
                 AtomicInteger idCorsa = new AtomicInteger(-1);
 
                 if (!controllerCompagnia.creaCorsa(idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, sconto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatante, idCorsa)) {
@@ -241,15 +247,15 @@ public class CreaCorse {
                     for (int i = 0; i < listaInizioPer.size(); i++) {
                         AtomicInteger idPeriodo = new AtomicInteger(-1);
                         if (controllerCompagnia.aggiungiPeriodo(listaGiorniAttivi.get(i), listaInizioPer.get(i), listaFinePer.get(i), idPeriodo)) {
-                            if (controllerCompagnia.attivaCorsaInPeriodo(idCorsa.get(), idPeriodo.get())) {
-                                JOptionPane.showMessageDialog(null, "Corsa creata!");
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Non è stato possibile creare la corsa");
+                            if (!controllerCompagnia.attivaCorsaInPeriodo(idCorsa.get(), idPeriodo.get())) {
+                                JOptionPane.showMessageDialog(null, "Corsa creata ma non è stato possibile attaccare dal periodo" + (i + 1) + " inserito in poi");
+                                return;
                             }
                         }
                     }
                 }
 
+                JOptionPane.showMessageDialog(null, "Corsa creata!");
                 frameChiamante.setVisible(true);
                 frame.dispose();
             }
@@ -378,6 +384,49 @@ public class CreaCorse {
         ListSelectionModel selectionModel = tablePeriodi.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollPanePeriodi.setViewportView(tablePeriodi);
+    }
+
+    private ArrayList<LocalDate> getDateOverlap(ArrayList<LocalDate> inizioPer, ArrayList<LocalDate> finePer) {
+        ArrayList<LocalDate> dateOverlap = new ArrayList<LocalDate>();
+        HashSet<LocalDate> dateViste = new HashSet<LocalDate>();
+
+        for (int i = 0; i < inizioPer.size(); i++) {
+            LocalDate firstDate = inizioPer.get(i);
+            LocalDate lastDate = finePer.get(i);
+
+            for (LocalDate currentDate = firstDate; !currentDate.isAfter(lastDate); currentDate = currentDate.plusDays(1)) {
+                if (!dateViste.contains(currentDate)) {
+                    dateViste.add(currentDate);
+                } else {
+                    dateOverlap.add(currentDate);
+                }
+            }
+        }
+
+        return dateOverlap;
+    }
+
+    private int countDay(ArrayList<String> giorni, int day) {
+        int cont = 0;
+        for (int i = 0; i < giorni.size(); i++) {
+            if (day != 7) {
+                if (giorni.get(i).charAt(day) == '1') {
+                    cont++;
+                }
+            }
+        }
+        return (cont > 1) ? 1 : 0;
+    }
+
+    private int getNumberOfOverlap(ArrayList<LocalDate> inizioPer, ArrayList<LocalDate> finePer, ArrayList<String> giorni) {
+        ArrayList<LocalDate> dateOverlap = getDateOverlap(inizioPer, finePer);
+        int overlap = 0;
+        for (LocalDate currentDate : dateOverlap) {
+            int day = currentDate.getDayOfWeek().getValue();
+            overlap += countDay(giorni, day);
+        }
+
+        return overlap;
     }
 
     {
