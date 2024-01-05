@@ -43,20 +43,20 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="83a38" class="javax.swing.JButton" binding="bModificaCorsa">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Modifica Corsa"/>
-            </properties>
-          </component>
           <component id="3e67b" class="javax.swing.JButton" binding="bCreaCorsa">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Crea Corsa "/>
+            </properties>
+          </component>
+          <component id="a40f7" class="javax.swing.JButton" binding="buttonEliminaCorsa">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Elimina Corsa"/>
             </properties>
           </component>
         </children>
@@ -122,17 +122,6 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="a40f7" class="javax.swing.JButton" binding="buttonEliminaCorsa">
-        <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="140" height="-1"/>
-            <maximum-size width="140" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <text value="EliminaCorsa"/>
-        </properties>
-      </component>
       <component id="bc304" class="javax.swing.JButton" binding="buttonLogout">
         <constraints>
           <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
@@ -145,6 +134,38 @@
           <text value="Logout"/>
         </properties>
       </component>
+      <grid id="7b197" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="83a38" class="javax.swing.JButton" binding="bModificaCorsa">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="140" height="-1"/>
+                <maximum-size width="140" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value="Modifica Corsa"/>
+            </properties>
+          </component>
+          <component id="60ee5" class="javax.swing.JButton" binding="buttonInfoCorsa">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="140" height="-1"/>
+                <preferred-size width="140" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value="Info Corsa"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>
