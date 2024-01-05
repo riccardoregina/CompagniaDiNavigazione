@@ -276,6 +276,8 @@ public class CreaCorse {
                         }
                     }
                 }
+                //Facciamo un refresh delle corse in modo tale da visualizzare le corse intermedie generate dal DB
+                controllerCompagnia.buildCorseRegolari(controllerCompagnia.getLoginCompagnia());
 
                 JOptionPane.showMessageDialog(null, "Corsa creata!");
                 frameChiamante.setVisible(true);
