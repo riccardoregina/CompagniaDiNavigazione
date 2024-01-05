@@ -2,6 +2,7 @@ package gui;
 
 import controller.ControllerCompagnia;
 import unnamed.DatePicker;
+import unnamed.NonStandardStringFunctions;
 import unnamed.Pair;
 
 import javax.swing.*;
@@ -284,8 +285,6 @@ public class CreaCorse {
                         }
                     }
                 }
-                //Facciamo un refresh delle corse in modo tale da visualizzare le corse intermedie generate dal DB
-                controllerCompagnia.buildCorseRegolari(controllerCompagnia.getLoginCompagnia());
 
                 JOptionPane.showMessageDialog(null, "Corsa creata!");
                 frameChiamante.setVisible(true);
@@ -408,20 +407,6 @@ public class CreaCorse {
         });
     }
 
-    private String bitStringToGiorni(String bitString) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append((bitString.charAt(1) == '1') ? 'L' : '-');
-        sb.append((bitString.charAt(2) == '1') ? "Ma" : '-');
-        sb.append((bitString.charAt(3) == '1') ? "Me" : '-');
-        sb.append((bitString.charAt(4) == '1') ? 'G' : '-');
-        sb.append((bitString.charAt(5) == '1') ? 'V' : '-');
-        sb.append((bitString.charAt(6) == '1') ? 'S' : '-');
-        sb.append((bitString.charAt(0) == '1') ? 'D' : '-');
-
-        return sb.toString();
-    }
-
     private void aggiornaTabellaPeriodi() {
         DefaultTableModel model;
         String[] col = new String[]{"Inizio Periodo", "Fine Periodo", "Giorni"};
@@ -430,7 +415,7 @@ public class CreaCorse {
         for (int i = 0; i < listaInizioPer.size(); i++) {
             data[i][0] = listaInizioPer.get(i);
             data[i][1] = listaFinePer.get(i);
-            data[i][2] = bitStringToGiorni(listaGiorniAttivi.get(i));
+            data[i][2] = NonStandardStringFunctions.bitStringToGiorni(listaGiorniAttivi.get(i));
         }
         model = new DefaultTableModel(data, col) {
             @Override
