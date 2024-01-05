@@ -162,6 +162,7 @@ public class HomeCompagnia {
         ArrayList<LocalTime> orarioPartenza = new ArrayList<LocalTime>();
         ArrayList<LocalTime> orarioArrivo = new ArrayList<LocalTime>();
 
+        controllerCompagnia.buildCorseRegolari(controllerCompagnia.getLoginCompagnia()); //un refresh dal DB
         controllerCompagnia.visualizzaCorseRegolari(idCorsa, portoPartenza, portoArrivo, natante, orarioPartenza, orarioArrivo);
 
         col = new String[]{"ID", "Partenza", "Orario", "Arrivo", "Orario", "Natante"};
