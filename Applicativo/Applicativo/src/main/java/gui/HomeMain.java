@@ -37,6 +37,7 @@ public class HomeMain {
         frame.setContentPane(this.panel1);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize((int) screenSize.width / 4, (int) (screenSize.height / 2));
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

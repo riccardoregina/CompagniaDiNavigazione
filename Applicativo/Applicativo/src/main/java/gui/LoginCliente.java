@@ -51,6 +51,8 @@ public class LoginCliente {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize((int) screenSize.width / 4, (int) (screenSize.height / 2));
+        frame.getRootPane().setDefaultButton(buttonInvio);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 

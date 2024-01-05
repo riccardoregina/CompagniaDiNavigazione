@@ -345,6 +345,25 @@ public class ControllerCompagnia {
         return true;
     }
 
+    public boolean aggiungiScalo(int idCorsa, Integer idPortoScalo, LocalTime orarioAttracco, LocalTime orarioRipartenza) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.aggiungeScalo(idCorsa, idPortoScalo, orarioAttracco, orarioRipartenza);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
+        try {
+            cr.addScalo(new Scalo(porti.get(idPortoScalo), orarioAttracco, orarioRipartenza));
+        } catch (NoSuchElementException e) {
+            System.out.println("Elemento non trovato.");
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
     public void visualizzaCorseSpecifichePerData(LocalDate data, ArrayList<Integer> idCorsa, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<String> nomeNatante) {
         for (Map.Entry<Pair, CorsaSpecifica> it : corseSpecifiche.entrySet()) {
             if (it.getValue().getData().equals(data)) {

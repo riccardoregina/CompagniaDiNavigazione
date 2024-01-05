@@ -570,6 +570,27 @@ public class CompagniaDAO implements dao.CompagniaDAO {
         }
     }
 
+    public void aggiungeScalo(int idCorsa, Integer idPortoScalo, LocalTime orarioAttracco, LocalTime orarioRipartenza) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "insert into navigazione.Scalo"
+                + " values (?,?,?,?)";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, idCorsa);
+            ps.setInt(2, idPortoScalo);
+            ps.setTime(3, Time.valueOf(orarioAttracco));
+            ps.setTime(4, Time.valueOf(orarioRipartenza));
+            ps.executeUpdate();
+            ps.close();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Eliminazione fallita.");
+            throw new SQLException();
+        }
+    }
+
     public void aggiungePeriodo(String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, AtomicInteger idPeriodo) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;

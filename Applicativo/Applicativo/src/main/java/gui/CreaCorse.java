@@ -12,6 +12,8 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -61,13 +63,21 @@ public class CreaCorse {
     private JButton bCal2;
     private JButton bEliminaPeriodo;
     private JScrollPane scrollPanePeriodi;
+    private JLabel labelX;
+    private JLabel labelAttracco;
+    private JLabel labelRipartenza;
+    private JLabel labelScalo;
+    private JButton bEliminaScalo;
     private JTable tablePeriodi;
     public JFrame frame;
     public JFrame frameChiamante;
     public ControllerCompagnia controllerCompagnia;
-    ArrayList<LocalDate> listaInizioPer;
-    ArrayList<LocalDate> listaFinePer;
-    ArrayList<String> listaGiorniAttivi;
+    public ArrayList<LocalDate> listaInizioPer;
+    public ArrayList<LocalDate> listaFinePer;
+    public ArrayList<String> listaGiorniAttivi;
+    public ArrayList<Pair> portoScalo = null;
+    public ArrayList<LocalTime> oraAttracco = null;
+    public ArrayList<LocalTime> oraRipartenza = null;
 
     public CreaCorse(JFrame frameChiamante, ControllerCompagnia controllerCompagnia) {
         this.frameChiamante = frameChiamante;
@@ -80,6 +90,15 @@ public class CreaCorse {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        labelScalo.setVisible(false);
+        labelAttracco.setVisible(false);
+        labelRipartenza.setVisible(false);
+        bEliminaScalo.setEnabled(false);
+
+        portoScalo = new ArrayList<Pair>();
+        oraAttracco = new ArrayList<LocalTime>();
+        oraRipartenza = new ArrayList<LocalTime>();
 
         listaInizioPer = new ArrayList<LocalDate>();
         listaFinePer = new ArrayList<LocalDate>();
@@ -97,9 +116,6 @@ public class CreaCorse {
 
         ArrayList<Pair> porti = new ArrayList<Pair>();
         ArrayList<String> natanti = new ArrayList<String>();
-        ArrayList<Integer> idPortiScalo = new ArrayList<Integer>();
-        ArrayList<LocalTime> oraAttracco = new ArrayList<LocalTime>();
-        ArrayList<LocalTime> oraRipartenza = new ArrayList<LocalTime>();
 
         controllerCompagnia.visualizzaPorti(porti);
         for (Pair porto : porti) {
@@ -241,6 +257,12 @@ public class CreaCorse {
                 if (!controllerCompagnia.creaCorsa(idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, sconto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatante, idCorsa)) {
                     JOptionPane.showMessageDialog(null, "Non è stato possibile creare la corsa");
                     return;
+                } else {
+                    if (!portoScalo.isEmpty()) {
+                        if (!controllerCompagnia.aggiungiScalo(idCorsa.get(), (Integer) portoScalo.getFirst().first, oraAttracco.getFirst(), oraRipartenza.getFirst())) {
+                            JOptionPane.showMessageDialog(null, "Corsa creata ma non è stato possibile aggiungere lo scalo");
+                        }
+                    }
                 }
 
                 if (!listaInizioPer.isEmpty()) {
@@ -338,12 +360,43 @@ public class CreaCorse {
         bScalo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AggiungiScalo aggiungiScalo = new AggiungiScalo(frame, controllerCompagnia, idPortiScalo, oraAttracco, oraRipartenza);
+                AggiungiScalo aggiungiScalo = new AggiungiScalo(frame, porti, portoScalo, oraAttracco, oraRipartenza);
                 frame.setVisible(false);
             }
         });
-    }
 
+        bEliminaScalo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                portoScalo.clear();
+                oraAttracco.clear();
+                oraRipartenza.clear();
+                labelScalo.setVisible(false);
+                labelAttracco.setVisible(false);
+                labelRipartenza.setVisible(false);
+                labelX.setText("Nessuno scalo aggiunto");
+                bEliminaScalo.setEnabled(false);
+            }
+        });
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowActivated(WindowEvent e) {
+                if (oraAttracco == null || oraAttracco.isEmpty()) {
+                    labelX.setText("Nessuno scalo aggiunto");
+                } else {
+                    labelX.setText("Uno scalo è stato aggiunto:");
+                    labelScalo.setText("Porto: " + portoScalo.getFirst().last.toString().toUpperCase());
+                    labelScalo.setVisible(true);
+                    labelAttracco.setText("Ora Attracco: " + oraAttracco.getFirst());
+                    labelAttracco.setVisible(true);
+                    labelRipartenza.setText("OraRipartenza: " + oraRipartenza.getFirst());
+                    labelRipartenza.setVisible(true);
+                    bEliminaScalo.setEnabled(true);
+                }
+            }
+        });
+    }
 
     private String bitStringToGiorni(String bitString) {
         StringBuilder sb = new StringBuilder();
@@ -445,7 +498,7 @@ public class CreaCorse {
      */
     private void $$$setupUI$$$() {
         panel1 = new JPanel();
-        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 9, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(11, 9, new Insets(0, 0, 0, 0), -1, -1));
         cbPortoArrivo = new JComboBox();
         panel1.add(cbPortoArrivo, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         cbNatante = new JComboBox();
@@ -515,13 +568,13 @@ public class CreaCorse {
         cbPortoPartenza = new JComboBox();
         panel1.add(cbPortoPartenza, new com.intellij.uiDesigner.core.GridConstraints(2, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panelPeriodo = new JPanel();
-        panelPeriodo.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panelPeriodo.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(11, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panelPeriodo, new com.intellij.uiDesigner.core.GridConstraints(5, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         tfDataInizioPeriodo = new JTextField();
         tfDataInizioPeriodo.setText("yyyy-mm-dd");
         panelPeriodo.add(tfDataInizioPeriodo, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
-        panelPeriodo.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panelPeriodo.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(10, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         tfDataFinePeriodo = new JTextField();
         tfDataFinePeriodo.setText("yyyy-mm-dd");
         panelPeriodo.add(tfDataFinePeriodo, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
@@ -543,6 +596,21 @@ public class CreaCorse {
         bEliminaPeriodo = new JButton();
         bEliminaPeriodo.setText("Elimina Periodo");
         panelPeriodo.add(bEliminaPeriodo, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelX = new JLabel();
+        labelX.setText("Nessuno scalo aggiunto");
+        panelPeriodo.add(labelX, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelAttracco = new JLabel();
+        labelAttracco.setText("");
+        panelPeriodo.add(labelAttracco, new com.intellij.uiDesigner.core.GridConstraints(8, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelScalo = new JLabel();
+        labelScalo.setText("");
+        panelPeriodo.add(labelScalo, new com.intellij.uiDesigner.core.GridConstraints(7, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelRipartenza = new JLabel();
+        labelRipartenza.setText("");
+        panelPeriodo.add(labelRipartenza, new com.intellij.uiDesigner.core.GridConstraints(9, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        bEliminaScalo = new JButton();
+        bEliminaScalo.setText("Elimina Scalo");
+        panelPeriodo.add(bEliminaScalo, new com.intellij.uiDesigner.core.GridConstraints(9, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         bCrea = new JButton();
         bCrea.setText("CREA");
         panel1.add(bCrea, new com.intellij.uiDesigner.core.GridConstraints(1, 7, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -570,6 +638,8 @@ public class CreaCorse {
         scrollPanePeriodi.setViewportView(label3);
         final com.intellij.uiDesigner.core.Spacer spacer6 = new com.intellij.uiDesigner.core.Spacer();
         panel1.add(spacer6, new com.intellij.uiDesigner.core.GridConstraints(6, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer7 = new com.intellij.uiDesigner.core.Spacer();
+        panel1.add(spacer7, new com.intellij.uiDesigner.core.GridConstraints(10, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
