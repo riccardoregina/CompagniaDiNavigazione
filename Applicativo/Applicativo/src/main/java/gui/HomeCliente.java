@@ -90,6 +90,16 @@ public class HomeCliente {
     private ArrayList<Float> prezzo;
     private ArrayList<LocalTime> orePart;
     private ArrayList<Integer> minutiRitardo;
+    int portoPartenza;
+    int portoDestinazione;
+    private Integer idPortoPart;
+    private Integer idPortoDest;
+    private LocalDate dataSelezionata;
+    private LocalTime orarioSelezionato;
+    private float prezzoMax;
+    private ArrayList<String> tipoNatanteSelezionato;
+    private ArrayList<String> porti;
+    private ArrayList<Integer> idPorti;
 
     /**
      * Instantiates a new Home cliente.
@@ -138,8 +148,8 @@ public class HomeCliente {
             comboBoxVeicoli.addItem(tipi.get(i) + " " + targhe.get(i));
         }
 
-        ArrayList<String> porti = new ArrayList<String>();
-        ArrayList<Integer> idPorti = new ArrayList<>();
+        porti = new ArrayList<String>();
+        idPorti = new ArrayList<>();
         controllerCliente.visualizzaPorti(idPorti, porti);
         for (String p : porti) {
             comboBoxPart.addItem(p);
@@ -149,18 +159,18 @@ public class HomeCliente {
         bCercaCorse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int portoPartenza = comboBoxPart.getSelectedIndex();
-                int portoDestinazione = comboBoxDest.getSelectedIndex();
-                Integer idPortoPart = idPorti.get(portoPartenza);
-                Integer idPortoDest = idPorti.get(portoDestinazione);
+                portoPartenza = comboBoxPart.getSelectedIndex();
+                portoDestinazione = comboBoxDest.getSelectedIndex();
+                idPortoPart = idPorti.get(portoPartenza);
+                idPortoDest = idPorti.get(portoDestinazione);
 
                 if (textData.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Inserire una data");
                     return;
                 }
 
-                LocalDate dataSelezionata = LocalDate.parse(textData.getText(), formatter);
-                LocalTime orarioSelezionato = LocalTime.of((int) spinnerOre.getValue(), (int) spinnerMinuti.getValue());
+                dataSelezionata = LocalDate.parse(textData.getText(), formatter);
+                orarioSelezionato = LocalTime.of((int) spinnerOre.getValue(), (int) spinnerMinuti.getValue());
 
                 etaPass = (int) spinnerEta.getValue();
                 bagaglio = checkBoxBagaglio.isSelected();
@@ -174,7 +184,6 @@ public class HomeCliente {
                 }
 
                 String inputCostoMax = textCostoMax.getText();
-                float prezzoMax;
                 try {
                     int costo = Integer.parseInt(inputCostoMax);
                     prezzoMax = (float) costo;
@@ -187,7 +196,7 @@ public class HomeCliente {
                     }
                 }
 
-                ArrayList<String> tipoNatanteSelezionato = new ArrayList<String>();
+                tipoNatanteSelezionato = new ArrayList<String>();
                 if (checkBoxTraghetto.isSelected()) {
                     tipoNatanteSelezionato.add(checkBoxTraghetto.getText().toLowerCase());
                 }
@@ -201,62 +210,7 @@ public class HomeCliente {
                     tipoNatanteSelezionato.add(checkBoxAltro.getText().toLowerCase());
                 }
 
-                idCorse = new ArrayList<Integer>();
-                dateCor = new ArrayList<LocalDate>();
-                postiDispPass = new ArrayList<Integer>();
-                postiDispVei = new ArrayList<Integer>();
-                cancellata = new ArrayList<Boolean>();
-                scaduta = new ArrayList<Boolean>();
-                prezzo = new ArrayList<Float>();
-                orePart = new ArrayList<LocalTime>();
-                minutiRitardo = new ArrayList<Integer>();
-                ArrayList<LocalTime> oreDest = new ArrayList<LocalTime>();
-                ArrayList<String> natanti = new ArrayList<String>();
-                ArrayList<String> nomeCompagnia = new ArrayList<String>();
-
-                controllerCliente.visualizzaCorse(idPortoPart, idPortoDest, dataSelezionata, orarioSelezionato, prezzoMax, tipoNatanteSelezionato, etaPass, veicolo, bagaglio, idCorse, nomeCompagnia, dateCor, orePart, oreDest, postiDispPass, postiDispVei, minutiRitardo, natanti, cancellata, prezzo);
-                String[] col = new String[]{"Compagnia", "Partenza", "Ore", "Arrivo", "Ore", "Prezzo", "Posti Passeggeri", "Posti Veicoli", "Ritardo", "Natante", "Data", "ID"};
-                Object[][] data = new Object[idCorse.size()][12];
-                for (int i = 0; i < idCorse.size(); i++) {
-                    data[i][0] = nomeCompagnia.get(i);
-                    data[i][1] = porti.get(portoPartenza);
-                    data[i][2] = orePart.get(i);
-                    data[i][3] = porti.get(portoDestinazione);
-                    data[i][4] = oreDest.get(i);
-                    data[i][5] = prezzo.get(i);
-                    data[i][6] = postiDispPass.get(i);
-                    data[i][7] = postiDispVei.get(i);
-                    data[i][8] = minutiRitardo.get(i) + "'";
-                    data[i][9] = natanti.get(i);
-                    data[i][10] = dateCor.get(i);
-                    data[i][11] = idCorse.get(i);
-
-                    if (dateCor.get(i).isBefore(LocalDate.now()) || (dateCor.get(i).isEqual(LocalDate.now()) && orePart.get(i).plusMinutes(minutiRitardo.get(i)).isBefore(LocalTime.now()))) {
-                        scaduta.add(true);
-                    } else {
-                        scaduta.add(false);
-                    }
-                }
-                DefaultTableModel model = new DefaultTableModel(data, col) {
-                    @Override
-                    public boolean isCellEditable(int row, int column) {
-                        return false;
-                    }
-                };
-
-                TableRowSorter<DefaultTableModel> sorterCorse = new TableRowSorter<>(model);
-
-                tableCorse = new JTable(model);
-                tableCorse.getTableHeader().setReorderingAllowed(false);
-                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-                centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-                tableCorse.setDefaultRenderer(Object.class, centerRenderer);
-                tableCorse.setRowSorter(sorterCorse);
-                sorterCorse.setSortKeys(List.of(new RowSorter.SortKey(2, SortOrder.ASCENDING))); //ordina per orario di partenza
-                tableCorse.setDefaultRenderer(Object.class, new CustomRenderer(cancellata, scaduta));
-                ListSelectionModel selectionModel = tableCorse.getSelectionModel();
-                selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                scrollPaneCorse.setViewportView(tableCorse);
+                aggiornaTabelloneCorse();
 
                 acquistaButton.setEnabled(true);
             }
@@ -294,7 +248,7 @@ public class HomeCliente {
                 String targaVeicolo = null;
 
                 if (veicolo && postiDispVei.get(selectedRow) <= 0) {
-                    JOptionPane.showMessageDialog(null, "I posti per veicoli sono esauriti!");
+                    JOptionPane.showMessageDialog(null, "Non ci sono posti per veicoli!");
                     return;
                 } else if (veicolo) {
                     String[] str = ((String) comboBoxVeicoli.getSelectedItem()).split(" ");
@@ -307,6 +261,7 @@ public class HomeCliente {
                     JOptionPane.showMessageDialog(null, "Errore :(");
                 }
 
+                aggiornaTabelloneCorse();
             }
         });
 
@@ -361,6 +316,65 @@ public class HomeCliente {
                 frame.dispose();
             }
         });
+    }
+
+    private void aggiornaTabelloneCorse() {
+        idCorse = new ArrayList<Integer>();
+        dateCor = new ArrayList<LocalDate>();
+        postiDispPass = new ArrayList<Integer>();
+        postiDispVei = new ArrayList<Integer>();
+        cancellata = new ArrayList<Boolean>();
+        scaduta = new ArrayList<Boolean>();
+        prezzo = new ArrayList<Float>();
+        orePart = new ArrayList<LocalTime>();
+        minutiRitardo = new ArrayList<Integer>();
+        ArrayList<LocalTime> oreDest = new ArrayList<LocalTime>();
+        ArrayList<String> natanti = new ArrayList<String>();
+        ArrayList<String> nomeCompagnia = new ArrayList<String>();
+
+        controllerCliente.visualizzaCorse(idPortoPart, idPortoDest, dataSelezionata, orarioSelezionato, prezzoMax, tipoNatanteSelezionato, etaPass, veicolo, bagaglio, idCorse, nomeCompagnia, dateCor, orePart, oreDest, postiDispPass, postiDispVei, minutiRitardo, natanti, cancellata, prezzo);
+        String[] col = new String[]{"Compagnia", "Partenza", "Ore", "Arrivo", "Ore", "Prezzo", "Posti Passeggeri", "Posti Veicoli", "Ritardo", "Natante", "Data", "ID"};
+        Object[][] data = new Object[idCorse.size()][12];
+        for (int i = 0; i < idCorse.size(); i++) {
+            data[i][0] = nomeCompagnia.get(i);
+            data[i][1] = porti.get(portoPartenza);
+            data[i][2] = orePart.get(i);
+            data[i][3] = porti.get(portoDestinazione);
+            data[i][4] = oreDest.get(i);
+            data[i][5] = prezzo.get(i);
+            data[i][6] = postiDispPass.get(i);
+            data[i][7] = postiDispVei.get(i);
+            data[i][8] = minutiRitardo.get(i) + "'";
+            data[i][9] = natanti.get(i);
+            data[i][10] = dateCor.get(i);
+            data[i][11] = idCorse.get(i);
+
+            if (dateCor.get(i).isBefore(LocalDate.now()) || (dateCor.get(i).isEqual(LocalDate.now()) && orePart.get(i).plusMinutes(minutiRitardo.get(i)).isBefore(LocalTime.now()))) {
+                scaduta.add(true);
+            } else {
+                scaduta.add(false);
+            }
+        }
+        DefaultTableModel model = new DefaultTableModel(data, col) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        TableRowSorter<DefaultTableModel> sorterCorse = new TableRowSorter<>(model);
+
+        tableCorse = new JTable(model);
+        tableCorse.getTableHeader().setReorderingAllowed(false);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tableCorse.setDefaultRenderer(Object.class, centerRenderer);
+        tableCorse.setRowSorter(sorterCorse);
+        sorterCorse.setSortKeys(List.of(new RowSorter.SortKey(2, SortOrder.ASCENDING))); //ordina per orario di partenza
+        tableCorse.setDefaultRenderer(Object.class, new CustomRenderer(cancellata, scaduta));
+        ListSelectionModel selectionModel = tableCorse.getSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        scrollPaneCorse.setViewportView(tableCorse);
     }
 
     private void aggiungiColoreLegenda(JPanel panelLegenda, Color colore, String descrizione) {

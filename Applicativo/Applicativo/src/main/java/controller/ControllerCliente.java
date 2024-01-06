@@ -249,7 +249,6 @@ public class ControllerCliente {
             //trovo la corsa specifica con id e Data
             CorsaSpecifica cs = corse.get(new Pair(idCorsa.get(i), dataCorsa.get(i)));
             Veicolo v = cliente.getVeicoliPosseduti().get(targaVeicolo.get(i));
-
             cliente.addBiglietto(new Biglietto(idBiglietto.get(i), cliente, cs, etaPasseggero.get(i), v, bagaglio.get(i), prevendita.get(i), prezzo.get(i), dataAcquisto.get(i)));
         }
     }
@@ -341,6 +340,9 @@ public class ControllerCliente {
         }
         Veicolo veicolo = cliente.getVeicoliPosseduti().get(targaVeicolo);
         cliente.addBiglietto(new Biglietto(idBiglietto.get(), cliente, cs, etaPasseggero, veicolo, prevendita, bagaglio, prezzo, dataAcquisto));
+        corse.clear();
+        buildCorse();
+
         return true;
     }
 
