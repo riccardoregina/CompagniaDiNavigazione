@@ -6,7 +6,9 @@ import unnamed.CustomRenderer;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.FontUIResource;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -91,8 +94,15 @@ public class TuoiBiglietti {
             }
         }
 
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+
         tableBiglietti = new JTable(model);
         tableBiglietti.getTableHeader().setReorderingAllowed(false);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tableBiglietti.setDefaultRenderer(Object.class, centerRenderer);
+        tableBiglietti.setRowSorter(sorter);
+        sorter.setSortKeys(List.of(new RowSorter.SortKey(0, SortOrder.DESCENDING))); //ordina con i biglietti più recenti in alto
         tableBiglietti.setDefaultRenderer(Object.class, new CustomRenderer(booleanList));
         ListSelectionModel selectionModel = tableBiglietti.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
