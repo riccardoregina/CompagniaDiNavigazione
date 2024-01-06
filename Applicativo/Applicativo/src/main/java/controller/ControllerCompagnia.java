@@ -470,4 +470,92 @@ public class ControllerCompagnia {
             }
         }
     }
+
+    public boolean modificaOrarioPartenza(int idCorsa, LocalTime nuovoOrarioPartenza) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.modificaOrarioPartenza(idCorsa, nuovoOrarioPartenza);
+        } catch (SQLException e) {
+            return false;
+        }
+        compagnia.getCorseErogate().get(idCorsa).setOrarioPartenza(nuovoOrarioPartenza);
+        return true;
+    }
+
+    public boolean modificaOrarioArrivo(int idCorsa, LocalTime nuovoOrarioArrivo) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.modificaOrarioArrivo(idCorsa, nuovoOrarioArrivo);
+        } catch (SQLException e) {
+            return false;
+        }
+        compagnia.getCorseErogate().get(idCorsa).setOrarioArrivo(nuovoOrarioArrivo);
+        return true;
+    }
+
+    public boolean modificaCostoIntero(int idCorsa, float nuovoCostoIntero) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.modificaCostoIntero(idCorsa, nuovoCostoIntero);
+        } catch (SQLException e) {
+            return false;
+        }
+        compagnia.getCorseErogate().get(idCorsa).setCostoIntero(nuovoCostoIntero);
+        return true;
+    }
+
+    public boolean modificaScontoRidotto(int idCorsa, float nuovoScontoRidotto) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.modificaScontoRidotto(idCorsa, nuovoScontoRidotto);
+        } catch (SQLException e) {
+            return false;
+        }
+        compagnia.getCorseErogate().get(idCorsa).setScontoRidotto(nuovoScontoRidotto);
+        return true;
+    }
+
+    public boolean modificaCostoBagaglio(int idCorsa, float nuovoCostoBagaglio) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.modificaCostoBagaglio(idCorsa, nuovoCostoBagaglio);
+        } catch (SQLException e) {
+            return false;
+        }
+        compagnia.getCorseErogate().get(idCorsa).setCostoBagaglio(nuovoCostoBagaglio);
+        return true;
+    }
+
+    public boolean modificaCostoPrevendita(int idCorsa, float nuovoCostoPrevendita) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.modificaCostoPrevendita(idCorsa, nuovoCostoPrevendita);
+        } catch (SQLException e) {
+            return false;
+        }
+        compagnia.getCorseErogate().get(idCorsa).setCostoPrevendita(nuovoCostoPrevendita);
+        return true;
+    }
+
+    public boolean modificaCostoVeicolo(int idCorsa, float nuovoCostoVeicolo) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.modificaCostoVeicolo(idCorsa, nuovoCostoVeicolo);
+        } catch (SQLException e) {
+            return false;
+        }
+        compagnia.getCorseErogate().get(idCorsa).setCostoVeicolo(nuovoCostoVeicolo);
+        return true;
+    }
+
+    public boolean modificaNatanteCorsa(int idCorsa, String nomeNatante) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.modificaNatanteCorsa(idCorsa, nomeNatante);
+        } catch (SQLException e) {
+            return false;
+        }
+        compagnia.getCorseErogate().get(idCorsa).setNatante(compagnia.getNatantiPosseduti().get(nomeNatante));
+        return true;
+    }
 }

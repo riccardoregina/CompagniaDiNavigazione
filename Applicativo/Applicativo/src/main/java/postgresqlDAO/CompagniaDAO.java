@@ -633,4 +633,141 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             throw new SQLException();
         }
     }
+
+    public void modificaOrarioPartenza(int idCorsa, LocalTime nuovoOrarioPartenza) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "update navigazione.corsaregolare set orariopartenza = ? where idcorsa = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setTime(1, Time.valueOf(nuovoOrarioPartenza));
+            ps.setInt(2, idCorsa);
+            ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
+
+    public void modificaOrarioArrivo(int idCorsa, LocalTime nuovoOrarioArrivo) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "update navigazione.corsaregolare set orarioarrivo = ? where idcorsa = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setTime(1, Time.valueOf(nuovoOrarioArrivo));
+            ps.setInt(2, idCorsa);
+            ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
+    
+    public void modificaCostoIntero(int idCorsa, float nuovoCostoIntero) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "update navigazione.corsaregolare set costointero = ? where idcorsa = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setFloat(1, nuovoCostoIntero);
+            ps.setInt(2, idCorsa);
+            ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
+
+    public void modificaScontoRidotto(int idCorsa, float nuovoScontoRidotto) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "update navigazione.corsaregolare set scontoridotto = ? where idcorsa = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setFloat(1, nuovoScontoRidotto);
+            ps.setInt(2, idCorsa);
+            ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
+
+    public void modificaCostoBagaglio(int idCorsa, float nuovoCostoBagaglio) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "update navigazione.corsaregolare set costobagaglio = ? where idcorsa = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setFloat(1, nuovoCostoBagaglio);
+            ps.setInt(2, idCorsa);
+            ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
+
+    public void modificaCostoPrevendita(int idCorsa, float nuovoCostoPrevendita) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "update navigazione.corsaregolare set costoprevendita = ? where idcorsa = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setFloat(1, nuovoCostoPrevendita);
+            ps.setInt(2, idCorsa);
+            ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
+
+
+    public void modificaCostoVeicolo(int idCorsa, float nuovoCostoVeicolo) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "update navigazione.corsaregolare set costoveicolo = ? where idcorsa = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setFloat(1, nuovoCostoVeicolo);
+            ps.setInt(2, idCorsa);
+            ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
+
+    public void modificaNatanteCorsa(int idCorsa, String nomeNatante) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "update navigazione.corsaregolare set natante = ? where idcorsa = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, nomeNatante);
+            ps.setInt(2, idCorsa);
+            ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
 }
