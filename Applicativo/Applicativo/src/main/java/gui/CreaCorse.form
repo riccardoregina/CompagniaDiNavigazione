@@ -464,12 +464,6 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="d5f14" class="javax.swing.JComboBox" binding="cbPortoPartenza">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
           <component id="a5786" class="javax.swing.JLabel" binding="labelDest">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -486,12 +480,6 @@
               <text value="Partenza"/>
             </properties>
           </component>
-          <component id="78d7f" class="javax.swing.JComboBox" binding="cbPortoArrivo">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
           <component id="d9965" class="javax.swing.JButton" binding="bScalo">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -499,6 +487,18 @@
             <properties>
               <text value="Aggiungi Scalo"/>
             </properties>
+          </component>
+          <component id="d5f14" class="javax.swing.JComboBox" binding="cbPortoPartenza">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="78d7f" class="javax.swing.JComboBox" binding="cbPortoArrivo">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
           </component>
         </children>
       </grid>
