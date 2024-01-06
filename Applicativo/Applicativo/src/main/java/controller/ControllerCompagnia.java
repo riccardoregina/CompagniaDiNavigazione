@@ -4,6 +4,7 @@ import model.*;
 import postgresqlDAO.CompagniaDAO;
 import unnamed.Pair;
 
+import java.net.Inet4Address;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -451,6 +452,21 @@ public class ControllerCompagnia {
                 if (it.getValue().getCorsaSup().getIdCorsa() == cr.getIdCorsa()) {
                     idSottoCorse.add(it.getValue().getIdCorsa());
                 }
+            }
+        }
+    }
+
+    public void visualizzaCorsePerNatante(String nomeNatante, ArrayList<Integer> idCorsa, ArrayList<String> portoPartenza, ArrayList<LocalTime> oraPartenza, ArrayList<String> portoArrivo, ArrayList<LocalTime> oraArrivo) {
+        Natante nt = compagnia.getNatantiPosseduti().get(nomeNatante);
+
+        for (Map.Entry<Integer, CorsaRegolare> it : compagnia.getCorseErogate().entrySet()) {
+            CorsaRegolare cr = it.getValue();
+            if (cr.getNatante().getNome().equals(nt.getNome()) && cr.getCorsaSup() == null) {
+                idCorsa.add(cr.getIdCorsa());
+                portoPartenza.add(cr.getPortoPartenza().getComune());
+                oraPartenza.add(cr.getOrarioPartenza());
+                portoArrivo.add(cr.getPortoArrivo().getComune());
+                oraArrivo.add(cr.getOrarioArrivo());
             }
         }
     }
