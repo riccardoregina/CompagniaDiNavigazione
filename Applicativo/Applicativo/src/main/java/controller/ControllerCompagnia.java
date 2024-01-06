@@ -422,13 +422,8 @@ public class ControllerCompagnia {
         }
     }
 
-    public void visualizzaInfoCorsa(int idCorsa, ArrayList<String> portoPartenza, ArrayList<String> portoArrivo, ArrayList<String> natante, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<LocalDate> inizioPer, ArrayList<LocalDate> finePer, ArrayList<String> giorniAttivi) {
+    public void visualizzaInfoCorsa(int idCorsa, ArrayList<String> portoPartenza, ArrayList<String> portoArrivo, ArrayList<String> natante, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo) {
         CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
-        for (Periodo p : cr.getPeriodiAttivita()) {
-            inizioPer.add(p.getDataInizio());
-            finePer.add(p.getDataFine());
-            giorniAttivi.add(p.getGiorni().toString());
-        }
 
         portoPartenza.addFirst(cr.getPortoPartenza().getComune());
         portoArrivo.addFirst(cr.getPortoArrivo().getComune());
@@ -444,7 +439,12 @@ public class ControllerCompagnia {
 
     public void visualizzaInfoCorsa(int idCorsa, ArrayList<String> portoPartenza, ArrayList<String> portoArrivo, ArrayList<String> natante, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<LocalDate> inizioPer, ArrayList<LocalDate> finePer, ArrayList<String> giorniAttivi, ArrayList<Integer> idSottoCorse) {
         CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
-        visualizzaInfoCorsa(idCorsa, portoPartenza, portoArrivo, natante, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, inizioPer, finePer, giorniAttivi);
+        for (Periodo p : cr.getPeriodiAttivita()) {
+            inizioPer.add(p.getDataInizio());
+            finePer.add(p.getDataFine());
+            giorniAttivi.add(p.getGiorni());
+        }
+        visualizzaInfoCorsa(idCorsa, portoPartenza, portoArrivo, natante, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo);
 
         for (Map.Entry<Integer, CorsaRegolare> it : compagnia.getCorseErogate().entrySet()) {
             if (it.getValue().getCorsaSup() != null) {
