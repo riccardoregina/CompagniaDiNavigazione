@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import unnamed.Pair;
 
@@ -330,7 +331,7 @@ public class ControllerCliente {
     public boolean acquistaBiglietto(int idCorsa, LocalDate data, String targaVeicolo, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
         ClienteDAO clienteDAO = new ClienteDAO();
         CorsaSpecifica cs = corse.get(new Pair(idCorsa, data));
-        int idBiglietto = -1; //solo una inizializzazione..
+        AtomicInteger idBiglietto = new AtomicInteger(-1);
         LocalDate dataAcquisto = LocalDate.now();
         try {
             clienteDAO.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), targaVeicolo, prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero, idBiglietto);
@@ -339,7 +340,7 @@ public class ControllerCliente {
             return false;
         }
         Veicolo veicolo = cliente.getVeicoliPosseduti().get(targaVeicolo);
-        cliente.addBiglietto(new Biglietto(idBiglietto, cliente, cs, etaPasseggero, veicolo, prevendita, bagaglio, prezzo, dataAcquisto));
+        cliente.addBiglietto(new Biglietto(idBiglietto.get(), cliente, cs, etaPasseggero, veicolo, prevendita, bagaglio, prezzo, dataAcquisto));
         return true;
     }
 

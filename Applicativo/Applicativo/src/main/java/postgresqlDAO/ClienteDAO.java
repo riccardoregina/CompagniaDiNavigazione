@@ -6,6 +6,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The type Cliente db.
@@ -460,7 +461,7 @@ public class ClienteDAO implements dao.ClienteDAO {
      * @param etaPasseggero the eta passeggero
      * @param idBiglietto   output parameter
      */
-    public void acquistaBiglietto(int idCorsa, LocalDate data, String loginCliente, String targaVeicolo, boolean prevendita, boolean bagaglio, float prezzo, LocalDate dataAcquisto, int etaPasseggero, Integer idBiglietto) throws SQLException{
+    public void acquistaBiglietto(int idCorsa, LocalDate data, String loginCliente, String targaVeicolo, boolean prevendita, boolean bagaglio, float prezzo, LocalDate dataAcquisto, int etaPasseggero, AtomicInteger idBiglietto) throws SQLException{
         //l'aggiornamento dei posti disponibili sará effettuato dal DB
         
         PreparedStatement ps = null;
@@ -482,7 +483,7 @@ public class ClienteDAO implements dao.ClienteDAO {
             ps.setInt(9, etaPasseggero);
             rs = ps.executeQuery();
             rs.next();
-            idBiglietto = rs.getInt("idBiglietto");
+            idBiglietto.set(rs.getInt("idBiglietto"));
             rs.close();
             ps.close();
 
