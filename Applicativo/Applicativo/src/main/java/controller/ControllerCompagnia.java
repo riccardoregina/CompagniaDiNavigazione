@@ -303,6 +303,15 @@ public class ControllerCompagnia {
         return true;
     }
 
+    public void visualizzaPeriodiCorsa(int idCorsa, ArrayList<LocalDate> dataInizioP, ArrayList<LocalDate> dataFineP, ArrayList<String> giorniAttivi) {
+        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
+        for (Periodo p : cr.getPeriodiAttivita()) {
+            dataInizioP.add(p.getDataInizio());
+            dataFineP.add(p.getDataFine());
+            giorniAttivi.add(p.getGiorni());
+        }
+    }
+
     public boolean attivaCorsaInPeriodo(int idCorsa, int idPeriodo) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
@@ -334,27 +343,6 @@ public class ControllerCompagnia {
         buildCorseRegolari(compagnia.getLogin());
         buildPeriodi(compagnia.getLogin());
         buildCorseSpecifiche();
-        return true;
-    }
-
-    public boolean aggiungiScali(int idCorsa, ArrayList<Integer> idPortoScalo, ArrayList<LocalTime> orarioAttracco, ArrayList<LocalTime> orarioRipartenza) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        try {
-            compagniaDAO.aggiungeScali(idCorsa, idPortoScalo, orarioAttracco, orarioRipartenza);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
-        try {
-            for (int i = 0; i < idPortoScalo.size(); i++) {
-                cr.addScalo(new Scalo(porti.get(idPortoScalo.get(i)), orarioAttracco.get(i), orarioRipartenza.get(i)));
-            }
-        } catch (NoSuchElementException e) {
-            System.out.println("Elemento non trovato.");
-            e.printStackTrace();
-        }
-
         return true;
     }
 
@@ -413,6 +401,17 @@ public class ControllerCompagnia {
     public boolean isSottoCorsa(Integer idCorsa) {
         CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
         return cr.getCorsaSup() != null;
+    }
+
+    public boolean haveSottoCorse(Integer idCorsa) {
+        for(Map.Entry<Integer, CorsaRegolare> it : compagnia.getCorseErogate().entrySet()) {
+            if (it.getValue().getCorsaSup() != null) {
+                if (it.getValue().getCorsaSup().getIdCorsa() == idCorsa.intValue()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public Integer getCorsaSup(Integer idCorsa) {

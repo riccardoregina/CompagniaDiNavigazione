@@ -214,7 +214,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
     public void fetchCorseRegolari(String loginCompagnia, ArrayList<Integer> idCorsa, ArrayList<Integer> idPortoPartenza, ArrayList<Integer> idPortoArrivo, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<String> nomeNatante, ArrayList<Integer> corsaSup) {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String query = "select * from navigazione.CorsaRegolare where Compagnia = ?";
+        String query = "select * from navigazione.CorsaRegolare where Compagnia = ? order by idCorsa";
 
         try {
             ps = connection.prepareStatement(query);
@@ -547,29 +547,6 @@ public class CompagniaDAO implements dao.CompagniaDAO {
         }
     }
 
-    public void aggiungeScali(int idCorsa, ArrayList<Integer> idPortoScalo, ArrayList<LocalTime> orarioAttracco, ArrayList<LocalTime> orarioRipartenza) throws SQLException {
-        PreparedStatement ps = null;
-        String query = "insert into navigazione.Scalo"
-                + " values (?,?,?,?)";
-
-        try {
-            for (int i = 0; i < idPortoScalo.size(); i++) {
-                ps = connection.prepareStatement(query);
-                ps.setInt(1, idCorsa);
-                ps.setInt(2, idPortoScalo.get(i));
-                ps.setTime(3, Time.valueOf(orarioAttracco.get(i)));
-                ps.setTime(4, Time.valueOf(orarioRipartenza.get(i)));
-                ps.executeUpdate();
-                ps.close();
-            }
-
-            connection.close();
-        } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
-            throw new SQLException();
-        }
-    }
-
     public void aggiungeScalo(int idCorsa, Integer idPortoScalo, LocalTime orarioAttracco, LocalTime orarioRipartenza) throws SQLException {
         PreparedStatement ps = null;
         String query = "insert into navigazione.Scalo"
@@ -586,7 +563,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
+            System.out.println("Inserimento fallito.");
             throw new SQLException();
         }
     }

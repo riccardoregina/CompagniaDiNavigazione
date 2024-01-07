@@ -195,6 +195,12 @@ public class HomeCompagnia {
             data[i][5] = natante.get(i);
         }
         modelCorse = new DefaultTableModel(data, col) {
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 0) {
+                    return Integer.class;
+                }
+                return super.getColumnClass(columnIndex);
+            }
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -207,6 +213,7 @@ public class HomeCompagnia {
         tableCorse.getTableHeader().setReorderingAllowed(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tableCorse.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         tableCorse.setDefaultRenderer(Object.class, centerRenderer);
         tableCorse.setRowSorter(sorterCorse);
         sorterCorse.setSortKeys(List.of(new RowSorter.SortKey(0, SortOrder.ASCENDING)));
