@@ -14,7 +14,7 @@ public class DatePicker {
     public DatePicker(JFrame parent) {
         d = new JDialog();
         d.setModal(true);
-        String[] header = { "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat" };
+        String[] header = { "Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab" };
         JPanel p1 = new JPanel(new GridLayout(7, 7));
         p1.setPreferredSize(new Dimension(430, 120));
 
