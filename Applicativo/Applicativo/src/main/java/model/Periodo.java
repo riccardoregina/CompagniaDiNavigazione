@@ -81,4 +81,13 @@ public class Periodo {
     public void setGiorni(String giorni) {
         this.giorni = giorni;
     }
+
+    /**
+     * Gets id periodo.
+     *
+     * @return the id periodo
+     */
+    public int getIdPeriodo() {
+        return idPeriodo;
+    }
 }

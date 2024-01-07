@@ -3,6 +3,7 @@ package model;
 import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * The type Corsa regolare.
@@ -13,7 +14,7 @@ public class CorsaRegolare {
     private Natante natante;
     private Porto portoPartenza;
     private Porto portoArrivo;
-    private ArrayList<Periodo> periodiAttivita;
+    private HashMap<Integer, Periodo> periodiAttivita;
     private LocalTime orarioPartenza;
     private LocalTime orarioArrivo;
     private float costoIntero;
@@ -57,7 +58,7 @@ public class CorsaRegolare {
         this.costoPrevendita = costoPrevendita;
         this.costoVeicolo = costoVeicolo;
         this.corsaSup = corsaSup;
-        periodiAttivita = new ArrayList<Periodo>();
+        periodiAttivita = new HashMap<>();
         corseSpecifiche = new ArrayList<CorsaSpecifica>();
         scali = new ArrayList<>();
     }
@@ -283,7 +284,7 @@ public class CorsaRegolare {
      *
      * @return the periodi attivita
      */
-    public ArrayList<Periodo> getPeriodiAttivita() {
+    public HashMap<Integer, Periodo> getPeriodiAttivita() {
         return periodiAttivita;
     }
 
@@ -292,7 +293,7 @@ public class CorsaRegolare {
      *
      * @param periodiAttivita the periodi attivita
      */
-    public void setPeriodiAttivita(ArrayList<Periodo> periodiAttivita) {
+    public void setPeriodiAttivita(HashMap<Integer, Periodo> periodiAttivita) {
         this.periodiAttivita = periodiAttivita;
     }
 
@@ -302,7 +303,7 @@ public class CorsaRegolare {
      * @param periodoAttivita the periodo attivita
      */
     public void addPeriodoAttivita(Periodo periodoAttivita) {
-        periodiAttivita.add(periodoAttivita);
+        periodiAttivita.put(periodoAttivita.getIdPeriodo(), periodoAttivita);
     }
 
     /**
@@ -311,7 +312,11 @@ public class CorsaRegolare {
      * @param periodoAttivita the periodo attivita
      */
     public void removePeriodoAttivita(Periodo periodoAttivita) {
-        periodiAttivita.remove(periodoAttivita);
+        periodiAttivita.remove(periodoAttivita.getIdPeriodo());
+    }
+
+    public void removePeriodoAttivita(int idPeriodoAttivita) {
+        periodiAttivita.remove(idPeriodoAttivita);
     }
 
     /**

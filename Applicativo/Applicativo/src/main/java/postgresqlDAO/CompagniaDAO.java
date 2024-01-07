@@ -770,4 +770,33 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             throw new SQLException();
         }
     }
+
+    /**
+     * Elimina un periodo di attivita per una corsa.
+     * Elimina anche tale periodo dal DB.
+     *
+     * @param idCorsa   the id corsa
+     * @param idPeriodo the id periodo
+     * @throws SQLException the sql exception
+     */
+    public void eliminaPeriodoAttivitaPerCorsa(int idCorsa, int idPeriodo) throws SQLException {
+        PreparedStatement ps = null;
+        String query1 = "delete from navigazione.attivain where idcorsa = ? and idPeriodo = ?";
+        String query2 = "delete from navigazione.periodo where idperiodo = ?";
+
+        try {
+            ps = connection.prepareStatement(query1);
+            ps.setInt(1, idCorsa);
+            ps.setInt(2, idPeriodo);
+            ps.executeUpdate();
+            ps.close();
+
+            ps = connection.prepareStatement(query2);
+            ps.setInt(1, idPeriodo);
+
+            connection.close();
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
 }
