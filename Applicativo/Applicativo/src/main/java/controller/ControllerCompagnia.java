@@ -303,15 +303,6 @@ public class ControllerCompagnia {
         return true;
     }
 
-    public void visualizzaPeriodiCorsa(int idCorsa, ArrayList<LocalDate> dataInizioP, ArrayList<LocalDate> dataFineP, ArrayList<String> giorniAttivi) {
-        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
-        for (Periodo p : cr.getPeriodiAttivita()) {
-            dataInizioP.add(p.getDataInizio());
-            dataFineP.add(p.getDataFine());
-            giorniAttivi.add(p.getGiorni());
-        }
-    }
-
     public boolean attivaCorsaInPeriodo(int idCorsa, int idPeriodo) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
@@ -437,9 +428,10 @@ public class ControllerCompagnia {
         costoVeicolo.addFirst(cr.getCostoVeicolo());
     }
 
-    public void visualizzaInfoCorsa(int idCorsa, ArrayList<String> portoPartenza, ArrayList<String> portoArrivo, ArrayList<String> natante, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<LocalDate> inizioPer, ArrayList<LocalDate> finePer, ArrayList<String> giorniAttivi, ArrayList<Integer> idSottoCorse) {
+    public void visualizzaInfoCorsa(int idCorsa, ArrayList<String> portoPartenza, ArrayList<String> portoArrivo, ArrayList<String> natante, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<Integer> listaIdPeriodo, ArrayList<LocalDate> inizioPer, ArrayList<LocalDate> finePer, ArrayList<String> giorniAttivi, ArrayList<Integer> idSottoCorse) {
         CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
         for (Map.Entry<Integer, Periodo> p : compagnia.getCorseErogate().get(idCorsa).getPeriodiAttivita().entrySet()) {
+            listaIdPeriodo.add(p.getKey());
             inizioPer.add(p.getValue().getDataInizio());
             finePer.add(p.getValue().getDataFine());
             giorniAttivi.add(p.getValue().getGiorni());
@@ -477,7 +469,8 @@ public class ControllerCompagnia {
         } catch (SQLException e) {
             return false;
         }
-        compagnia.getCorseErogate().get(idCorsa).setOrarioPartenza(nuovoOrarioPartenza);
+        buildCorseRegolari(compagnia.getLogin());
+        buildPeriodi(compagnia.getLogin());
         return true;
     }
 
@@ -488,7 +481,8 @@ public class ControllerCompagnia {
         } catch (SQLException e) {
             return false;
         }
-        compagnia.getCorseErogate().get(idCorsa).setOrarioArrivo(nuovoOrarioArrivo);
+        buildCorseRegolari(compagnia.getLogin());
+        buildPeriodi(compagnia.getLogin());
         return true;
     }
 
@@ -547,16 +541,6 @@ public class ControllerCompagnia {
         return true;
     }
 
-    public boolean modificaNatanteCorsa(int idCorsa, String nomeNatante) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        try {
-            compagniaDAO.modificaNatanteCorsa(idCorsa, nomeNatante);
-        } catch (SQLException e) {
-            return false;
-        }
-        compagnia.getCorseErogate().get(idCorsa).setNatante(compagnia.getNatantiPosseduti().get(nomeNatante));
-        return true;
-    }
 
     public boolean eliminaPeriodoAttivitaPerCorsa(int idCorsa, int idPeriodo) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
@@ -565,8 +549,8 @@ public class ControllerCompagnia {
         } catch (SQLException e) {
             return false;
         }
-        compagnia.getCorseErogate().get(idCorsa).removePeriodoAttivita(idPeriodo);
         buildCorseRegolari(compagnia.getLogin());
+        buildPeriodi(compagnia.getLogin());
         return true;
     }
 }
