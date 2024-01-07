@@ -321,62 +321,9 @@ public class CompagniaDAO implements dao.CompagniaDAO {
         }
     }
 
-    /**
-     * Aggiungi corsa.
-     */
-    public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, String giorni, ArrayList<LocalDate> inizioPeriodo, ArrayList<LocalDate> finePeriodo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante, int idCorsa, ArrayList<Integer> idPeriodo) throws SQLException {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        String query1 = "insert into navigazione.CorsaRegolare (portopartenza, portoarrivo, orariopartenza, orarioarrivo, costointero, scontoridotto, costobagaglio, costoprevendita, costoveicolo, compagnia, natante) values (?,?,?,?,?,?,?,?,?,?,?) returning idcorsa";
-        String query2 = "insert into navigazione.Periodo (datainizio, datafine, giorni) values (?,?,?) returning idperiodo";
-        String query3 = "insert into navigazione.AttivaIn values (?,?)";
-
-        try {
-            ps = connection.prepareStatement(query1);
-            ps.setInt(1, idPortoPartenza);
-            ps.setInt(2, idPortoArrivo);
-            ps.setTime(3, Time.valueOf(orarioPartenza));
-            ps.setTime(4, Time.valueOf(orarioArrivo));
-            ps.setFloat(5, costoIntero);
-            ps.setFloat(6, scontoRidotto);
-            ps.setFloat(7, costoBagaglio);
-            ps.setFloat(8, costoPrevendita);
-            ps.setFloat(9, costoVeicolo);
-            ps.setString(10, loginCompagnia);
-            ps.setString(11, nomeNatante);
-            rs = ps.executeQuery();
-            rs.next();
-            idCorsa = rs.getInt("idCorsa");
-            rs.close();
-
-            for (int i = 0; i < inizioPeriodo.size(); i++) {
-                ps = connection.prepareStatement(query2);
-                ps.setDate(1, java.sql.Date.valueOf(inizioPeriodo.get(i)));
-                ps.setDate(2, java.sql.Date.valueOf(finePeriodo.get(i)));
-                ps.setString(3, giorni);
-                rs = ps.executeQuery();
-                rs.next();
-                idPeriodo.add(rs.getInt("idPeriodo"));
-                rs.close();
-            }
-
-            for (int id : idPeriodo) {
-                ps = connection.prepareStatement(query3);
-                ps.setInt(1, idCorsa);
-                ps.setInt(2, id);
-            }
-
-            ps.close();
-            connection.close();
-
-        } catch(SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            throw new SQLException();
-        }
-    }
 
     /**
-     * Overload di aggiungeCorsa. Prova ad aggiungere una corsa nel DB. Se riesce, restituisce l'id
+     * Prova ad aggiungere una corsa nel DB. Se riesce, restituisce l'id
      * della tupla inserita, altrimenti viene lanciata un'eccezione.
      *
      * @param idPortoPartenza
@@ -731,23 +678,6 @@ public class CompagniaDAO implements dao.CompagniaDAO {
         }
     }
 
-    public void modificaNatanteCorsa(int idCorsa, String nomeNatante) throws SQLException {
-        PreparedStatement ps = null;
-        String query = "update navigazione.corsaregolare set natante = ? where idcorsa = ?";
-
-        try {
-            ps = connection.prepareStatement(query);
-            ps.setString(1, nomeNatante);
-            ps.setInt(2, idCorsa);
-            ps.executeUpdate();
-
-            ps.close();
-            connection.close();
-        } catch (SQLException e) {
-            throw new SQLException();
-        }
-    }
-
     /**
      * Elimina un periodo di attivita per una corsa.
      * Elimina anche tale periodo dal DB.
@@ -759,7 +689,6 @@ public class CompagniaDAO implements dao.CompagniaDAO {
     public void eliminaPeriodoAttivitaPerCorsa(int idCorsa, int idPeriodo) throws SQLException {
         PreparedStatement ps = null;
         String query1 = "delete from navigazione.attivain where idcorsa = ? and idPeriodo = ?";
-        String query2 = "delete from navigazione.periodo where idperiodo = ?";
 
         try {
             ps = connection.prepareStatement(query1);
@@ -767,9 +696,6 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setInt(2, idPeriodo);
             ps.executeUpdate();
             ps.close();
-
-            ps = connection.prepareStatement(query2);
-            ps.setInt(1, idPeriodo);
 
             connection.close();
         } catch (SQLException e) {
