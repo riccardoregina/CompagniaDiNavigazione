@@ -1,3 +1,11 @@
+------------------------------------------
+-- trigger per aggiornare i posti (per passeggeri) disponibili per una corsa specifica
+create trigger triggeraggiornapostipasseggero
+    after insert
+    on biglietto
+    for each row
+execute procedure aggiornapostipasseggero();
+
 create function aggiornapostipasseggero() returns trigger
     language plpgsql
 as
@@ -30,6 +38,16 @@ begin
 end;
 $$;
 
+----------------------------------------
+-- trigger per aggiornare i posti (per veicoli) disponibili per una corsa specifica
+
+create trigger triggeraggiornapostiveicolo
+    after insert
+    on biglietto
+    for each row
+    when (new.veicolo IS NOT NULL)
+execute procedure aggiornapostiveicolo();
+
 create function aggiornapostiveicolo() returns trigger
     language plpgsql
 as
@@ -60,6 +78,15 @@ begin
     return null;
 end;
 $$;
+
+----------------------------------------------------
+-- all'inserimento di uno scalo per una corsaregolare, questo trigger si occupa di generare le sottocorse.
+
+create trigger generatrattescalotrigger
+    after insert
+    on scalo
+    for each row
+execute procedure aggiungicorsescalo();
 
 create function aggiungicorsescalo() returns trigger
     language plpgsql
@@ -117,6 +144,15 @@ begin
 end;
 $$;
 
+------------------------------
+-- trigger per attivare nei periodi della corsa padre le sottocorse generate da uno scalo
+
+create trigger attivasottocorsetrigger
+    after insert
+    on attivain
+    for each row
+execute procedure attivasottocorse();
+
 create function attivasottocorse() returns trigger
     language plpgsql
 as
@@ -135,6 +171,17 @@ begin
     return new;
 end;
 $$;
+
+------------------------------------------
+-- il trigger che rende vera l'espressione: cambio orario di arrivo per la corsa => cambio orario di arrivo per la sottocorsa che parte dal porto di scalo
+
+create trigger cambiaorarioarrivoinsottocorsa
+    after update
+        of orarioarrivo
+    on corsaregolare
+    for each row
+    when (new.corsasup IS NULL AND new.orarioarrivo IS NOT NULL)
+execute procedure cambiaorarioarrivoinsottocorsa();
 
 create function cambiaorarioarrivoinsottocorsa() returns trigger
     language plpgsql
@@ -155,6 +202,16 @@ begin
     return new;
 end;
 $$;
+--------------------------------------------
+-- il trigger che rende vera l'espressione: cambio orario di partenza per la corsa => cambio orario di arrivo per la sottocorsa che arriva al porto di scalo
+
+create trigger cambiaorariopartenzainsottocorsa
+    after update
+        of orariopartenza
+    on corsaregolare
+    for each row
+    when (new.corsasup IS NULL AND new.orariopartenza IS NOT NULL)
+execute procedure cambiaorariopartenzainsottocorsa();
 
 create function cambiaorariopartenzainsottocorsa() returns trigger
     language plpgsql
@@ -175,6 +232,15 @@ begin
     return new;
 end;
 $$;
+
+-------------------------------------
+-- trigger per cancellare le corse specifiche di una corsa regolare non più attiva in un periodo
+
+create trigger cancellacorse
+    after delete
+    on attivain
+    for each row
+execute procedure cancellacorseinperiodo();
 
 create function cancellacorseinperiodo() returns trigger
     language plpgsql
@@ -207,6 +273,15 @@ begin
 end;
 $$;
 
+------------------------------------------------
+-- 
+
+create trigger eliminatrattescalotrigger
+    after delete
+    on scalo
+    for each row
+execute procedure eliminacorsescalo();
+
 create function eliminacorsescalo() returns trigger
     language plpgsql
 as
@@ -218,6 +293,14 @@ begin
     return null;
 end;
 $$;
+
+-------------------------------------------
+create trigger eliminaaltrasottocorsa
+    after delete
+    on corsaregolare
+    for each row
+    when (old.corsasup IS NOT NULL)
+execute procedure eliminasottocorse();
 
 create function eliminasottocorse() returns trigger
     language plpgsql
@@ -242,6 +325,15 @@ begin
     return null;
 end;
 $$;
+
+------------------------------------
+-- trigger per la generazione delle corse specifiche
+
+create trigger generatrattescalotrigger
+    after insert
+    on scalo
+    for each row
+execute procedure aggiungicorsescalo();
 
 create function generacorsespecifiche() returns trigger
     language plpgsql
@@ -275,7 +367,14 @@ begin
     for i in 0..6 loop
         v_data_corrente := v_data_inizio;
         if get_bit(v_giorni, i) = 1 then
-            v_offset := (i - v_day) % 7;
+            v_offset := (i - v_day);
+            if v_offset < 0 then
+                while v_offset < 0 loop
+                    v_offset := v_offset + 7;
+                end loop;
+            else
+                v_offset := v_offset % 7;
+            end if;
             v_data_corrente := v_data_corrente + v_offset;
             while v_data_corrente <= v_data_fine loop
                 insert into navigazione.corsaSpecifica
@@ -288,6 +387,15 @@ begin
     return new;
 end;
 $$;
+
+---------------------------
+create trigger propagacancellazione
+    after update
+        of cancellata
+    on corsaspecifica
+    for each row
+    when (new.cancellata = true)
+execute procedure propagacancellazione();
 
 create function propagacancellazione() returns trigger
     language plpgsql
@@ -331,6 +439,3 @@ begin
     return new;
 end;
 $$;
-
-
-
