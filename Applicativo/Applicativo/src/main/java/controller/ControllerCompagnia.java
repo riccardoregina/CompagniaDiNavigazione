@@ -5,6 +5,7 @@ import postgresqlDAO.CompagniaDAO;
 import unnamed.Pair;
 
 import java.net.Inet4Address;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -362,13 +363,19 @@ public class ControllerCompagnia {
         return true;
     }
 
-    public void visualizzaCorseSpecifichePerData(LocalDate data, ArrayList<Integer> idCorsa, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<String> nomeNatante) {
+    public void visualizzaCorseSpecifichePerData(LocalDate data, ArrayList<Integer> idCorsa, ArrayList<String> portoPartenza, ArrayList<LocalTime> orarioPartenza, ArrayList<String> portoArrivo, ArrayList<LocalTime> orarioArrivo, ArrayList<Integer> minutiRitardo, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Boolean> cancellata) {
         for (Map.Entry<Pair, CorsaSpecifica> it : corseSpecifiche.entrySet()) {
             if (it.getValue().getData().equals(data)) {
-                idCorsa.add(it.getValue().getCorsaRegolare().getIdCorsa());
-                orarioPartenza.add(it.getValue().getCorsaRegolare().getOrarioPartenza());
-                orarioArrivo.add(it.getValue().getCorsaRegolare().getOrarioArrivo());
-                nomeNatante.add(it.getValue().getCorsaRegolare().getNatante().getNome());
+                CorsaSpecifica cs = it.getValue();
+                idCorsa.add(cs.getCorsaRegolare().getIdCorsa());
+                portoPartenza.add(cs.getCorsaRegolare().getPortoPartenza().getComune());
+                orarioPartenza.add(cs.getCorsaRegolare().getOrarioPartenza());
+                portoArrivo.add(cs.getCorsaRegolare().getPortoArrivo().getComune());
+                orarioArrivo.add(cs.getCorsaRegolare().getOrarioArrivo());
+                minutiRitardo.add(cs.getMinutiRitardo());
+                postiDispPass.add(cs.getPostiDispPass());
+                postiDispVei.add(cs.getPostiDispVei());
+                cancellata.add(cs.isCancellata());
             }
         }
     }
@@ -383,6 +390,31 @@ public class ControllerCompagnia {
             orarioPartenza.add(it.getValue().getOrarioPartenza());
             orarioArrivo.add(it.getValue().getOrarioArrivo());
         }
+    }
+
+    public boolean cancellaCorsaSpecifica(int idCorsa, LocalDate data) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.cancellaCorsaSpecifica(idCorsa, Date.valueOf(data));
+        } catch (SQLException e) {
+            return false;
+        }
+        buildCorseSpecifiche();
+
+        return true;
+    }
+
+    public boolean segnalaRitardo(int idCorsa, LocalDate data, int minutiRitardo) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.segnalaRitardo(idCorsa, Date.valueOf(data), minutiRitardo);
+        } catch (SQLException e) {
+            return false;
+        }
+        CorsaSpecifica cs = corseSpecifiche.get(new Pair(idCorsa, data));
+        cs.setMinutiRitardo(minutiRitardo);
+
+        return true;
     }
 
     public String getLoginCompagnia() {

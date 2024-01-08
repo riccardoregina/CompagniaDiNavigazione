@@ -1,10 +1,9 @@
 package unnamed;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CustomRenderer extends DefaultTableCellRenderer {
@@ -50,6 +49,25 @@ public class CustomRenderer extends DefaultTableCellRenderer {
             comp.setForeground(table.getSelectionForeground());
         }
 
+        ((DefaultTableCellRenderer) comp).setHorizontalAlignment(CENTER);
+        ((DefaultTableCellRenderer) comp).setVerticalAlignment(CENTER);
+
         return comp;
+    }
+
+    public static void aggiungiColoreLegenda(JPanel panelLegenda, Color colore, String descrizione) {
+        JPanel colorSquare = new JPanel();
+        colorSquare.setPreferredSize(new Dimension(20, 20));
+        colorSquare.setBackground(colore);
+        Border bordo = BorderFactory.createLineBorder(Color.BLACK);
+        colorSquare.setBorder(bordo);
+
+        JLabel labelDescrizione = new JLabel(descrizione);
+
+        JPanel bulletPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bulletPanel.add(colorSquare);
+        bulletPanel.add(labelDescrizione);
+
+        panelLegenda.add(bulletPanel);
     }
 }

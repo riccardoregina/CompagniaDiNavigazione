@@ -4,11 +4,9 @@ import controller.ControllerCliente;
 import unnamed.CustomRenderer;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -45,8 +42,8 @@ public class TuoiBiglietti {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        aggiungiColoreLegenda(panelLegenda, new Color(255, 70, 70, 255), "Biglietti non più attivi");
-        aggiungiColoreLegenda(panelLegenda, Color.white, "Biglietti ancora attivi");
+        CustomRenderer.aggiungiColoreLegenda(panelLegenda, new Color(255, 70, 70, 255), "Biglietti non più attivi");
+        CustomRenderer.aggiungiColoreLegenda(panelLegenda, Color.white, "Biglietti ancora attivi");
 
         ArrayList<Integer> idBiglietti = new ArrayList<Integer>();
         ArrayList<Integer> idCorse = new ArrayList<Integer>();
@@ -79,15 +76,6 @@ public class TuoiBiglietti {
             data[i][10] = prezzi.get(i);
         }
         DefaultTableModel model = new DefaultTableModel(data, col) {
-            public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 0 || columnIndex == 1 || columnIndex == 8) {
-                    return Integer.class;
-                }
-                if (columnIndex == 10) {
-                    return Float.class;
-                }
-                return super.getColumnClass(columnIndex);
-            }
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -103,17 +91,10 @@ public class TuoiBiglietti {
             }
         }
 
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-
         tableBiglietti = new JTable(model);
         tableBiglietti.getTableHeader().setReorderingAllowed(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        for (int i = 0; i < tableBiglietti.getColumnCount(); i++) {
-            tableBiglietti.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-        }
-        tableBiglietti.setRowSorter(sorter);
-        sorter.setSortKeys(List.of(new RowSorter.SortKey(0, SortOrder.DESCENDING))); //ordina con i biglietti più recenti in alto
         tableBiglietti.setDefaultRenderer(Object.class, new CustomRenderer(booleanList));
         ListSelectionModel selectionModel = tableBiglietti.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -125,22 +106,6 @@ public class TuoiBiglietti {
                 frame.dispose();
             }
         });
-    }
-
-    private void aggiungiColoreLegenda(JPanel panelLegenda, Color colore, String descrizione) {
-        JPanel colorSquare = new JPanel();
-        colorSquare.setPreferredSize(new Dimension(20, 20));
-        colorSquare.setBackground(colore);
-        Border bordo = BorderFactory.createLineBorder(Color.BLACK);
-        colorSquare.setBorder(bordo);
-
-        JLabel labelDescrizione = new JLabel(descrizione);
-
-        JPanel bulletPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        bulletPanel.add(colorSquare);
-        bulletPanel.add(labelDescrizione);
-
-        panelLegenda.add(bulletPanel);
     }
 
     {

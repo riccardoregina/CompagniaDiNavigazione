@@ -30,7 +30,7 @@ public interface CompagniaDAO extends UtenteDAO {
      * @param idCorsa the id corsa
      * @param data    the data
      */
-    public void cancellaCorsaSpecifica(int idCorsa, Date data);
+    public void cancellaCorsaSpecifica(int idCorsa, Date data) throws SQLException;
 
     /**
      * Segnala ritardo.
@@ -39,7 +39,7 @@ public interface CompagniaDAO extends UtenteDAO {
      * @param data    the data
      * @param ritardo the ritardo
      */
-    public void segnalaRitardo(int idCorsa, Date data, int ritardo);
+    public void segnalaRitardo(int idCorsa, Date data, int ritardo) throws SQLException;
 
     /**
      * Aggiunge natante.

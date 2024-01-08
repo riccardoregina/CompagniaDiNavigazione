@@ -398,7 +398,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      * @param idCorsa the id corsa
      * @param data    the data
      */
-    public void cancellaCorsaSpecifica(int idCorsa, Date data) {
+    public void cancellaCorsaSpecifica(int idCorsa, Date data) throws SQLException {
         PreparedStatement ps = null;
         String query = "update navigazione.CorsaSpecifica"
         + " set cancellata = true"
@@ -415,6 +415,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
         } catch (SQLException e) {
             System.out.println("Cancellazione fallita.");
             e.printStackTrace();
+            throw new SQLException();
         }
     }
 
@@ -425,7 +426,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      * @param data    the data
      * @param ritardo the ritardo
      */
-    public void segnalaRitardo(int idCorsa, Date data, int ritardo) {
+    public void segnalaRitardo(int idCorsa, Date data, int ritardo) throws SQLException {
         PreparedStatement ps = null;
         String query = "update navigazione.CorsaSpecifica"
         + " set minutiRitardo = ?"
@@ -443,6 +444,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
         } catch (SQLException e) {
             System.out.println("Segnalazione ritardo fallita.");
             e.printStackTrace();
+            throw new SQLException();
         }
     }
 

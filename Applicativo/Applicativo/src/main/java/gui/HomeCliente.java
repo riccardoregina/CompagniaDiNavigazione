@@ -5,11 +5,9 @@ import unnamed.CustomRenderer;
 import unnamed.DatePicker;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,8 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -121,10 +117,10 @@ public class HomeCliente {
         frame.setVisible(true);
         acquistaButton.setEnabled(false);
 
-        aggiungiColoreLegenda(panelLegenda, new Color(255, 70, 70, 255), "Corse cancellate");
-        aggiungiColoreLegenda(panelLegenda, new Color(255, 250, 60, 255), "Corse vecchie");
-        aggiungiColoreLegenda(panelLegenda, new Color(15, 115, 245, 255), "Corse vecchie e cancellate");
-        aggiungiColoreLegenda(panelLegenda, Color.white, "Corse acquistabili");
+        CustomRenderer.aggiungiColoreLegenda(panelLegenda, new Color(255, 70, 70, 255), "Corse cancellate");
+        CustomRenderer.aggiungiColoreLegenda(panelLegenda, new Color(255, 250, 60, 255), "Corse vecchie");
+        CustomRenderer.aggiungiColoreLegenda(panelLegenda, new Color(15, 115, 245, 255), "Corse vecchie e cancellate");
+        CustomRenderer.aggiungiColoreLegenda(panelLegenda, Color.white, "Corse acquistabili");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -180,8 +176,11 @@ public class HomeCliente {
                         veicolo = true;
                     } else {
                         JOptionPane.showMessageDialog(null, "Un minorenne non può portare con sè un veicolo");
+                        veicolo = false;
                         return;
                     }
+                } else {
+                    veicolo = false;
                 }
 
                 String inputCostoMax = textCostoMax.getText();
@@ -357,53 +356,21 @@ public class HomeCliente {
             }
         }
         DefaultTableModel model = new DefaultTableModel(data, col) {
-            public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 6 || columnIndex == 7 || columnIndex == 8 || columnIndex == 11) {
-                    return Integer.class;
-                }
-                if (columnIndex == 5) {
-                    return Float.class;
-                }
-                return super.getColumnClass(columnIndex);
-            }
-
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        TableRowSorter<DefaultTableModel> sorterCorse = new TableRowSorter<>(model);
-
         tableCorse = new JTable(model);
         tableCorse.getTableHeader().setReorderingAllowed(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        for (int i = 0; i < tableCorse.getColumnCount(); i++) {
-            tableCorse.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-        }
-        tableCorse.setRowSorter(sorterCorse);
-        sorterCorse.setSortKeys(List.of(new RowSorter.SortKey(2, SortOrder.ASCENDING))); //ordina per orario di partenza
+        tableCorse.setDefaultRenderer(Object.class, centerRenderer);
         tableCorse.setDefaultRenderer(Object.class, new CustomRenderer(cancellata, scaduta));
         ListSelectionModel selectionModel = tableCorse.getSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollPaneCorse.setViewportView(tableCorse);
-    }
-
-    private void aggiungiColoreLegenda(JPanel panelLegenda, Color colore, String descrizione) {
-        JPanel colorSquare = new JPanel();
-        colorSquare.setPreferredSize(new Dimension(20, 20));
-        colorSquare.setBackground(colore);
-        Border bordo = BorderFactory.createLineBorder(Color.BLACK);
-        colorSquare.setBorder(bordo);
-
-        JLabel labelDescrizione = new JLabel(descrizione);
-
-        JPanel bulletPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        bulletPanel.add(colorSquare);
-        bulletPanel.add(labelDescrizione);
-
-        panelLegenda.add(bulletPanel);
     }
 
     {
