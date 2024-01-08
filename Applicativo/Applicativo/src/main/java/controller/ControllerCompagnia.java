@@ -585,4 +585,23 @@ public class ControllerCompagnia {
         buildPeriodi(compagnia.getLogin());
         return true;
     }
+
+    /**
+     * Chiede al DB di calcolare l'incasso di una corsa regolare in un periodo dato.
+     * Se il DB fallisce, la funzione restituisce il valore -1.
+     * Altrimenti, restituisce l'incasso della corsa nel periodo selezionato.
+     *
+     * @param idCorsa
+     * @param inizioPeriodo
+     * @param finePeriodo
+     * @return
+     */
+    public float calcolaIncassiCorsaInPeriodo(int idCorsa, LocalDate inizioPeriodo, LocalDate finePeriodo) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            return compagniaDAO.calcolaIncassiCorsaInPeriodo(idCorsa, inizioPeriodo, finePeriodo);
+        } catch (SQLException e) {
+            return -1;
+        }
+    }
 }
