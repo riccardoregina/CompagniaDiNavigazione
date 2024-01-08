@@ -201,6 +201,7 @@ public class HomeCompagnia {
                 }
                 return super.getColumnClass(columnIndex);
             }
+
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -244,6 +245,13 @@ public class HomeCompagnia {
         }
 
         modelNatanti = new DefaultTableModel(data, col) {
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 2 || columnIndex == 3) {
+                    return Integer.class;
+                }
+                return super.getColumnClass(columnIndex);
+            }
+
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -256,6 +264,8 @@ public class HomeCompagnia {
         tableNatanti.getTableHeader().setReorderingAllowed(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tableNatanti.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        tableNatanti.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         tableNatanti.setDefaultRenderer(Object.class, centerRenderer);
         tableNatanti.setRowSorter(sorterNatanti);
         sorterNatanti.setSortKeys(List.of(new RowSorter.SortKey(1, SortOrder.ASCENDING))); //ordina per tipo

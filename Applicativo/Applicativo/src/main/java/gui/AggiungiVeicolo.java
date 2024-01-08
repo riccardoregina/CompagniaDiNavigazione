@@ -30,7 +30,7 @@ public class AggiungiVeicolo {
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setSize((int) (screenSize.width / 1.5), (int) (screenSize.height / 1.8));
+        frame.setSize((int) (screenSize.width / 2.3), (int) (screenSize.height / 2.6));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 

@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -356,6 +357,16 @@ public class HomeCliente {
             }
         }
         DefaultTableModel model = new DefaultTableModel(data, col) {
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 6 || columnIndex == 7 || columnIndex == 8 || columnIndex == 11) {
+                    return Integer.class;
+                }
+                if (columnIndex == 5) {
+                    return Float.class;
+                }
+                return super.getColumnClass(columnIndex);
+            }
+
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -368,7 +379,9 @@ public class HomeCliente {
         tableCorse.getTableHeader().setReorderingAllowed(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tableCorse.setDefaultRenderer(Object.class, centerRenderer);
+        for (int i = 0; i < tableCorse.getColumnCount(); i++) {
+            tableCorse.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
         tableCorse.setRowSorter(sorterCorse);
         sorterCorse.setSortKeys(List.of(new RowSorter.SortKey(2, SortOrder.ASCENDING))); //ordina per orario di partenza
         tableCorse.setDefaultRenderer(Object.class, new CustomRenderer(cancellata, scaduta));
@@ -521,7 +534,8 @@ public class HomeCliente {
         buttonLogout.setText("Logout");
         panel1.add(buttonLogout, new com.intellij.uiDesigner.core.GridConstraints(12, 6, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
-        Font label1Font = this.$$$getFont$$$(null, -1, 20, label1.getFont());
+        label1.setEnabled(true);
+        Font label1Font = this.$$$getFont$$$(null, -1, 34, label1.getFont());
         if (label1Font != null) label1.setFont(label1Font);
         label1.setText("Home");
         panel1.add(label1, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

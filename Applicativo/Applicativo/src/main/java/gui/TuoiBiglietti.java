@@ -79,6 +79,15 @@ public class TuoiBiglietti {
             data[i][10] = prezzi.get(i);
         }
         DefaultTableModel model = new DefaultTableModel(data, col) {
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 0 || columnIndex == 1 || columnIndex == 8) {
+                    return Integer.class;
+                }
+                if (columnIndex == 10) {
+                    return Float.class;
+                }
+                return super.getColumnClass(columnIndex);
+            }
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -100,7 +109,9 @@ public class TuoiBiglietti {
         tableBiglietti.getTableHeader().setReorderingAllowed(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tableBiglietti.setDefaultRenderer(Object.class, centerRenderer);
+        for (int i = 0; i < tableBiglietti.getColumnCount(); i++) {
+            tableBiglietti.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
         tableBiglietti.setRowSorter(sorter);
         sorter.setSortKeys(List.of(new RowSorter.SortKey(0, SortOrder.DESCENDING))); //ordina con i biglietti più recenti in alto
         tableBiglietti.setDefaultRenderer(Object.class, new CustomRenderer(booleanList));
