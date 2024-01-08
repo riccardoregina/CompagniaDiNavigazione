@@ -300,7 +300,11 @@ public class ControllerCliente {
                 }
                 if (prezzoCalcolato <= prezzoMax) {
                     //aggiungo le informazioni sulla corsa da restituire alla gui
-                    prezzo.add(prezzoCalcolato);
+
+                    //non voglio prezzi al di sotto del centesimo. Nota: non é previsto overflow per le dimensioni dei numeri in questione.
+                    double prezzoArrotondato = (Math.floor(prezzoCalcolato * 100) / 100);
+                    prezzo.add((float) prezzoArrotondato);
+
                     idCorsa.add(cs.getCorsaRegolare().getIdCorsa());
                     nomeCompagnia.add(cs.getCorsaRegolare().getCompagnia().getNome());
                     data.add(cs.getData());
