@@ -367,7 +367,7 @@ public class InfoCorsa {
         tableCorse.getTableHeader().setReorderingAllowed(false);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tableCorse.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        tableCorse.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         tableCorse.setDefaultRenderer(Object.class, centerRenderer);
         tableCorse.setRowSorter(sorterCorse);
         sorterCorse.setSortKeys(List.of(new RowSorter.SortKey(0, SortOrder.ASCENDING)));
