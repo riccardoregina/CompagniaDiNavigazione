@@ -409,9 +409,10 @@ public class ControllerCliente {
             nomeSocial.add(x.getNomeSocial());
             tag.add(x.getTag());
         }
-        email = c.getEmails();
-        telefono = c.getTelefoni();
-        sitoWeb.add(c.getSitoWeb());
+
+        email.addAll(c.getEmails());
+        telefono.addAll(c.getTelefoni());
+        sitoWeb.addFirst(c.getSitoWeb());
     }
 
     /**
@@ -456,5 +457,14 @@ public class ControllerCliente {
             return false;
         }
         return true;
+    }
+
+    public void visualizzaInfoPorti(ArrayList<String> comune, ArrayList<String> indirizzo, ArrayList<String> telefono) {
+        for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
+            Porto p = it.getValue();
+            comune.add(p.getComune());
+            indirizzo.add(p.getIndirizzo());
+            telefono.add(p.getNumeroTelefono());
+        }
     }
 }

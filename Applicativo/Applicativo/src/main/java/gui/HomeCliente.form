@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.HomeCliente">
-  <grid id="27dc6" binding="panel1" layout-manager="GridLayoutManager" row-count="13" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="panel1" layout-manager="GridLayoutManager" row-count="10" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="25" y="20" width="1452" height="777"/>
@@ -176,10 +176,10 @@
           </grid>
         </children>
       </grid>
-      <grid id="d7d05" binding="panelInfoCompagnia" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="d7d05" binding="panelInfo" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="12" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false">
+          <grid row="9" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="-1" height="40"/>
             <maximum-size width="-1" height="40"/>
           </grid>
@@ -187,33 +187,62 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="41c02" class="javax.swing.JButton" binding="bVediInfoCompagnia">
+          <grid id="4a5b0" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="220" height="-1"/>
-                <maximum-size width="220" height="-1"/>
-              </grid>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties>
-              <text value="Contatti Compagnia"/>
-            </properties>
-          </component>
-          <component id="c8e70" class="javax.swing.JComboBox" binding="comboBoxCompagnie">
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="9e80d" class="javax.swing.JButton" binding="buttonInfoPorto">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                    <preferred-size width="180" height="-1"/>
+                    <maximum-size width="180" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <text value="Info Porti"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="dc1a2" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="4" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="120" height="-1"/>
-                <maximum-size width="120" height="-1"/>
-              </grid>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties>
-              <editable value="false"/>
-            </properties>
-          </component>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="4cd8a" class="javax.swing.JComboBox" binding="comboBoxCompagnie">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="4" fill="0" indent="0" use-parent-layout="false">
+                    <preferred-size width="180" height="-1"/>
+                    <maximum-size width="180" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="41c02" class="javax.swing.JButton" binding="bVediInfoCompagnia">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                    <preferred-size width="180" height="-1"/>
+                    <maximum-size width="180" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <text value="Contatti Compagnia"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
         </children>
       </grid>
       <scrollpane id="14be9" binding="scrollPaneCorse">
         <constraints>
-          <grid row="4" column="5" row-span="7" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="4" column="5" row-span="4" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <minimum-size width="-1" height="150"/>
             <preferred-size width="-1" height="400"/>
           </grid>
@@ -234,12 +263,12 @@
       </scrollpane>
       <hspacer id="84e71">
         <constraints>
-          <grid row="8" column="8" row-span="2" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="7" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
       </hspacer>
       <hspacer id="b6132">
         <constraints>
-          <grid row="8" column="0" row-span="2" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
       </hspacer>
       <component id="8b02c" class="javax.swing.JButton" binding="bBigliettiCliente">
@@ -277,7 +306,7 @@
       </component>
       <component id="b2975" class="javax.swing.JButton" binding="acquistaButton" default-binding="true">
         <constraints>
-          <grid row="6" column="1" row-span="2" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Acquista"/>
@@ -325,7 +354,7 @@
       </component>
       <grid id="a0978" binding="panelLegenda" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints>
-          <grid row="11" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -333,7 +362,7 @@
       </grid>
       <component id="78a33" class="javax.swing.JButton" binding="buttonLogout">
         <constraints>
-          <grid row="12" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Logout"/>
