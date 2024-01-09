@@ -728,7 +728,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
     public void aggiornaPostiDisponibiliSottocorse(int idCorsa) throws SQLException {
         CallableStatement cs = null;
         try {
-            cs = connection.prepareCall("{call navigazione.aggiornapostisottocorse(?)}");
+            cs = connection.prepareCall("call navigazione.aggiornapostisottocorse(?)");
             cs.setInt(1, idCorsa);
 
             cs.executeUpdate();

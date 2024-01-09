@@ -347,13 +347,13 @@ public class ControllerCompagnia {
             return false;
         }
 
-       /* compagniaDAO = new CompagniaDAO();
+        compagniaDAO = new CompagniaDAO();
         try {
             compagniaDAO.aggiornaPostiDisponibiliSottocorse(idCorsa);
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Aggiornamento dei posti disponibili fallito.");
-        }*/
+        }
 
         compagnia.getCorseErogate().clear();
         corseSpecifiche.clear();
