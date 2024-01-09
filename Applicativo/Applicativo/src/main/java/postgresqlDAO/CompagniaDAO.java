@@ -724,4 +724,20 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             throw new SQLException();
         }
     }
+
+    public void aggiornaPostiDisponibiliSottocorse(int idCorsa) throws SQLException {
+        CallableStatement cs = null;
+        try {
+            cs = connection.prepareCall("{call navigazione.aggiornapostisottocorse(?)}");
+            cs.setInt(1, idCorsa);
+
+            cs.executeUpdate();
+            cs.close();
+            connection.close();
+
+            System.out.println("I posti sono stati aggiornati");
+        } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
 }

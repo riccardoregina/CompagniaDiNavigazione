@@ -346,13 +346,14 @@ public class ControllerCompagnia {
             e.printStackTrace();
             return false;
         }
-        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
+
+       /* compagniaDAO = new CompagniaDAO();
         try {
-            cr.addScalo(new Scalo(porti.get(idPortoScalo), orarioAttracco, orarioRipartenza));
-        } catch (NoSuchElementException e) {
-            System.out.println("Elemento non trovato.");
+            compagniaDAO.aggiornaPostiDisponibiliSottocorse(idCorsa);
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
+            System.out.println("Aggiornamento dei posti disponibili fallito.");
+        }*/
 
         compagnia.getCorseErogate().clear();
         corseSpecifiche.clear();
