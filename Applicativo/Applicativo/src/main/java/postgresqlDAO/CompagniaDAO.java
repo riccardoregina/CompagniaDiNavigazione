@@ -708,14 +708,15 @@ public class CompagniaDAO implements dao.CompagniaDAO {
     public float calcolaIncassiCorsaInPeriodo(int idCorsa, LocalDate inizioPeriodo, LocalDate finePeriodo) throws SQLException {
         CallableStatement cs = null;
         try {
-            cs = connection.prepareCall("call navigazione.calcolaIncassiCorsaInPeriodo(?,?,?,?)");
+            cs = connection.prepareCall("call navigazione.calcolaincassicorsainperiodo(?,?,?,?)");
             cs.setInt(1, idCorsa);
             cs.setDate(2, java.sql.Date.valueOf(inizioPeriodo));
             cs.setDate(3, java.sql.Date.valueOf(finePeriodo));
-            cs.registerOutParameter(4, Types.FLOAT);
+            cs.setFloat(4, 0);
+            cs.registerOutParameter(4, Types.DOUBLE);
 
             cs.execute();
-            float ret = cs.getFloat(1);
+            float ret = (float) cs.getDouble(4);
             cs.close();
 
             connection.close();
