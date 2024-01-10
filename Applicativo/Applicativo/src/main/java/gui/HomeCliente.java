@@ -118,6 +118,10 @@ public class HomeCliente {
         frame.setVisible(true);
         acquistaButton.setEnabled(false);
 
+        ImageIcon imagePorto = new ImageIcon("resources/icons/icons8-faro-48.png");
+        labelPart.setIcon(imagePorto);
+        labelDest.setIcon(imagePorto);
+
         CustomRenderer.aggiungiColoreLegenda(panelLegenda, new Color(255, 70, 70, 255), "Corse cancellate");
         CustomRenderer.aggiungiColoreLegenda(panelLegenda, new Color(255, 250, 60, 255), "Corse vecchie");
         CustomRenderer.aggiungiColoreLegenda(panelLegenda, new Color(15, 115, 245, 255), "Corse vecchie e cancellate");
