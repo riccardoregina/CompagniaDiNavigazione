@@ -1,6 +1,7 @@
 package controller;
 
 import model.*;
+import postgresqlDAO.ClienteDAO;
 import postgresqlDAO.CompagniaDAO;
 import unnamed.Pair;
 
@@ -39,16 +40,20 @@ public class ControllerCompagnia {
      * @param password the password
      * @return the boolean
      */
-    public boolean compagniaAccede(String login, String password) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        boolean exists = compagniaDAO.accede(login, password);
-        if (exists) {
+    public void compagniaAccede(String login, String password) throws SQLException {
+        try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
+            compagniaDAO.accede(login, password);
+
             //prende dal DB tutte i dati della compagnia e costruisce l'ambiente per l'uso dell'applicativo
             buildModel(login, password);
-            return true;
-        } else {
-            //restituisci errore sulla GUI
-            return false;
+        } catch(SQLException e) {
+            String message = e.getMessage();
+            if (message.equals("Impossibile connettersi al server.")) {
+                throw e;
+            } else if (message.equals("Credenziali errate / compagnia non esistente.")) {
+                throw e;
+            }
         }
     }
 
@@ -58,145 +63,174 @@ public class ControllerCompagnia {
      * @param login    the login
      * @param password the password
      */
-    public void buildModel(String login, String password) {
-        buildPorti();
-        buildCompagnia(login, password);
-        buildNatantiCompagnia(login);
-        buildCorseRegolari(login);
-        buildPeriodi(login);
-        buildCorseSpecifiche();
+    public void buildModel(String login, String password) throws SQLException {
+        try {
+            buildPorti();
+            buildCompagnia(login, password);
+            buildNatantiCompagnia(login);
+            buildCorseRegolari(login);
+            buildPeriodi(login);
+            buildCorseSpecifiche();
+        } catch (SQLException e) {
+            throw e;
+        }
     }
 
     /**
      * Build porti.
      */
-    public void buildPorti() {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        ArrayList<Integer> idPorto = new ArrayList<>();
-        ArrayList<String> comuni = new ArrayList<>();
-        ArrayList<String> indirizzi = new ArrayList<>();
-        ArrayList<String> numeriTelefono = new ArrayList<>();
-        compagniaDAO.fetchPorti(idPorto, comuni, indirizzi, numeriTelefono);
-        for (int i = 0; i < comuni.size(); i++) {
-            porti.put(idPorto.get(i), new Porto(idPorto.get(i), comuni.get(i), indirizzi.get(i), numeriTelefono.get(i)));
+    public void buildPorti() throws SQLException {
+        try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
+            ArrayList<Integer> idPorto = new ArrayList<>();
+            ArrayList<String> comuni = new ArrayList<>();
+            ArrayList<String> indirizzi = new ArrayList<>();
+            ArrayList<String> numeriTelefono = new ArrayList<>();
+            compagniaDAO.fetchPorti(idPorto, comuni, indirizzi, numeriTelefono);
+            for (int i = 0; i < comuni.size(); i++) {
+                porti.put(idPorto.get(i), new Porto(idPorto.get(i), comuni.get(i), indirizzi.get(i), numeriTelefono.get(i)));
+            }
+        } catch (SQLException e) {
+            throw e;
         }
     }
 
-    public void buildCompagnia(String loginCompagnia, String password) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        ArrayList<String> nomeCompagnia = new ArrayList<String>();
-        ArrayList<String> telefono = new ArrayList<>();
-        ArrayList<String> email = new ArrayList<>();
-        ArrayList<String> nomeSocial = new ArrayList<>();
-        ArrayList<String> tagSocial = new ArrayList<>();
-        ArrayList<String> sitoWeb = new ArrayList<String>();
-        compagniaDAO.fetchCompagnia(loginCompagnia, nomeCompagnia, telefono, email, nomeSocial, tagSocial, sitoWeb);
+    public void buildCompagnia(String loginCompagnia, String password) throws SQLException {
+        try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
+            ArrayList<String> nomeCompagnia = new ArrayList<String>();
+            ArrayList<String> telefono = new ArrayList<>();
+            ArrayList<String> email = new ArrayList<>();
+            ArrayList<String> nomeSocial = new ArrayList<>();
+            ArrayList<String> tagSocial = new ArrayList<>();
+            ArrayList<String> sitoWeb = new ArrayList<String>();
+            compagniaDAO.fetchCompagnia(loginCompagnia, nomeCompagnia, telefono, email, nomeSocial, tagSocial, sitoWeb);
 
-        compagnia = new Compagnia(loginCompagnia, password, nomeCompagnia.getFirst());
-        compagnia.setTelefoni(telefono);
-        compagnia.setEmails(email);
-        compagnia.setSitoWeb(sitoWeb.getFirst());
+            compagnia = new Compagnia(loginCompagnia, password, nomeCompagnia.getFirst());
+            compagnia.setTelefoni(telefono);
+            compagnia.setEmails(email);
+            compagnia.setSitoWeb(sitoWeb.getFirst());
 
-        ArrayList<AccountSocial> accountSocial = new ArrayList<>();
-        for (int i = 0; i < tagSocial.size(); i++) {
-            accountSocial.add(new AccountSocial(compagnia, nomeSocial.get(i), tagSocial.get(i)));
-        }
-        compagnia.setAccounts(accountSocial);
-    }
-
-    public void buildNatantiCompagnia(String loginCompagnia) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        ArrayList<String> nomeNatante = new ArrayList<>();
-        ArrayList<Integer> capienzaPasseggeri = new ArrayList<>();
-        ArrayList<Integer> capienzaVeicoli = new ArrayList<>();
-        ArrayList<String> tipo = new ArrayList<>();
-        compagniaDAO.fetchNatantiCompagnia(loginCompagnia, nomeNatante, capienzaPasseggeri, capienzaVeicoli, tipo);
-        for (int i = 0; i < nomeNatante.size(); i++) {
-            compagnia.addNatante(new Natante(compagnia, nomeNatante.get(i), capienzaPasseggeri.get(i), capienzaVeicoli.get(i), tipo.get(i)));
+            ArrayList<AccountSocial> accountSocial = new ArrayList<>();
+            for (int i = 0; i < tagSocial.size(); i++) {
+                accountSocial.add(new AccountSocial(compagnia, nomeSocial.get(i), tagSocial.get(i)));
+            }
+            compagnia.setAccounts(accountSocial);
+        } catch (SQLException e) {
+            throw e;
         }
     }
 
-    public void buildCorseRegolari(String loginCompagnia) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        ArrayList<Integer> idCorsa = new ArrayList<>();
-        ArrayList<Integer> idPortoPartenza = new ArrayList<>();
-        ArrayList<Integer> idPortoArrivo = new ArrayList<>();
-        ArrayList<LocalTime> orarioPartenza = new ArrayList<>();
-        ArrayList<LocalTime> orarioArrivo = new ArrayList<>();
-        ArrayList<Float> costoIntero = new ArrayList<>();
-        ArrayList<Float> scontoRidotto = new ArrayList<>();
-        ArrayList<Float> costoBagaglio = new ArrayList<>();
-        ArrayList<Float> costoPrevendita = new ArrayList<>();
-        ArrayList<Float> costoVeicolo = new ArrayList<>();
-        ArrayList<String> nomeNatanteCorsa = new ArrayList<>();
-        ArrayList<Integer> corsaSup = new ArrayList<>();
-        compagniaDAO.fetchCorseRegolari(loginCompagnia, idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatanteCorsa, corsaSup);
-        for (int i = 0; i < costoIntero.size(); i++) {
-            int id = idCorsa.get(i);
-            Natante n = compagnia.getNatantiPosseduti().get(nomeNatanteCorsa.get(i));
-            Porto pPartenza = porti.get(idPortoPartenza.get(i));
-            Porto pArrivo = porti.get(idPortoArrivo.get(i));
-            LocalTime oraPartenza = orarioPartenza.get(i);
-            LocalTime oraArrivo = orarioArrivo.get(i);
-            float cIntero = costoIntero.get(i);
-            float sRidotto = scontoRidotto.get(i);
-            float cBagaglio = costoBagaglio.get(i);
-            float cPrev = costoPrevendita.get(i);
-            float cVei = costoVeicolo.get(i);
-            CorsaRegolare crSup = compagnia.getCorseErogate().get(corsaSup.get(i));
-            compagnia.addCorsaRegolare(new CorsaRegolare(id, compagnia, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cVei, cPrev, crSup));
+    public void buildNatantiCompagnia(String loginCompagnia) throws SQLException {
+        try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
+            ArrayList<String> nomeNatante = new ArrayList<>();
+            ArrayList<Integer> capienzaPasseggeri = new ArrayList<>();
+            ArrayList<Integer> capienzaVeicoli = new ArrayList<>();
+            ArrayList<String> tipo = new ArrayList<>();
+            compagniaDAO.fetchNatantiCompagnia(loginCompagnia, nomeNatante, capienzaPasseggeri, capienzaVeicoli, tipo);
+            for (int i = 0; i < nomeNatante.size(); i++) {
+                compagnia.addNatante(new Natante(compagnia, nomeNatante.get(i), capienzaPasseggeri.get(i), capienzaVeicoli.get(i), tipo.get(i)));
+            }
+        } catch (SQLException e) {
+            throw e;
         }
     }
 
-    public void buildPeriodi(String loginCompagnia) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        HashMap<Integer, Periodo> periodi = new HashMap<>();
-        ArrayList<Integer> corsa = new ArrayList<>();
-        ArrayList<Integer> idPeriodo = new ArrayList<>();
-        ArrayList<LocalDate> dataInizio = new ArrayList<>();
-        ArrayList<LocalDate> dataFine = new ArrayList<>();
-        ArrayList<String> giorni = new ArrayList<>();
-        compagniaDAO.fetchPeriodiAttivitaCorse(loginCompagnia, idPeriodo, dataInizio, dataFine, giorni, corsa);
-        //Assegno un periodo alla sua corsa.
-        for (int i = 0; i < dataInizio.size(); i++) {
-            CorsaRegolare cr = compagnia.getCorseErogate().get(corsa.get(i));
-            cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), giorni.get(i)));
+    public void buildCorseRegolari(String loginCompagnia) throws SQLException {
+        try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
+            ArrayList<Integer> idCorsa = new ArrayList<>();
+            ArrayList<Integer> idPortoPartenza = new ArrayList<>();
+            ArrayList<Integer> idPortoArrivo = new ArrayList<>();
+            ArrayList<LocalTime> orarioPartenza = new ArrayList<>();
+            ArrayList<LocalTime> orarioArrivo = new ArrayList<>();
+            ArrayList<Float> costoIntero = new ArrayList<>();
+            ArrayList<Float> scontoRidotto = new ArrayList<>();
+            ArrayList<Float> costoBagaglio = new ArrayList<>();
+            ArrayList<Float> costoPrevendita = new ArrayList<>();
+            ArrayList<Float> costoVeicolo = new ArrayList<>();
+            ArrayList<String> nomeNatanteCorsa = new ArrayList<>();
+            ArrayList<Integer> corsaSup = new ArrayList<>();
+            compagniaDAO.fetchCorseRegolari(loginCompagnia, idCorsa, idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, nomeNatanteCorsa, corsaSup);
+            for (int i = 0; i < costoIntero.size(); i++) {
+                int id = idCorsa.get(i);
+                Natante n = compagnia.getNatantiPosseduti().get(nomeNatanteCorsa.get(i));
+                Porto pPartenza = porti.get(idPortoPartenza.get(i));
+                Porto pArrivo = porti.get(idPortoArrivo.get(i));
+                LocalTime oraPartenza = orarioPartenza.get(i);
+                LocalTime oraArrivo = orarioArrivo.get(i);
+                float cIntero = costoIntero.get(i);
+                float sRidotto = scontoRidotto.get(i);
+                float cBagaglio = costoBagaglio.get(i);
+                float cPrev = costoPrevendita.get(i);
+                float cVei = costoVeicolo.get(i);
+                CorsaRegolare crSup = compagnia.getCorseErogate().get(corsaSup.get(i));
+                compagnia.addCorsaRegolare(new CorsaRegolare(id, compagnia, n, pPartenza, pArrivo, oraPartenza, oraArrivo, cIntero, sRidotto, cBagaglio, cVei, cPrev, crSup));
+            }
+        } catch (SQLException e) {
+            throw e;
         }
+    }
+
+    public void buildPeriodi(String loginCompagnia) throws SQLException {
+        try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
+            HashMap<Integer, Periodo> periodi = new HashMap<>();
+            ArrayList<Integer> corsa = new ArrayList<>();
+            ArrayList<Integer> idPeriodo = new ArrayList<>();
+            ArrayList<LocalDate> dataInizio = new ArrayList<>();
+            ArrayList<LocalDate> dataFine = new ArrayList<>();
+            ArrayList<String> giorni = new ArrayList<>();
+            compagniaDAO.fetchPeriodiAttivitaCorse(loginCompagnia, idPeriodo, dataInizio, dataFine, giorni, corsa);
+            //Assegno un periodo alla sua corsa.
+            for (int i = 0; i < dataInizio.size(); i++) {
+                CorsaRegolare cr = compagnia.getCorseErogate().get(corsa.get(i));
+                cr.addPeriodoAttivita(new Periodo(idPeriodo.get(i), dataInizio.get(i), dataFine.get(i), giorni.get(i)));
+            }
+        } catch (SQLException e) {
+            throw e;
+        }
+
     }
 
     /**
      * Build corse specifiche.
      */
-    public void buildCorseSpecifiche() {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        ArrayList<Integer> corsaRegolare = new ArrayList<>();
-        ArrayList<LocalDate> data = new ArrayList<>();
-        ArrayList<Integer> postiDispPass = new ArrayList<>();
-        ArrayList<Integer> postiDispVei = new ArrayList<>();
-        ArrayList<Integer> minutiRitardo = new ArrayList<>();
-        ArrayList<Boolean> cancellata = new ArrayList<>();
-        compagniaDAO.fetchCorseSpecifiche(compagnia.getLogin(),corsaRegolare, data, postiDispPass, postiDispVei, minutiRitardo, cancellata);
-        for (int i = 0; i < data.size(); i++) {
-            CorsaRegolare cr = compagnia.getCorseErogate().get(corsaRegolare.get(i));
-            LocalDate d = data.get(i);
-            int pPass = postiDispPass.get(i);
-            int pVei = postiDispVei.get(i);
-            int mRit = minutiRitardo.get(i);
-            boolean canc = cancellata.get(i);
-            Pair pair = new Pair(cr.getIdCorsa(), d);
-            corseSpecifiche.put(pair, new CorsaSpecifica(cr, d, pPass, pVei, mRit, canc));
+    public void buildCorseSpecifiche() throws SQLException {
+        try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
+            ArrayList<Integer> corsaRegolare = new ArrayList<>();
+            ArrayList<LocalDate> data = new ArrayList<>();
+            ArrayList<Integer> postiDispPass = new ArrayList<>();
+            ArrayList<Integer> postiDispVei = new ArrayList<>();
+            ArrayList<Integer> minutiRitardo = new ArrayList<>();
+            ArrayList<Boolean> cancellata = new ArrayList<>();
+            compagniaDAO.fetchCorseSpecifiche(compagnia.getLogin(),corsaRegolare, data, postiDispPass, postiDispVei, minutiRitardo, cancellata);
+            for (int i = 0; i < data.size(); i++) {
+                CorsaRegolare cr = compagnia.getCorseErogate().get(corsaRegolare.get(i));
+                LocalDate d = data.get(i);
+                int pPass = postiDispPass.get(i);
+                int pVei = postiDispVei.get(i);
+                int mRit = minutiRitardo.get(i);
+                boolean canc = cancellata.get(i);
+                Pair pair = new Pair(cr.getIdCorsa(), d);
+                corseSpecifiche.put(pair, new CorsaSpecifica(cr, d, pPass, pVei, mRit, canc));
+            }
+        } catch (SQLException e) {
+            throw e;
         }
     }
 
     public boolean aggiungiNatante (String nome, String tipo, int capienzaPasseggeri, int capienzaVeicoli) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.aggiungeNatante(compagnia.getLogin(), nome, capienzaPasseggeri, capienzaVeicoli, tipo);
+            compagnia.addNatante(new Natante(compagnia, nome, capienzaPasseggeri, capienzaVeicoli, tipo));
+            return true;
         } catch (Exception e) {
             return false;
         }
-        compagnia.addNatante(new Natante(compagnia, nome, capienzaPasseggeri, capienzaVeicoli, tipo));
-        return true;
     }
 
     public void visualizzaNatanti(ArrayList<String> nome, ArrayList<Integer> capienzaPasseggeri, ArrayList<Integer> capienzaVeicoli, ArrayList<String> tipo) {
@@ -227,14 +261,14 @@ public class ControllerCompagnia {
     }
 
     public boolean rimuoviNatante(String nomeNatante) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.rimuoveNatante(nomeNatante);
+            compagnia.getNatantiPosseduti().remove(nomeNatante);
+            return true;
         } catch (Exception e) {
             return false;
         }
-        compagnia.getNatantiPosseduti().remove(nomeNatante);
-        return true;
     }
 
     public void visualizzaPorti(ArrayList<Pair> porti) {
@@ -264,23 +298,22 @@ public class ControllerCompagnia {
      * @return
      */
     public boolean creaCorsa(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String nomeNatante, AtomicInteger idCorsa) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        //Mi faccio restituire dal DAO l'id della tupla inserita.
-        idCorsa.set(-1); //solo una inizializzazione...
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
+            //Mi faccio restituire dal DAO l'id della tupla inserita.
+            idCorsa.set(-1); //solo una inizializzazione...
             compagniaDAO.aggiungeCorsa(idPortoPartenza, idPortoArrivo, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, compagnia.getLogin(), nomeNatante, idCorsa);
+
+            compagnia.getCorseErogate().clear();
+            corseSpecifiche.clear();
+            buildCorseRegolari(compagnia.getLogin());
+            buildPeriodi(compagnia.getLogin());
+            buildCorseSpecifiche();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-
-        compagnia.getCorseErogate().clear();
-        corseSpecifiche.clear();
-        buildCorseRegolari(compagnia.getLogin());
-        buildPeriodi(compagnia.getLogin());
-        buildCorseSpecifiche();
-
-        return true;
     }
 
     /**
@@ -293,75 +326,78 @@ public class ControllerCompagnia {
      * @return a boolean
      */
     public boolean aggiungiPeriodo(String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, AtomicInteger idPeriodo) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        idPeriodo.set(-1);
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
+            idPeriodo.set(-1);
             compagniaDAO.aggiungePeriodo(giorni, inizioPeriodo, finePeriodo, idPeriodo);
+            periodiNonCollegatiACorse.put(idPeriodo.get(), new Periodo(idPeriodo.get(), inizioPeriodo, finePeriodo, giorni));
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        periodiNonCollegatiACorse.put(idPeriodo.get(), new Periodo(idPeriodo.get(), inizioPeriodo, finePeriodo, giorni));
-        return true;
     }
 
     public boolean attivaCorsaInPeriodo(int idCorsa, int idPeriodo) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.attivaCorsaInPeriodo(idCorsa, idPeriodo);
+            CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
+            Periodo p = periodiNonCollegatiACorse.get(idPeriodo);
+            cr.addPeriodoAttivita(p);
+            //se il periodo non era collegato ad una corsa, adesso lo é.
+            periodiNonCollegatiACorse.remove(idPeriodo);
+
+            compagnia.getCorseErogate().clear();
+            corseSpecifiche.clear();
+            buildCorseRegolari(compagnia.getLogin());
+            buildPeriodi(compagnia.getLogin());
+            buildCorseSpecifiche();
+
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        CorsaRegolare cr = compagnia.getCorseErogate().get(idCorsa);
-        Periodo p = periodiNonCollegatiACorse.get(idPeriodo);
-        cr.addPeriodoAttivita(p);
-        //se il periodo non era collegato ad una corsa, adesso lo é.
-        periodiNonCollegatiACorse.remove(idPeriodo);
-
-        compagnia.getCorseErogate().clear();
-        corseSpecifiche.clear();
-        buildCorseRegolari(compagnia.getLogin());
-        buildPeriodi(compagnia.getLogin());
-        buildCorseSpecifiche();
-
-        return true;
     }
 
     public boolean eliminaCorsaRegolare(int idCorsa) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
-        compagniaDAO.cancellaCorsaRegolare(idCorsa);
-        //aggiorno le corse regolari e le corse specifiche
-        compagnia.getCorseErogate().clear();
-        corseSpecifiche.clear();
-        buildCorseRegolari(compagnia.getLogin());
-        buildPeriodi(compagnia.getLogin());
-        buildCorseSpecifiche();
-        return true;
+        try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
+            compagniaDAO.cancellaCorsaRegolare(idCorsa);
+            //aggiorno le corse regolari e le corse specifiche
+            compagnia.getCorseErogate().clear();
+            corseSpecifiche.clear();
+            buildCorseRegolari(compagnia.getLogin());
+            buildPeriodi(compagnia.getLogin());
+            buildCorseSpecifiche();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     public boolean aggiungiScalo(int idCorsa, Integer idPortoScalo, LocalTime orarioAttracco, LocalTime orarioRipartenza) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.aggiungeScalo(idCorsa, idPortoScalo, orarioAttracco, orarioRipartenza);
+            compagniaDAO = new CompagniaDAO();
+            try {
+                compagniaDAO.aggiornaPostiDisponibiliSottocorse(idCorsa);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Aggiornamento dei posti disponibili fallito.");
+            }
+
+            compagnia.getCorseErogate().clear();
+            corseSpecifiche.clear();
+            buildCorseRegolari(compagnia.getLogin());
+            buildPeriodi(compagnia.getLogin());
+            buildCorseSpecifiche();
+
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-
-        compagniaDAO = new CompagniaDAO();
-        try {
-            compagniaDAO.aggiornaPostiDisponibiliSottocorse(idCorsa);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Aggiornamento dei posti disponibili fallito.");
-        }
-
-        compagnia.getCorseErogate().clear();
-        corseSpecifiche.clear();
-        buildCorseRegolari(compagnia.getLogin());
-        buildPeriodi(compagnia.getLogin());
-        buildCorseSpecifiche();
-
-        return true;
     }
 
     public void visualizzaCorseSpecifichePerData(LocalDate data, ArrayList<Integer> idCorsa, ArrayList<String> portoPartenza, ArrayList<LocalTime> orarioPartenza, ArrayList<String> portoArrivo, ArrayList<LocalTime> orarioArrivo, ArrayList<Integer> minutiRitardo, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Boolean> cancellata) {
@@ -394,28 +430,26 @@ public class ControllerCompagnia {
     }
 
     public boolean cancellaCorsaSpecifica(int idCorsa, LocalDate data) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.cancellaCorsaSpecifica(idCorsa, Date.valueOf(data));
+            buildCorseSpecifiche();
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        buildCorseSpecifiche();
-
-        return true;
     }
 
     public boolean segnalaRitardo(int idCorsa, LocalDate data, int minutiRitardo) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.segnalaRitardo(idCorsa, Date.valueOf(data), minutiRitardo);
+            CorsaSpecifica cs = corseSpecifiche.get(new Pair(idCorsa, data));
+            cs.setMinutiRitardo(minutiRitardo);
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        CorsaSpecifica cs = corseSpecifiche.get(new Pair(idCorsa, data));
-        cs.setMinutiRitardo(minutiRitardo);
-
-        return true;
     }
 
     public String getLoginCompagnia() {
@@ -496,95 +530,95 @@ public class ControllerCompagnia {
     }
 
     public boolean modificaOrarioPartenza(int idCorsa, LocalTime nuovoOrarioPartenza) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.modificaOrarioPartenza(idCorsa, nuovoOrarioPartenza);
+            buildCorseRegolari(compagnia.getLogin());
+            buildPeriodi(compagnia.getLogin());
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        buildCorseRegolari(compagnia.getLogin());
-        buildPeriodi(compagnia.getLogin());
-        return true;
     }
 
     public boolean modificaOrarioArrivo(int idCorsa, LocalTime nuovoOrarioArrivo) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.modificaOrarioArrivo(idCorsa, nuovoOrarioArrivo);
+            buildCorseRegolari(compagnia.getLogin());
+            buildPeriodi(compagnia.getLogin());
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        buildCorseRegolari(compagnia.getLogin());
-        buildPeriodi(compagnia.getLogin());
-        return true;
     }
 
     public boolean modificaCostoIntero(int idCorsa, float nuovoCostoIntero) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.modificaCostoIntero(idCorsa, nuovoCostoIntero);
+            compagnia.getCorseErogate().get(idCorsa).setCostoIntero(nuovoCostoIntero);
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        compagnia.getCorseErogate().get(idCorsa).setCostoIntero(nuovoCostoIntero);
-        return true;
     }
 
     public boolean modificaScontoRidotto(int idCorsa, float nuovoScontoRidotto) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.modificaScontoRidotto(idCorsa, nuovoScontoRidotto);
+            compagnia.getCorseErogate().get(idCorsa).setScontoRidotto(nuovoScontoRidotto);
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        compagnia.getCorseErogate().get(idCorsa).setScontoRidotto(nuovoScontoRidotto);
-        return true;
     }
 
     public boolean modificaCostoBagaglio(int idCorsa, float nuovoCostoBagaglio) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.modificaCostoBagaglio(idCorsa, nuovoCostoBagaglio);
+            compagnia.getCorseErogate().get(idCorsa).setCostoBagaglio(nuovoCostoBagaglio);
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        compagnia.getCorseErogate().get(idCorsa).setCostoBagaglio(nuovoCostoBagaglio);
-        return true;
     }
 
     public boolean modificaCostoPrevendita(int idCorsa, float nuovoCostoPrevendita) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.modificaCostoPrevendita(idCorsa, nuovoCostoPrevendita);
+            compagnia.getCorseErogate().get(idCorsa).setCostoPrevendita(nuovoCostoPrevendita);
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        compagnia.getCorseErogate().get(idCorsa).setCostoPrevendita(nuovoCostoPrevendita);
-        return true;
     }
 
     public boolean modificaCostoVeicolo(int idCorsa, float nuovoCostoVeicolo) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.modificaCostoVeicolo(idCorsa, nuovoCostoVeicolo);
+            compagnia.getCorseErogate().get(idCorsa).setCostoVeicolo(nuovoCostoVeicolo);
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        compagnia.getCorseErogate().get(idCorsa).setCostoVeicolo(nuovoCostoVeicolo);
-        return true;
     }
 
 
     public boolean eliminaPeriodoAttivitaPerCorsa(int idCorsa, int idPeriodo) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.eliminaPeriodoAttivitaPerCorsa(idCorsa, idPeriodo);
+            buildCorseRegolari(compagnia.getLogin());
+            buildPeriodi(compagnia.getLogin());
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        buildCorseRegolari(compagnia.getLogin());
-        buildPeriodi(compagnia.getLogin());
-        return true;
     }
 
     /**
@@ -598,8 +632,8 @@ public class ControllerCompagnia {
      * @return
      */
     public float calcolaIncassiCorsaInPeriodo(int idCorsa, LocalDate inizioPeriodo, LocalDate finePeriodo) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             return compagniaDAO.calcolaIncassiCorsaInPeriodo(idCorsa, inizioPeriodo, finePeriodo);
         } catch (SQLException e) {
             return -1;
@@ -618,97 +652,96 @@ public class ControllerCompagnia {
     }
 
     public boolean aggiungiSocial(String nomeSocial, String tag) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.aggiungiSocial(nomeSocial, tag, compagnia.getLogin());
+            compagnia.getAccounts().add(new AccountSocial(compagnia, nomeSocial, tag));
+
+            return true;
         } catch (SQLException e) {
             return false;
         }
-
-        compagnia.getAccounts().add(new AccountSocial(compagnia, nomeSocial, tag));
-
-        return true;
     }
 
     public boolean eliminaSocial(String nomeSocial, String tag) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.eliminaSocial(nomeSocial, tag);
+
+            for (int i = 0; i < compagnia.getAccounts().size(); i++) {
+                if (compagnia.getAccounts().get(i).getNomeSocial().equals(nomeSocial) && compagnia.getAccounts().get(i).getTag().equals(tag)) {
+                    compagnia.getAccounts().remove(i);
+                }
+            }
+
+            return true;
         } catch (SQLException e) {
             return false;
         }
-
-        for (int i = 0; i < compagnia.getAccounts().size(); i++) {
-            if (compagnia.getAccounts().get(i).getNomeSocial().equals(nomeSocial) && compagnia.getAccounts().get(i).getTag().equals(tag)) {
-                compagnia.getAccounts().remove(i);
-            }
-        }
-
-        return true;
     }
 
     public boolean aggiungiTelefono(String telefono) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.aggiungiTelefono(telefono, compagnia.getLogin());
+
+            compagnia.getTelefoni().add(telefono);
+
+            return true;
         } catch (SQLException e) {
             return false;
         }
-
-        compagnia.getTelefoni().add(telefono);
-
-        return true;
     }
 
     public boolean eliminaTelefono(String telefono) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.eliminaTelefono(telefono);
+
+            compagnia.getTelefoni().remove(telefono);
+
+            return true;
         } catch (SQLException e) {
             return false;
         }
-
-        compagnia.getTelefoni().remove(telefono);
-
-        return true;
     }
 
     public boolean aggiungiEmail(String email) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.aggiungiEmail(email, compagnia.getLogin());
+
+            compagnia.getEmails().add(email);
+
+            return true;
         } catch (SQLException e) {
             return false;
         }
-
-        compagnia.getEmails().add(email);
-
-        return true;
     }
 
     public boolean eliminaEmail(String email) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.eliminaEmail(email);
+
+            compagnia.getEmails().remove(email);
+
+            return true;
         } catch (SQLException e) {
             return false;
         }
-
-        compagnia.getEmails().remove(email);
-
-        return true;
     }
 
     public boolean modificaSitoWeb(String sito) {
-        CompagniaDAO compagniaDAO = new CompagniaDAO();
         try {
+            CompagniaDAO compagniaDAO = new CompagniaDAO();
             compagniaDAO.modificaSitoWeb(sito, compagnia.getLogin());
+
+            compagnia.setSitoWeb(sito);
+
+            return  true;
         } catch (SQLException e) {
             return false;
         }
-
-        compagnia.setSitoWeb(sito);
-
-        return  true;
     }
 }

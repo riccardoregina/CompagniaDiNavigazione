@@ -13,11 +13,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ClienteDAO implements dao.ClienteDAO {
     private Connection connection;
-    public ClienteDAO() {
+    public ClienteDAO() throws SQLException {
         try {
             connection = ConnessioneDB.getInstance().getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -26,10 +26,8 @@ public class ClienteDAO implements dao.ClienteDAO {
      *
      * @param login the login
      * @param pw    the pw
-     * @return the boolean
      */
-    public boolean accede(String login, String pw) {
-        boolean found = false;
+    public void accede(String login, String pw) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select *"
@@ -41,18 +39,16 @@ public class ClienteDAO implements dao.ClienteDAO {
             ps.setString(1, login);
             ps.setString(2, pw);
             rs = ps.executeQuery();
-
-            if (rs.next()) { //se esiste un risultato
-                found = true;
+            if (!rs.next()) {
+                throw new SQLException("Credenziali errate / utente non esistente.");
             }
+
             rs.close();
+            ps.close();
             connection.close();
-            return found;
         } catch (SQLException e) {
-            System.out.println("Accesso negato.");
-            e.printStackTrace();
+            throw e;
         }
-        return found;
     }
 
     /**
@@ -62,7 +58,7 @@ public class ClienteDAO implements dao.ClienteDAO {
      * @param nome    the nome
      * @param cognome the cognome
      */
-    public void fetchCliente(String login, String nome, String cognome) {
+    public void fetchCliente(String login, ArrayList<String> nome, ArrayList<String> cognome) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select *"
@@ -75,8 +71,8 @@ public class ClienteDAO implements dao.ClienteDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                nome = rs.getString("nome");
-                cognome = rs.getString("cognome");
+                nome.add(rs.getString("nome"));
+                cognome.add(rs.getString("cognome"));
             }
             rs.close();
             ps.close();

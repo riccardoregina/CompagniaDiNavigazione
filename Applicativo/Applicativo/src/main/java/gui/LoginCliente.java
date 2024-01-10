@@ -6,6 +6,7 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.Locale;
 
 import controller.ControllerCliente;
@@ -70,11 +71,17 @@ public class LoginCliente {
                     return;
                 }
 
-                if (controllerCliente.clienteAccede(login, pwd)) {
+                try {
+                    controllerCliente.clienteAccede(login, pwd);
                     HomeCliente homeCliente = new HomeCliente(frame, controllerCliente);
                     frame.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "connessione al DB fallita/ credenziali errate");
+                } catch (SQLException ex) {
+                    String message = ex.getMessage();
+                    if (message.equals("Impossibile connettersi al server.")) {
+                        JOptionPane.showMessageDialog(null, "Impossibile connettersi al server. Riprova tra poco.");
+                    } else if (message.equals("Credenziali errate / utente non esistente.")) {
+                        JOptionPane.showMessageDialog(null, "Impossibile trovare l'utente corrispondente alle credenziali inserite.");
+                    }
                 }
             }
         });

@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * The interface Cliente dao.
  */
 public interface ClienteDAO extends UtenteDAO {
-    public void fetchCliente(String login, String nome, String cognome);
+    public void fetchCliente(String login, ArrayList<String> nome, ArrayList<String> cognome);
     public void fetchVeicoliCliente(String login, ArrayList<String> veicoliTarga, ArrayList<String> veicoliTipo);
     public void fetchCompagnie(ArrayList<String> login, ArrayList<String> nomeCompagnia, ArrayList<String> sitoWeb, ArrayList<String> compagniaSocial, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> compagniaEmail, ArrayList<String> indirizzoEmail, ArrayList<String> compagniaTelefono, ArrayList<String> numeroTelefono);
     public void fetchContattiCompagnie(ArrayList<String> compagniaSocial, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> compagniaEmail, ArrayList<String> indirizzoEmail, ArrayList<String> compagniaTelefono, ArrayList<String> numeroTelefono);

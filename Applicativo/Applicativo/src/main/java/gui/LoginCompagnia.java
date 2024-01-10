@@ -8,6 +8,7 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.Locale;
 
 /**
@@ -65,11 +66,20 @@ public class LoginCompagnia {
 
                 if (login.isEmpty() || pwd.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "inserisci le tue credenziali");
-                } else if (controllerCompagnia.compagniaAccede(login, pwd)) {
+                    return;
+                }
+
+                try {
+                    controllerCompagnia.compagniaAccede(login, pwd);
                     HomeCompagnia homeCompagnia = new HomeCompagnia(frame, controllerCompagnia);
                     frame.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "connessione al DB fallita/ credenziali errate");
+                } catch (SQLException ex) {
+                    String message = ex.getMessage();
+                    if (message.equals("Impossibile connettersi al server.")) {
+                        JOptionPane.showMessageDialog(null, "Impossibile connettersi al server. Riprova tra poco.");
+                    } else if (message.equals("Credenziali errate / compagnia non esistente.")) {
+                        JOptionPane.showMessageDialog(null, "Impossibile trovare l'utente corrispondente alle credenziali inserite.");
+                    }
                 }
             }
         });

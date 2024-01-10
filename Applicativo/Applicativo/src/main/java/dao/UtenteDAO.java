@@ -1,5 +1,7 @@
 package dao;
 
+import java.sql.SQLException;
+
 /**
  * The interface Utente dao.
  */
@@ -11,5 +13,5 @@ public interface UtenteDAO {
      * @param password the password
      * @return the boolean
      */
-    public boolean accede(String login, String password);
+    public void accede(String login, String password) throws SQLException;
 }

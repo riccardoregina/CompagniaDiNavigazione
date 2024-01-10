@@ -14,11 +14,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class CompagniaDAO implements dao.CompagniaDAO {
     private Connection connection;
-    public CompagniaDAO() {
+    public CompagniaDAO() throws SQLException {
         try {
             connection = ConnessioneDB.getInstance().getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -29,8 +29,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      * @param pw    the pw
      * @return the boolean
      */
-    public boolean accede(String login, String pw) {
-        boolean found = false;
+    public void accede(String login, String pw) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = "select *"
@@ -43,16 +42,18 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(2, pw);
             rs = ps.executeQuery();
 
-            if (rs.next()) { //se esiste un risultato
-                found = true;
+            if (!rs.next()) {
+                rs.close();
+                ps.close();
+                throw new SQLException("Credenziali errate / compagnia non esistente.");
             }
             rs.close();
-            connection.close();
+            ps.close();
         } catch (SQLException e) {
-            System.out.println("Cancellazione fallita.");
-            e.printStackTrace();
+            throw e;
+        } finally {
+            connection.close();
         }
-        return found;
     }
 
     /**
