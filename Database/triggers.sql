@@ -80,7 +80,8 @@ end;
 $$;
 
 ----------------------------------------------------
--- all'inserimento di uno scalo per una corsaregolare, questo trigger si occupa di generare le sottocorse.
+-- all'inserimento di uno scalo per una corsaregolare, questo trigger si occupa di generare le sottocorse e di attivarle nei periodi
+--in cui è attiva la corsa padre.
 
 create trigger generatrattescalotrigger
     after insert
@@ -203,7 +204,7 @@ begin
 end;
 $$;
 --------------------------------------------
--- il trigger che rende vera l'espressione: cambio orario di partenza per la corsa => cambio orario di arrivo per la sottocorsa che arriva al porto di scalo
+-- il trigger che rende vera l'espressione: cambio orario di partenza per la corsa => cambio orario di partenza per la sottocorsa che arriva al porto di scalo
 
 create trigger cambiaorariopartenzainsottocorsa
     after update
@@ -274,7 +275,7 @@ end;
 $$;
 
 ------------------------------------------------
--- 
+-- Trigger per eliminare le sottocorse dopo che è stato eliminato uno scalo
 
 create trigger eliminatrattescalotrigger
     after delete
@@ -295,6 +296,8 @@ end;
 $$;
 
 -------------------------------------------
+--Trigger per eliminare l'altra sottocorsa dopo che ne è stata eliminata una, poichè non può esistere una senza l'altra. 
+
 create trigger eliminaaltrasottocorsa
     after delete
     on corsaregolare
@@ -327,13 +330,13 @@ end;
 $$;
 
 ------------------------------------
--- trigger per la generazione delle corse specifiche
+-- trigger per la generazione delle corse specifiche in tutte le date presenti nel periodo di attivazione
 
-create trigger generatrattescalotrigger
+create trigger generacorse
     after insert
-    on scalo
+    on attivain
     for each row
-execute procedure aggiungicorsescalo();
+execute procedure generacorsespecifiche();
 
 create function generacorsespecifiche() returns trigger
     language plpgsql
@@ -363,7 +366,6 @@ begin
     where nome = v_natante;
 
     v_day := extract(dow from v_data_inizio::timestamp);
-    --raise notice 'v_day = %', v_day;
     for i in 0..6 loop
         v_data_corrente := v_data_inizio;
         if get_bit(v_giorni, i) = 1 then
@@ -389,6 +391,9 @@ end;
 $$;
 
 ---------------------------
+-- trigger per cancellare le sottocorse figlie (quando viene cancellata una corsa principale), e la
+-- sottocorsa sorella (quando viene cancellata una sottocorsa).
+
 create trigger propagacancellazione
     after update
         of cancellata
@@ -437,5 +442,51 @@ begin
         end loop;
     end if;
     return new;
+end;
+$$;
+
+-----------------------------------------------------
+-----------------------------------------------------
+
+------------------------------
+--procedura per calcolare gli incassi di una corsa regolare in un determinato arco di tempo
+
+create procedure calcolaincassicorsainperiodo(IN thisidcorsa integer, IN ini_periodo date, IN fin_periodo date, OUT incasso double precision)
+    language plpgsql
+as
+$$
+begin
+    select sum(prezzo) into incasso
+    from navigazione.biglietto
+    where idcorsa = thisidcorsa and data between ini_periodo and fin_periodo;
+end;
+$$;
+
+----------------------------
+--procedura per fare in modo che quando venga creato uno scalo in una corsa regolare, per ogni data
+--in cui è attiva, le sottocorse create abbiano gli stessi posti disponibili della corsa madre.
+
+create procedure aggiornapostisottocorse(IN idcorsa_in integer)
+    language plpgsql
+as
+$$
+declare
+    cur_sottocorse cursor for
+        select CR.idcorsa
+        from navigazione.corsaregolare as CR
+        where CR.corsasup = idCorsa_in;
+
+    cur_postidisp cursor for
+        select CS.idcorsa, CS.data, CS.postidisppass, CS.postidispvei, CS.cancellata
+        from navigazione.corsaspecifica as CS
+        where CS.idcorsa = idCorsa_in;
+begin
+    for k in cur_postidisp loop
+        for i in cur_sottocorse loop
+            update navigazione.corsaspecifica
+            set postidisppass = k.postidisppass, postidispvei = k.postidispvei, cancellata = k.cancellata
+            where idcorsa = i.idcorsa AND data = k.data;
+        end loop;
+    end loop;
 end;
 $$;
