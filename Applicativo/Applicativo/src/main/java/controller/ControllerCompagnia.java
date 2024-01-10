@@ -84,18 +84,18 @@ public class ControllerCompagnia {
 
     public void buildCompagnia(String loginCompagnia, String password) {
         CompagniaDAO compagniaDAO = new CompagniaDAO();
-        String nomeCompagnia = null;
+        ArrayList<String> nomeCompagnia = new ArrayList<String>();
         ArrayList<String> telefono = new ArrayList<>();
         ArrayList<String> email = new ArrayList<>();
         ArrayList<String> nomeSocial = new ArrayList<>();
         ArrayList<String> tagSocial = new ArrayList<>();
-        String sitoWeb = null;
+        ArrayList<String> sitoWeb = new ArrayList<String>();
         compagniaDAO.fetchCompagnia(loginCompagnia, nomeCompagnia, telefono, email, nomeSocial, tagSocial, sitoWeb);
 
-        compagnia = new Compagnia(loginCompagnia, password, nomeCompagnia);
+        compagnia = new Compagnia(loginCompagnia, password, nomeCompagnia.getFirst());
         compagnia.setTelefoni(telefono);
         compagnia.setEmails(email);
-        compagnia.setSitoWeb(sitoWeb);
+        compagnia.setSitoWeb(sitoWeb.getFirst());
 
         ArrayList<AccountSocial> accountSocial = new ArrayList<>();
         for (int i = 0; i < tagSocial.size(); i++) {
@@ -604,5 +604,111 @@ public class ControllerCompagnia {
         } catch (SQLException e) {
             return -1;
         }
+    }
+
+    public void visualizzaContatti(ArrayList<String> nomeSocial, ArrayList<String> tag, ArrayList<String> email, ArrayList<String> telefono, ArrayList<String> sitoWeb) {
+        for (AccountSocial x : compagnia.getAccounts()) {
+            nomeSocial.add(x.getNomeSocial());
+            tag.add(x.getTag());
+        }
+
+        email.addAll(compagnia.getEmails());
+        telefono.addAll(compagnia.getTelefoni());
+        sitoWeb.addFirst(compagnia.getSitoWeb());
+    }
+
+    public boolean aggiungiSocial(String nomeSocial, String tag) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.aggiungiSocial(nomeSocial, tag, compagnia.getLogin());
+        } catch (SQLException e) {
+            return false;
+        }
+
+        compagnia.getAccounts().add(new AccountSocial(compagnia, nomeSocial, tag));
+
+        return true;
+    }
+
+    public boolean eliminaSocial(String nomeSocial, String tag) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.eliminaSocial(nomeSocial, tag);
+        } catch (SQLException e) {
+            return false;
+        }
+
+        for (int i = 0; i < compagnia.getAccounts().size(); i++) {
+            if (compagnia.getAccounts().get(i).getNomeSocial().equals(nomeSocial) && compagnia.getAccounts().get(i).getTag().equals(tag)) {
+                compagnia.getAccounts().remove(i);
+            }
+        }
+
+        return true;
+    }
+
+    public boolean aggiungiTelefono(String telefono) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.aggiungiTelefono(telefono, compagnia.getLogin());
+        } catch (SQLException e) {
+            return false;
+        }
+
+        compagnia.getTelefoni().add(telefono);
+
+        return true;
+    }
+
+    public boolean eliminaTelefono(String telefono) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.eliminaTelefono(telefono);
+        } catch (SQLException e) {
+            return false;
+        }
+
+        compagnia.getTelefoni().remove(telefono);
+
+        return true;
+    }
+
+    public boolean aggiungiEmail(String email) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.aggiungiEmail(email, compagnia.getLogin());
+        } catch (SQLException e) {
+            return false;
+        }
+
+        compagnia.getEmails().add(email);
+
+        return true;
+    }
+
+    public boolean eliminaEmail(String email) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.eliminaEmail(email);
+        } catch (SQLException e) {
+            return false;
+        }
+
+        compagnia.getEmails().remove(email);
+
+        return true;
+    }
+
+    public boolean modificaSitoWeb(String sito) {
+        CompagniaDAO compagniaDAO = new CompagniaDAO();
+        try {
+            compagniaDAO.modificaSitoWeb(sito, compagnia.getLogin());
+        } catch (SQLException e) {
+            return false;
+        }
+
+        compagnia.setSitoWeb(sito);
+
+        return  true;
     }
 }

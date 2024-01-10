@@ -66,7 +66,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      * @param tagSocial      the tag social
      * @param sitoWeb        the sito web
      */
-    public void fetchCompagnia(String loginCompagnia, String nome, ArrayList<String> telefono, ArrayList<String> email, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, String sitoWeb) {
+    public void fetchCompagnia(String loginCompagnia, ArrayList<String> nome, ArrayList<String> telefono, ArrayList<String> email, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> sitoWeb) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query1 = "select * from navigazione.Compagnia where login = ?";
@@ -80,8 +80,8 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                nome = rs.getString("nome");
-                sitoWeb = rs.getString("sitoWeb");
+                nome.addFirst(rs.getString("nome"));
+                sitoWeb.addFirst(rs.getString("sitoWeb"));
             }
             rs.close();
             ps.close();
@@ -738,6 +738,139 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             System.out.println("I posti sono stati aggiornati");
         } catch (SQLException e) {
+            throw new SQLException();
+        }
+    }
+
+    public void aggiungiSocial(String nomeSocial, String tag, String nomeCompagnia) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "insert into navigazione.AccountSocial"
+                + " values (?,?,?)";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, nomeSocial);
+            ps.setString(2, tag);
+            ps.setString(3, nomeCompagnia);
+            ps.executeUpdate();
+            ps.close();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Inserimento fallito.");
+            throw new SQLException();
+        }
+    }
+
+    public void eliminaSocial(String nomeSocial, String tag) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "delete from navigazione.AccountSocial "
+                + "where nomesocial = ? AND tag = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, nomeSocial);
+            ps.setString(2, tag);
+            ps.executeUpdate();
+            ps.close();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Eliminazione fallita.");
+            throw new SQLException();
+        }
+    }
+
+    public void aggiungiEmail(String email, String nomeCompagnia) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "insert into navigazione.Email"
+                + " values (?,?)";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, email);
+            ps.setString(2, nomeCompagnia);
+            ps.executeUpdate();
+            ps.close();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Inserimento fallito.");
+            throw new SQLException();
+        }
+    }
+
+    public void eliminaEmail(String email) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "delete from navigazione.Email " +
+                "where indirizzo = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, email);
+            ps.executeUpdate();
+            ps.close();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Eliminazione fallita.");
+            throw new SQLException();
+        }
+    }
+
+    public void aggiungiTelefono(String telefono, String nomeCompagnia) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "insert into navigazione.Telefono"
+                + " values (?,?)";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, telefono);
+            ps.setString(2, nomeCompagnia);
+            ps.executeUpdate();
+            ps.close();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Inserimento fallito.");
+            throw new SQLException();
+        }
+    }
+
+    public void eliminaTelefono(String telefono) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "delete from navigazione.Telefono " +
+                "where numero = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, telefono);
+            ps.executeUpdate();
+            ps.close();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Eliminazione fallita.");
+            throw new SQLException();
+        }
+    }
+
+    public void modificaSitoWeb(String sito, String nomeCompagnia) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "update navigazione.Compagnia " +
+                        "set sitoweb = ? " +
+                        "where login = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, sito);
+            ps.setString(2, nomeCompagnia);
+            ps.executeUpdate();
+            ps.close();
+
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Modifica fallita.");
             throw new SQLException();
         }
     }
