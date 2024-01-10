@@ -1,7 +1,6 @@
 package gui;
 
 import controller.ControllerCompagnia;
-import controller.IncassiCorsa;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
