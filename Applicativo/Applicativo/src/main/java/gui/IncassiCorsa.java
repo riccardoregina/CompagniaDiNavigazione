@@ -1,5 +1,6 @@
-package controller;
+package gui;
 
+import controller.ControllerCompagnia;
 import unnamed.DatePicker;
 
 import javax.swing.*;
