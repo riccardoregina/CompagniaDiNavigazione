@@ -18,25 +18,29 @@ public class ConnessioneDB {
     private String user = "riccardoregina04";
     private String password = METTIPW;
     private String driver = "org.postgresql.Driver";
-    private ConnessioneDB() {
+    private ConnessioneDB() throws SQLException {
         try {
             //password = Files.readString(Path.of("password.txt"), Charset.defaultCharset());
             Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new SQLException("Impossibile trovare il driver.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException("Impossibile connettersi al server.");
         }
     }
 
     public static ConnessioneDB getInstance() throws SQLException {
-        if (instance == null) {
-            instance = new ConnessioneDB();
-        } else if (instance.connection.isClosed()) {
-            instance = new ConnessioneDB();
+        try {
+            if (instance == null) {
+                instance = new ConnessioneDB();
+            } else if (instance.connection.isClosed()) {
+                instance = new ConnessioneDB();
+            }
+            return instance;
+        } catch (SQLException e) {
+            throw e;
         }
-        return instance;
     }
 
     public Connection getConnection() {
