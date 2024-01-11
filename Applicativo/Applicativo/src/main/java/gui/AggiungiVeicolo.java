@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 /**
@@ -51,6 +52,11 @@ public class AggiungiVeicolo {
                     if (check == false) {
                         JOptionPane.showMessageDialog(null, "non è stato possibile aggiungere il veicolo.");
                     } else {
+                        try {
+                            controllerCliente.buildVeicoli(controllerCliente.getLoginCliente());
+                        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(null, "non è stato possibile aggiungere il veicolo.");
+                        }
                         JOptionPane.showMessageDialog(null, "veicolo aggiunto.");
                     }
                     frameChiamante.setVisible(true);

@@ -53,10 +53,10 @@ public class HomeMain {
         panel1.setBackground(Color.white);
         panel2.setBackground(Color.white);
 
-        ImageIcon imageCliente = new ImageIcon("resources/icons/icons8-user-48.png");
-        ImageIcon imageCompagnia = new ImageIcon("resources/icons/icons8-nave-da-crociera-48.png");
-        ImageIcon imageCompagniaHovered = new ImageIcon("resources/icons/icons8-nave-da-crociera-48-when-hoevered.png");
-        ImageIcon imageClienteHovered = new ImageIcon("resources/icons/icons8-utente-maschile-48.png");
+        ImageIcon imageCompagnia = new ImageIcon("resources/icons/icons8-nave-48.png");
+        ImageIcon imageCompagniaHovered = new ImageIcon("resources/icons/icons8-nave-48-hovered.png");
+        ImageIcon imageCliente = new ImageIcon("resources/icons/icons8-utente-maschile-48.png");
+        ImageIcon imageClienteHovered = new ImageIcon("resources/icons/icons8-utente-maschile-48-hovered.png");
         labelButtonCompagnia.setIcon(imageCompagnia);
         labelButtonCliente.setIcon(imageCliente);
 
@@ -93,13 +93,13 @@ public class HomeMain {
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
-                labelButtonCliente.setIcon(imageCliente);
+                labelButtonCliente.setIcon(imageClienteHovered);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
-                labelButtonCliente.setIcon(imageClienteHovered);
+                labelButtonCliente.setIcon(imageCliente);
             }
         });
     }

@@ -50,8 +50,7 @@ public class ControllerCliente {
             ClienteDAO clienteDAO = new ClienteDAO();
             clienteDAO.accede(login, password);
 
-            buildCliente(login, password);
-            buildModel();
+            buildModel(login, password);
         } catch(SQLException e) {
             String message = e.getMessage();
             if (message.equals("Impossibile connettersi al server.")) {
@@ -70,13 +69,20 @@ public class ControllerCliente {
             ArrayList<String> cognome = new ArrayList<>();
             clienteDAO.fetchCliente(login, nome, cognome);
 
+            cliente = new Cliente(login, password, nome.getFirst(), cognome.getFirst());
 
-            clienteDAO = new ClienteDAO();
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    public void buildVeicoli(String login) throws SQLException {
+        try {
+            ClienteDAO clienteDAO = new ClienteDAO();
             ArrayList<String> veicoliTipo = new ArrayList<>();
             ArrayList<String> veicoliTarga = new ArrayList<>();
             clienteDAO.fetchVeicoliCliente(login, veicoliTarga, veicoliTipo);
 
-            cliente = new Cliente(login, password, nome.getFirst(), cognome.getFirst());
             for (int i = 0; i < veicoliTarga.size(); i++) {
                 cliente.addVeicolo(new Veicolo(veicoliTipo.get(i), veicoliTarga.get(i)));
             }
@@ -88,8 +94,10 @@ public class ControllerCliente {
     /**
      * Questo metodo si occupa di costruire l'ambiente dell'applicativo a partire dal fetching del DB
      */
-    public void buildModel() throws SQLException {
+    private void buildModel(String login, String password) throws SQLException {
         try {
+            buildCliente(login, password);
+            buildVeicoli(login);
             buildCompagnie();
             buildPorti();
             buildCorse();
@@ -499,5 +507,9 @@ public class ControllerCliente {
             indirizzo.add(p.getIndirizzo());
             telefono.add(p.getNumeroTelefono());
         }
+    }
+
+    public String getLoginCliente() {
+        return cliente.getLogin();
     }
 }
