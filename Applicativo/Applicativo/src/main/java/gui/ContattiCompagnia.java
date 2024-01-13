@@ -82,6 +82,10 @@ public class ContattiCompagnia {
         labelYt.setIcon(imageYt);
         labelLk.setIcon(imageLk);
 
+        ImageIcon imageWww = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-www-48.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        labelSitoWeb.setIcon(imageWww);
+        labelSitoWeb.setHorizontalTextPosition(SwingConstants.LEFT);
+
         ArrayList<String> nomeSocial = new ArrayList<String>();
         ArrayList<String> tag = new ArrayList<String>();
         ArrayList<String> email = new ArrayList<String>();
