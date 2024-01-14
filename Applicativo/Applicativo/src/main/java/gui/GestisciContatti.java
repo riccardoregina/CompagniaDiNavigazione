@@ -79,11 +79,11 @@ public class GestisciContatti {
         panelSito.setBackground(Color.white);
 
 
-        ImageIcon imageTelefono = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-phone-50.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        ImageIcon imageTelefono = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-telefono-48.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
         labelTelefono.setIcon(imageTelefono);
         labelTelefono.setHorizontalTextPosition(SwingConstants.LEFT);
 
-        ImageIcon imageEmail = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-email-100.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        ImageIcon imageEmail = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-cassetta-postale-chiusa-bandiera-sù-48.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
         labelEmail.setIcon(imageEmail);
         labelEmail.setHorizontalTextPosition(SwingConstants.LEFT);
 
@@ -96,15 +96,15 @@ public class GestisciContatti {
         labelYt.setIcon(imageYt);
         labelLk.setIcon(imageLk);
 
-        ImageIcon imageWww = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-www-48.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        ImageIcon imageWww = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-web-48.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
         labelSitoWeb.setIcon(imageWww);
         labelSitoWeb.setHorizontalTextPosition(SwingConstants.LEFT);
 
 
-        ImageIcon imageAdd = new ImageIcon(new ImageIcon("resources/icons/icons8-add-48.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
-        ImageIcon imageRemove = new ImageIcon(new ImageIcon("resources/icons/icons8-remove-48.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
-        ImageIcon imageAddHovered = new ImageIcon(new ImageIcon("resources/icons/icons8-add-48_hovered.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
-        ImageIcon imageRemoveHovered = new ImageIcon(new ImageIcon("resources/icons/icons8-remove-48_hovered.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+        ImageIcon imageAdd = new ImageIcon(new ImageIcon("resources/icons/icons8-aggiungi-48.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+        ImageIcon imageRemove = new ImageIcon(new ImageIcon("resources/icons/icons8-elimina-48.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+        ImageIcon imageAddHovered = new ImageIcon(new ImageIcon("resources/icons/icons8-aggiungi-48_hovered.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+        ImageIcon imageRemoveHovered = new ImageIcon(new ImageIcon("resources/icons/icons8-elimina-48_hovered.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 
         labelAddPhone.setIcon(imageAdd);
         labelRemovePhone.setIcon(imageRemove);
