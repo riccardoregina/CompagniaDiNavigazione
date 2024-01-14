@@ -94,7 +94,7 @@
                         </constraints>
                         <properties>
                           <font size="24" style="1"/>
-                          <foreground color="-394241"/>
+                          <foreground color="-1"/>
                           <horizontalTextPosition value="2"/>
                           <text value="Acquista"/>
                         </properties>
@@ -691,7 +691,7 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <text value="prezzo max"/>
+                  <text value=""/>
                 </properties>
               </component>
               <component id="4e316" class="javax.swing.JLabel" binding="labelPrezzoMax">

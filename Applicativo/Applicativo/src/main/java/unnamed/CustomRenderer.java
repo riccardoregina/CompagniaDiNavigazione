@@ -26,18 +26,19 @@ public class CustomRenderer extends DefaultTableCellRenderer {
 
         if (booleanListYellow == null) {
             if (row < booleanListRed.size() && booleanListRed.get(row)) {
-                comp.setBackground(new Color(255, 70, 70, 255));
+                comp.setBackground(new Color(215, 75, 75, 255));
             } else {
                 comp.setBackground(table.getBackground());
                 comp.setForeground(table.getForeground());
             }
         } else {
             if ((row < booleanListRed.size() && booleanListRed.get(row)) && (row < booleanListYellow.size() && booleanListYellow.get(row))) {
-                comp.setBackground(new Color(15, 115, 245, 255));
+                comp.setBackground(new Color(180, 135, 220, 255));
             } else if (row < booleanListRed.size() && booleanListRed.get(row)) {
-                comp.setBackground(new Color(255, 70, 70, 255));
+                comp.setBackground(new Color(215, 75, 75, 255));
             } else if (row < booleanListYellow.size() && booleanListYellow.get(row)) {
-                comp.setBackground(new Color(255, 250, 60, 255));
+                comp.setBackground(new Color(120, 120, 120, 255));
+                comp.setForeground(Color.white);
             } else {
                 comp.setBackground(table.getBackground());
                 comp.setForeground(table.getForeground());

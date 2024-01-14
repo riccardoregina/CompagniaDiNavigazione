@@ -10,6 +10,8 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -47,12 +49,12 @@ public class ContattiCompagnia {
 
     public ControllerCliente controllerCliente;
 
-    public ContattiCompagnia(JFrame frameChiamante, ControllerCliente controllerCliente, String compagnia) {
+    public ContattiCompagnia(JFrame frameChiamante, ControllerCliente controllerCliente, String compagnia, JButton buttonChiamante) {
         this.frameChiamante = frameChiamante;
         this.controllerCliente = controllerCliente;
         frame = new JFrame("Contatti Compagnia");
         frame.setContentPane(contentPane);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize((int) (screenSize.width / 1.5), (int) (screenSize.height / 1.8));
         frame.setLocationRelativeTo(null);
@@ -160,10 +162,18 @@ public class ContattiCompagnia {
         selectionModelTel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollPaneTelefoni.setViewportView(tableTelefoni);
 
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                buttonChiamante.setEnabled(true);
+            }
+        });
+
         buttonChiudi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frameChiamante.setVisible(true);
+                buttonChiamante.setEnabled(true);
                 frame.dispose();
             }
         });

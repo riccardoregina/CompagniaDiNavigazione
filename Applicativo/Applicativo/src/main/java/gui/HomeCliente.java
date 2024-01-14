@@ -189,7 +189,6 @@ public class HomeCliente {
         panelOrario.setBackground(white);
         panelNatanti.setBackground(white);
 
-        //ImageIcon imagePorto = new ImageIcon("resources/icons/icons8-faro-48.png");
         ImageIcon imageAggiungiVeicolo = new ImageIcon("resources/icons/icons8-automobile-48.png");
         ImageIcon imageAggiungiVeicoloHovered = new ImageIcon("resources/icons/icons8-automobile-48-hovered.png");
         ImageIcon imageDataPicker = new ImageIcon("resources/icons/icons8-calendario-48.png");
@@ -203,9 +202,7 @@ public class HomeCliente {
         ImageIcon imageInfo = new ImageIcon("resources/icons/icons8-informazioni-48.png");
         ImageIcon imageInfoHovered = new ImageIcon("resources/icons/icons8-informazioni-48-hovered.png");
         ImageIcon imageCerca = new ImageIcon("resources/icons/icons8-ricerca-48.png");
-        ImageIcon imageAcquista = new ImageIcon("resources/icons/icons8-carrello-2-48.png");
-        //labelPart.setIcon(imagePorto);
-        //labelDest.setIcon(imagePorto);
+        ImageIcon imageAcquista = new ImageIcon("resources/icons/icons8-carrello-48.png");
         labelButtonSelezionaData.setIcon(imageDataPicker);
         labelButtonBiglietti.setIcon(imageBiglietto);
         labelButtonVeicoli.setIcon(imageGarage);
@@ -220,9 +217,9 @@ public class HomeCliente {
         labelButtonAggiungiVeicolo.setIcon(imageAggiungiVeicolo);
         labelButtonAggiungiVeicolo.setHorizontalTextPosition(SwingConstants.LEFT);
 
-        CustomRenderer.aggiungiColoreLegenda(panelLegendaCorse, new Color(208, 92, 92, 255), "Corse cancellate");
-        CustomRenderer.aggiungiColoreLegenda(panelLegendaCorse, new Color(141, 141, 141, 255), "Corse vecchie");
-        CustomRenderer.aggiungiColoreLegenda(panelLegendaCorse, new Color(141, 141, 141, 255), "Corse vecchie e cancellate");
+        CustomRenderer.aggiungiColoreLegenda(panelLegendaCorse, new Color(215, 75, 75, 255), "Corse cancellate");
+        CustomRenderer.aggiungiColoreLegenda(panelLegendaCorse, new Color(120, 120, 120, 255), "Corse vecchie");
+        CustomRenderer.aggiungiColoreLegenda(panelLegendaCorse, new Color(180, 135, 220, 255), "Corse vecchie e cancellate");
         CustomRenderer.aggiungiColoreLegenda(panelLegendaCorse, Color.white, "Corse acquistabili");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -272,17 +269,33 @@ public class HomeCliente {
             public void actionPerformed(ActionEvent e) {
                 int idxCompagnia = comboBoxCompagnie.getSelectedIndex();
                 String idCompagnia = idsCompagnie.get(idxCompagnia);
-                ContattiCompagnia contattiCompagnia = new ContattiCompagnia(frame, controllerCliente, idCompagnia);
+                ContattiCompagnia contattiCompagnia = new ContattiCompagnia(frame, controllerCliente, idCompagnia, bVediInfoCompagnia);
                 bVediInfoCompagnia.setEnabled(false);
-                labelButtonInfoPorto.setEnabled(false);
             }
         });
 
-        frame.addWindowListener(new WindowAdapter() {
+        labelButtonInfoPorto.addMouseListener(new MouseAdapter() {
             @Override
-            public void windowActivated(WindowEvent e) {
-                super.windowActivated(e);
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (labelButtonInfoPorto.isEnabled()) {
+                    ContattiPorto contattiPorto = new ContattiPorto(frame, controllerCliente, labelButtonInfoPorto);
+                    labelButtonInfoPorto.setEnabled(false);
+                }
+            }
 
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                if (labelButtonInfoPorto.isEnabled()) {
+                    labelButtonInfoPorto.setIcon(imageInfoHovered);
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                labelButtonInfoPorto.setIcon(imageInfo);
             }
         });
 
@@ -309,12 +322,10 @@ public class HomeCliente {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                //TuoiBiglietti iTuoiBiglietti = new TuoiBiglietti(frame, controllerCliente);
-                //frame.setVisible(false);
                 JTable tableBiglietti;
 
                 panelLegendaBiglietti.removeAll();
-                CustomRenderer.aggiungiColoreLegenda(panelLegendaBiglietti, new Color(255, 70, 70, 255), "Biglietti non più attivi");
+                CustomRenderer.aggiungiColoreLegenda(panelLegendaBiglietti, new Color(215, 75, 75, 255), "Biglietti non più attivi");
                 CustomRenderer.aggiungiColoreLegenda(panelLegendaBiglietti, Color.white, "Biglietti ancora attivi");
 
                 ArrayList<Integer> idBiglietti = new ArrayList<Integer>();
@@ -502,26 +513,7 @@ public class HomeCliente {
                 labelButtonLogoutBiglietti.setIcon(imageLogout);
             }
         });
-        labelButtonInfoPorto.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                ContattiPorto contattiPorto = new ContattiPorto(frame, controllerCliente);
-                labelButtonInfoPorto.setEnabled(false);
-            }
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                super.mouseEntered(e);
-                labelButtonInfoPorto.setIcon(imageInfoHovered);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                super.mouseExited(e);
-                labelButtonInfoPorto.setIcon(imageInfo);
-            }
-        });
         bCercaCorse.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -655,7 +647,9 @@ public class HomeCliente {
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
-                acquistaButton.setBackground(accentHovered);
+                if (acquistaButton.isEnabled()) {
+                    acquistaButton.setBackground(accentHovered);
+                }
             }
 
             @Override
@@ -807,7 +801,7 @@ public class HomeCliente {
         acquistaButton = new JButton();
         Font acquistaButtonFont = this.$$$getFont$$$(null, Font.BOLD, 24, acquistaButton.getFont());
         if (acquistaButtonFont != null) acquistaButton.setFont(acquistaButtonFont);
-        acquistaButton.setForeground(new Color(-394241));
+        acquistaButton.setForeground(new Color(-1));
         acquistaButton.setHorizontalTextPosition(2);
         acquistaButton.setText("Acquista");
         panelAcquista.add(acquistaButton, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(210, 60), new Dimension(210, 60), 0, false));
@@ -1003,7 +997,7 @@ public class HomeCliente {
         labelEta.setText("Età Passeggero");
         panelParametri.add(labelEta, new com.intellij.uiDesigner.core.GridConstraints(7, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         textCostoMax = new JTextField();
-        textCostoMax.setText("prezzo max");
+        textCostoMax.setText("");
         panelParametri.add(textCostoMax, new com.intellij.uiDesigner.core.GridConstraints(8, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(90, -1), new Dimension(90, -1), 0, false));
         labelPrezzoMax = new JLabel();
         labelPrezzoMax.setText("Prezzo massimo");

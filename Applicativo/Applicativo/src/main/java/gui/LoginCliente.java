@@ -70,8 +70,6 @@ public class LoginCliente {
 
         ImageIcon imageUsername = new ImageIcon("resources/icons/icons8-user-48.png");
         ImageIcon imagePassword = new ImageIcon("resources/icons/icons8-password-48.png");
-        ImageIcon imageConferma = new ImageIcon("resources/icons/icons8-ok-48.png");
-        ImageIcon imageConfermaHovered = new ImageIcon("resources/icons/icons8-ok-48-hovered.png");
 
         buttonAccedi.setBackground(accent);
         buttonAccedi.setForeground(white);
