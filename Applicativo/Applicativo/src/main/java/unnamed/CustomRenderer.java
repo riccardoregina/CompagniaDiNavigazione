@@ -68,7 +68,7 @@ public class CustomRenderer extends DefaultTableCellRenderer {
         JPanel bulletPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bulletPanel.add(colorSquare);
         bulletPanel.add(labelDescrizione);
-
+        bulletPanel.setBackground(Color.white);
         panelLegenda.add(bulletPanel);
     }
 }

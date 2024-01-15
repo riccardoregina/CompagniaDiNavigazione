@@ -179,6 +179,7 @@
                           </grid>
                         </constraints>
                         <properties>
+                          <horizontalAlignment value="4"/>
                           <text value="Esci"/>
                         </properties>
                       </component>
@@ -302,6 +303,7 @@
                           </grid>
                         </constraints>
                         <properties>
+                          <horizontalAlignment value="4"/>
                           <text value="Esci"/>
                         </properties>
                       </component>
@@ -413,6 +415,7 @@
                           </grid>
                         </constraints>
                         <properties>
+                          <horizontalAlignment value="4"/>
                           <text value="Esci"/>
                         </properties>
                       </component>
