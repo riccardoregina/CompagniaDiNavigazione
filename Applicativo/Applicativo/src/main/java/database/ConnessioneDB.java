@@ -11,7 +11,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The type Connessione db.
+ * La classe ConnessioneDB si occupa di creare il collegamento tra l'applicativo
+ * e il database, caricandone il driver ed altre informazioni attinte dal file dbconfig.properties, e
+ * poi restituirlo secondo la policy 'singleton': non e' possibile ottenere due collegamenti attivi al db
+ * nello stesso istante.
  */
 public class ConnessioneDB {
     private Logger logger = Logger.getLogger(this.getClass().getName());
@@ -31,12 +34,11 @@ public class ConnessioneDB {
             user = properties.getProperty("database.user");
             password = properties.getProperty("database.password");
             driver = properties.getProperty("database.driver");
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Impossibile accedere a dbconfig.properties");
-        }
-        try {
+
             Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Impossibile accedere a dbconfig.properties");
         } catch (ClassNotFoundException e) {
             logger.log(Level.SEVERE, "Impossibile trovare il driver.");
             throw new SQLException("Impossibile trovare il driver.");
@@ -46,19 +48,26 @@ public class ConnessioneDB {
         }
     }
 
+    /**
+     * Restituisce un'istanza del collegamento al DB.
+     *
+     * @return l'istanza del collegamento
+     * @throws SQLException
+     */
     public static ConnessioneDB getInstance() throws SQLException {
-        try {
-            if (instance == null) {
-                instance = new ConnessioneDB();
-            } else if (instance.connection.isClosed()) {
-                instance = new ConnessioneDB();
-            }
-            return instance;
-        } catch (SQLException e) {
-            throw e;
+        if (instance == null) {
+            instance = new ConnessioneDB();
+        } else if (instance.connection.isClosed()) {
+            instance = new ConnessioneDB();
         }
+        return instance;
     }
 
+    /**
+     * Restituisce la connessione al DB.
+     *
+     * @return un oggetto Connection: una connessione
+     */
     public Connection getConnection() {
         return connection;
     }

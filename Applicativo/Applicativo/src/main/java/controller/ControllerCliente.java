@@ -13,10 +13,11 @@ import java.util.logging.Logger;
 
 import unnamed.Pair;
 
-import static unnamed.NonStandardConversions.StringToBitset;
-
 /**
- * The type Controller.
+ * La classe ControllerCliente si occupa di:
+ *  + ricevere richieste da un interfaccia
+ *  + provvedere a soddisfare tali richieste, che possono interessare: il Model, il DB, o entrambi.
+ * Questa classe contiene i dati del Model presenti nei membr: cliente, porti, compagnie, corse.
  */
 public class ControllerCliente {
     Logger logger = Logger.getLogger(this.getClass().getName());
@@ -24,28 +25,25 @@ public class ControllerCliente {
     private HashMap<Integer, Porto> porti;
     private HashMap<String, Compagnia> compagnie;
     private HashMap<Pair, CorsaSpecifica> corse;
-    private ArrayList<Biglietto> bigliettiAcquistati;
 
     /**
-     * Instantiates a new Controller cliente.
+     * Istanzia un nuovo ControllerCliente.
      */
     public ControllerCliente() {
         porti = new HashMap<>();
         compagnie = new HashMap<>();
         corse = new HashMap<>();
-        bigliettiAcquistati = new ArrayList<>();
     }
 
     /**
      * Prende login e password dalla GUI,
      * richiede una connessione al DB,
      * se il cliente esiste nel DB,
-     * crea il contesto per l'esecuzione del programma
-     * nel model.
+     * crea il contesto nel model per l'esecuzione del programma.
      *
-     * @param login    the login
-     * @param password the password
-     * @throws SQLException the sql exception
+     * @param login    la login
+     * @param password la password
+     * @throws SQLException
      */
     public void clienteAccede(String login, String password) throws SQLException {
         try {
@@ -56,19 +54,21 @@ public class ControllerCliente {
         } catch(SQLException e) {
             String message = e.getMessage();
             if (message.equals("Impossibile connettersi al server.")) {
+                logger.log(Level.SEVERE, message);
                 throw e;
             } else if (message.equals("Credenziali errate / utente non esistente.")) {
+                logger.log(Level.FINE, message);
                 throw e;
             }
         }
     }
 
     /**
-     * Build cliente.
+     * Comanda il fetch del cliente al DB e riempie il model con i dati ottenuti.
      *
-     * @param login    the login
-     * @param password the password
-     * @throws SQLException the sql exception
+     * @param login    la login
+     * @param password la password
+     * @throws SQLException
      */
     public void buildCliente(String login, String password) throws SQLException {
         try {
@@ -81,15 +81,16 @@ public class ControllerCliente {
             cliente = new Cliente(login, password, nome.getFirst(), cognome.getFirst());
 
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             throw e;
         }
     }
 
     /**
-     * Build veicoli.
+     * Comanda il fetch dei veicoli del cliente al DB e riempie il model con i dati ottenuti.
      *
-     * @param login the login
-     * @throws SQLException the sql exception
+     * @param login la login
+     * @throws SQLException
      */
     public void buildVeicoli(String login) throws SQLException {
         try {
@@ -102,12 +103,13 @@ public class ControllerCliente {
                 cliente.addVeicolo(new Veicolo(veicoliTipo.get(i), veicoliTarga.get(i)));
             }
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             throw e;
         }
     }
 
     /**
-     * Questo metodo si occupa di costruire l'ambiente dell'applicativo a partire dal fetching del DB
+     * Costruisce l'ambiente dell'applicativo a partire dal fetching del DB
      */
     private void buildModel(String login, String password) throws SQLException {
         try {
@@ -118,14 +120,15 @@ public class ControllerCliente {
             buildCorse();
             buildBigliettiAcquistati();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             throw e;
         }
     }
 
     /**
-     * Download porti.
+     * Comanda il fetch dei porti al DB e riempie il model con i dati ottenuti.
      *
-     * @throws SQLException the sql exception
+     * @throws SQLException
      */
     public void buildPorti() throws SQLException {
         try {
@@ -139,14 +142,15 @@ public class ControllerCliente {
                 porti.put(idPorto.get(i), new Porto(idPorto.get(i), comuni.get(i), indirizzi.get(i), numeriTelefono.get(i)));
             }
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             throw e;
         }
     }
 
     /**
-     * Costruisce le compagnie del model a partire dai dati del DB
+     * Comanda il fetch delle compagnie al DB e riempie il model con i dati ottenuti.
      *
-     * @throws SQLException the sql exception
+     * @throws SQLException
      */
     public void buildCompagnie() throws SQLException {
         try {
@@ -185,6 +189,7 @@ public class ControllerCliente {
                 compagnie.get(compagniaTelefono.get(i)).addTelefono(numeroTelefono.get(i));
             }
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             throw e;
         }
     }
@@ -196,7 +201,7 @@ public class ControllerCliente {
      * 3) assegna i periodi alle corse regolari
      * 4) costruisce le corse specifiche e popola la collezione 'corse' di questa classe
      *
-     * @throws SQLException the sql exception
+     * @throws SQLException
      */
     public void buildCorse() throws SQLException {
         try {
@@ -284,14 +289,15 @@ public class ControllerCliente {
                 corse.put(pair, new CorsaSpecifica(cr, d, pPass, pVei, mRit, canc));
             }
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             throw e;
         }
     }
 
     /**
-     * Costruisce i biglietti acquistati dell'utente del model a partire dai dati del DB
+     * Comanda al DB il fetch dei biglietti acquistati dal cliente e riempie il model con i dati ottenuti.
      *
-     * @throws SQLException the sql exception
+     * @throws SQLException
      */
     public void buildBigliettiAcquistati() throws SQLException {
         try {
@@ -313,33 +319,34 @@ public class ControllerCliente {
                 cliente.addBiglietto(new Biglietto(idBiglietto.get(i), cliente, cs, etaPasseggero.get(i), v, bagaglio.get(i), prevendita.get(i), prezzo.get(i), dataAcquisto.get(i)));
             }
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             throw e;
         }
     }
 
     /**
-     * Visualizza le corse, salvate nel model, che rispettano i filtri comandati dalla gui
+     * Visualizza le corse, salvate nel model, che rispettano i filtri comandati dall'interfaccia.
      *
-     * @param idPortoPartenzaSelezionato the porto partenza
-     * @param idPortoArrivoSelezionato   the porto arrivo
-     * @param dataSelezionata            the dataSelezionata
-     * @param orarioMinimoPartenza       the orario minimo partenza
-     * @param prezzoMax                  the prezzo max
-     * @param tipoNatanteSelezionato     the tipo natante selezionato
-     * @param etaPasseggero              the eta passeggero
-     * @param veicolo                    the veicolo
-     * @param bagaglio                   the bagaglio
-     * @param idCorsa                    output parameter
-     * @param nomeCompagnia              the nome compagnia
-     * @param data                       output parameter
-     * @param orePart                    the ore part
-     * @param oreDest                    the ore dest
-     * @param postiDispPass              output parameter
-     * @param postiDispVei               output parameter
-     * @param minutiRitardo              output parameter
-     * @param natanti                    the natanti
-     * @param cancellata                 output parameter
-     * @param prezzo                     output parameter
+     * @param idPortoPartenzaSelezionato il porto di partenza selezionato
+     * @param idPortoArrivoSelezionato   il porto di arrivo selezionato
+     * @param dataSelezionata            la data selezionata
+     * @param orarioMinimoPartenza       l'orario minimo di partenza
+     * @param prezzoMax                  il prezzo massimo selezionato
+     * @param tipoNatanteSelezionato     il tipo di natante selezionato
+     * @param etaPasseggero              l'eta del passeggero per cui verra' acquistato il biglietto
+     * @param veicolo                    un valore booleano: true se il cliente intende portare con se' un veicolo, false altrimenti
+     * @param bagaglio                   un valore booleano: true se il cliente intende portare con se' un bagaglio, false altrimenti
+     * @param idCorsa                    output - gli id delle corse trovate
+     * @param nomeCompagnia              output - i nomi delle compagnie che erogano le corse trovate
+     * @param data                       output - le date delle corse trovate
+     * @param orePart                    output - le ore di partenza delle corse trovate
+     * @param oreDest                    output - le ore di arrivo delle corse trovate
+     * @param postiDispPass              output - i posti disponibili per passeggeri delle corse trovate
+     * @param postiDispVei               output - i posti disponibili per veicoli delle corse trovate
+     * @param minutiRitardo              output - i minuti di ritardo delle corse trovate
+     * @param natanti                    output - i natanti impiegati nelle corse trovate
+     * @param cancellata                 output - i valori booleani che indicano se le corse trovate sono state cancellate o meno
+     * @param prezzo                     output - i prezzi calcolati secondo i parametri di ricerca per le corse trovate
      */
     public void visualizzaCorse(int idPortoPartenzaSelezionato, int idPortoArrivoSelezionato, LocalDate dataSelezionata, LocalTime orarioMinimoPartenza, Float prezzoMax, ArrayList<String> tipoNatanteSelezionato, int etaPasseggero, boolean veicolo, boolean bagaglio, ArrayList<Integer> idCorsa, ArrayList<String> nomeCompagnia, ArrayList<LocalDate> data, ArrayList<LocalTime> orePart, ArrayList<LocalTime> oreDest, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Integer> minutiRitardo, ArrayList<String> natanti, ArrayList<Boolean> cancellata, ArrayList<Float> prezzo) {
         Porto portoPartenza = porti.get(idPortoPartenzaSelezionato);
@@ -389,7 +396,8 @@ public class ControllerCliente {
     }
 
     /**
-     * Acquista biglietto.
+     * Comanda al DB di registrare l'acquisto di un biglietto da parte dell'utente. In caso di risposta positiva
+     * del DB, il biglietto viene anche aggiunto al Model.
      *
      * @param idCorsa       l'identificativo della corsa
      * @param data          la data della corsa
@@ -397,8 +405,8 @@ public class ControllerCliente {
      * @param prevendita    indica la presenza di una prevendita
      * @param bagaglio      indica la presenza di un bagaglio
      * @param etaPasseggero l'etá del passeggero per cui si vuole acquistare il biglietto
-     * @param prezzo        il prezzo
-     * @return the boolean
+     * @param prezzo        il prezzo d'acquisto
+     * @return true se l'acquisto e' andato a buon fine, false altrimenti
      */
     public boolean acquistaBiglietto(int idCorsa, LocalDate data, String targaVeicolo, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
         try {
@@ -413,16 +421,16 @@ public class ControllerCliente {
             buildCorse();
             return true;
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             return false;
-            //Do nothing, for now!
         }
     }
 
     /**
-     * Visualizza porti.
+     * Visualizza i porti.
      *
-     * @param idPorto the id porto
-     * @param comune  the comune
+     * @param idPorto gli id dei porti
+     * @param comune  i comuni dei porti
      */
     public void visualizzaPorti(ArrayList<Integer> idPorto, ArrayList<String> comune) {
         for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
@@ -432,11 +440,11 @@ public class ControllerCliente {
     }
 
     /**
-     * Add veicolo boolean.
+     * Comanda al DB di aggiungere un veicolo per il cliente. In caso di risposta positiva del DB, lo aggiunge anche al Model.
      *
-     * @param tipoVeicolo the tipo veicolo
-     * @param targa       the targa
-     * @return a boolean
+     * @param tipoVeicolo il tipo del veicolo da inserire
+     * @param targa       la targa del veicolo da inserire
+     * @return true se il veicolo e' stato correttamente aggiunto, false altrimenti
      */
     public boolean addVeicolo(String tipoVeicolo, String targa) {
         try {
@@ -445,16 +453,16 @@ public class ControllerCliente {
             cliente.addVeicolo(new Veicolo(targa, tipoVeicolo));
             return true;
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             return false;
-            //Do nothing, for now!
         }
     }
 
     /**
-     * Gets compagnie.
+     * Restituisce le compagnie presenti nel Model.
      *
-     * @param login the login
-     * @param nome  the nome
+     * @param login le login delle compagnie
+     * @param nome  i nomi delle compagnie
      */
     public void getCompagnie(ArrayList<String> login, ArrayList<String> nome) {
         for (Map.Entry<String, Compagnia> it : compagnie.entrySet()) {
@@ -464,14 +472,14 @@ public class ControllerCliente {
     }
 
     /**
-     * Visualizza contatti.
+     * Visualizza i contatti di una compagnia.
      *
-     * @param idCompagnia the id compagnia
-     * @param nomeSocial  the nome social
-     * @param tag         the tag
-     * @param email       the email
-     * @param telefono    the telefono
-     * @param sitoWeb     the sito web
+     * @param idCompagnia l'id della compagnia
+     * @param nomeSocial  i nomi dei social
+     * @param tag         i tag nei social
+     * @param email       gli indirizzi email
+     * @param telefono    i telefoni
+     * @param sitoWeb     il sito web (ArrayList solo per essere modificato)
      */
     public void visualizzaContatti(String idCompagnia, ArrayList<String> nomeSocial, ArrayList<String> tag, ArrayList<String> email, ArrayList<String> telefono, ArrayList<String> sitoWeb) {
         Compagnia c = compagnie.get(idCompagnia);
@@ -486,10 +494,10 @@ public class ControllerCliente {
     }
 
     /**
-     * Visualizza veicoli.
+     * Visualizza i veicoli del cliente.
      *
-     * @param targa the targa
-     * @param tipo  the tipo
+     * @param targa le targhe dei veicoli
+     * @param tipo  i tipi dei veicoli
      */
     public void visualizzaVeicoli(ArrayList<String> targa, ArrayList<String> tipo) {
         for (Map.Entry<String, Veicolo> it : cliente.getVeicoliPosseduti().entrySet()) {
@@ -499,20 +507,20 @@ public class ControllerCliente {
     }
 
     /**
-     * Visualizza biglietti acquistati.
+     * Visualizza i biglietti acquistati dal cliente.
      *
-     * @param idBiglietti   the id biglietti
-     * @param idCorse       the id corse
-     * @param dataCor       the data cor
-     * @param orePart       the ore part
-     * @param minutiRitardo the minuti ritardo
-     * @param portoPar      the porto par
-     * @param portoDest     the porto dest
-     * @param bagagli       the bagagli
-     * @param targaVeicolo  the targa veicolo
-     * @param etaPass       the eta pass
-     * @param dataAcquisto  the data acquisto
-     * @param prezzi        the prezzi
+     * @param idBiglietti   gli id dei biglietti
+     * @param idCorse       gli id delle corse
+     * @param dataCor       le date delle corse
+     * @param orePart       le ore di partenza
+     * @param minutiRitardo i minuti di ritardo
+     * @param portoPar      i porti di partenza
+     * @param portoDest     i porti di destinazione
+     * @param bagagli       valori booleani che indicano se il cliente ha portato con se' un bagaglio o meno
+     * @param targaVeicolo  le targe dei veicoli che il cliente ha portato con se'
+     * @param etaPass       le eta dei passeggeri
+     * @param dataAcquisto  le date di acquisto
+     * @param prezzi        i prezzi di acquisto
      */
     public void visualizzaBigliettiAcquistati(ArrayList<Integer> idBiglietti, ArrayList<Integer> idCorse, ArrayList<LocalDate> dataCor, ArrayList<LocalTime> orePart, ArrayList<Integer> minutiRitardo, ArrayList<String> portoPar, ArrayList<String> portoDest, ArrayList<Boolean> bagagli, ArrayList<String> targaVeicolo, ArrayList<Integer> etaPass, ArrayList<LocalDate> dataAcquisto, ArrayList<Float> prezzi) {
         for (Biglietto b : cliente.getBigliettiAcquistati()) {
@@ -536,13 +544,13 @@ public class ControllerCliente {
     }
 
     /**
-     * Cliente si registra boolean.
+     * Comanda al DB di registrare un nuovo cliente.
      *
-     * @param nome    the nome
-     * @param cognome the cognome
-     * @param login   the login
-     * @param pwd     the pwd
-     * @return the boolean
+     * @param nome    il nome del nuovo cliente
+     * @param cognome il cognome del nuovo cliente
+     * @param login   la login del nuovo cliente
+     * @param pwd     la password del nuovo cliente
+     * @return true se la registrazione e' andata a buon fine, false altrimenti.
      */
     public boolean clienteSiRegistra(String nome, String cognome, String login, String pwd) {
         try {
@@ -550,16 +558,17 @@ public class ControllerCliente {
             clienteDAO.siRegistra(nome, cognome, login, pwd);
             return true;
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             return false;
         }
     }
 
     /**
-     * Visualizza info porti.
+     * Visualizza le informazioni dei porti.
      *
-     * @param comune    the comune
-     * @param indirizzo the indirizzo
-     * @param telefono  the telefono
+     * @param comune    i comuni dei porti
+     * @param indirizzo gli indirizzi dei porti
+     * @param telefono  i telefoni dei porti
      */
     public void visualizzaInfoPorti(ArrayList<String> comune, ArrayList<String> indirizzo, ArrayList<String> telefono) {
         for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
@@ -571,9 +580,9 @@ public class ControllerCliente {
     }
 
     /**
-     * Gets login cliente.
+     * Restituisce la login del cliente.
      *
-     * @return the login cliente
+     * @return la login del cliente
      */
     public String getLoginCliente() {
         return cliente.getLogin();
