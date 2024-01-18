@@ -169,7 +169,7 @@ public class ControllerCliente {
             //Elementi dei telefoni
             ArrayList<String> compagniaTelefono = new ArrayList<>();
             ArrayList<String> numeroTelefono = new ArrayList<>();
-            clienteDAO.fetchCompagnie(login, nomeCompagnia, sitoWeb, compagniaSocial, nomeSocial, tagSocial, compagniaEmail, indirizzoEmail, compagniaTelefono, numeroTelefono);
+            clienteDAO.fetchCompagnie(login, nomeCompagnia, sitoWeb);
             for (int i = 0; i < login.size(); i++) {
                 Compagnia c = new Compagnia(login.get(i), null, nomeCompagnia.get(i));
                 c.setSitoWeb(sitoWeb.get(i));
