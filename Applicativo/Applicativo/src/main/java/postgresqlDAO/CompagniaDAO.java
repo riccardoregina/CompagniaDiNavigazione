@@ -56,13 +56,17 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             if (!rs.next()) {
                 rs.close();
                 ps.close();
+                logger.log(Level.FINE, "Credenziali errate / compagnia non esistente.");
                 throw new SQLException("Credenziali errate / compagnia non esistente.");
             }
             rs.close();
             ps.close();
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, e.getMessage());
-            throw e;
+            String message = e.getMessage();
+            if (!message.equals("Credenziali errate / compagnia non esistente.")) {
+                logger.log(Level.SEVERE, message);
+                throw e;
+            }
         } finally {
             try {
                 connection.close();
@@ -76,12 +80,12 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      * Effettua il fetch dei dati della compagnia sul DB.
      *
      * @param loginCompagnia la login
-     * @param nome           output - il nome
-     * @param telefono       output - il telefono
-     * @param email          output - l'email
-     * @param nomeSocial     output - il nome del social
-     * @param tagSocial      output - il tag del social
-     * @param sitoWeb        output - il sito web
+     * @param nome           output - il nome della compagnia
+     * @param telefono       output - i telefoni della compagnia
+     * @param email          output - gli indirizzi email della compagnia
+     * @param nomeSocial     output - i nomi dei social
+     * @param tagSocial      output - i tag della compagnia nei social
+     * @param sitoWeb        output - il sito web della compagnia
      */
     public void fetchCompagnia(String loginCompagnia, ArrayList<String> nome, ArrayList<String> telefono, ArrayList<String> email, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> sitoWeb) {
         PreparedStatement ps = null;
