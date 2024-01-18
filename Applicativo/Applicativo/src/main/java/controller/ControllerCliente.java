@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import unnamed.Pair;
 
@@ -17,6 +19,7 @@ import static unnamed.NonStandardConversions.StringToBitset;
  * The type Controller.
  */
 public class ControllerCliente {
+    Logger logger = Logger.getLogger(this.getClass().getName());
     private Cliente cliente;
     private HashMap<Integer, Porto> porti;
     private HashMap<String, Compagnia> compagnie;
@@ -37,13 +40,12 @@ public class ControllerCliente {
      * Prende login e password dalla GUI,
      * richiede una connessione al DB,
      * se il cliente esiste nel DB,
-     * lo costruisce nel model e gli associa i suoi veicoli
-     * Restituisce un valore di controllo alla GUI,
-     * che si occupera' di cambiare schermata
+     * crea il contesto per l'esecuzione del programma
+     * nel model.
      *
      * @param login    the login
      * @param password the password
-     * @return the boolean
+     * @throws SQLException the sql exception
      */
     public void clienteAccede(String login, String password) throws SQLException {
         try {
@@ -61,6 +63,13 @@ public class ControllerCliente {
         }
     }
 
+    /**
+     * Build cliente.
+     *
+     * @param login    the login
+     * @param password the password
+     * @throws SQLException the sql exception
+     */
     public void buildCliente(String login, String password) throws SQLException {
         try {
             ClienteDAO clienteDAO = new ClienteDAO();
@@ -76,6 +85,12 @@ public class ControllerCliente {
         }
     }
 
+    /**
+     * Build veicoli.
+     *
+     * @param login the login
+     * @throws SQLException the sql exception
+     */
     public void buildVeicoli(String login) throws SQLException {
         try {
             ClienteDAO clienteDAO = new ClienteDAO();
@@ -109,6 +124,8 @@ public class ControllerCliente {
 
     /**
      * Download porti.
+     *
+     * @throws SQLException the sql exception
      */
     public void buildPorti() throws SQLException {
         try {
@@ -128,6 +145,8 @@ public class ControllerCliente {
 
     /**
      * Costruisce le compagnie del model a partire dai dati del DB
+     *
+     * @throws SQLException the sql exception
      */
     public void buildCompagnie() throws SQLException {
         try {
@@ -176,6 +195,8 @@ public class ControllerCliente {
      * 2) costruisce le corse regolari e le assegna alle compagnie
      * 3) assegna i periodi alle corse regolari
      * 4) costruisce le corse specifiche e popola la collezione 'corse' di questa classe
+     *
+     * @throws SQLException the sql exception
      */
     public void buildCorse() throws SQLException {
         try {
@@ -269,6 +290,8 @@ public class ControllerCliente {
 
     /**
      * Costruisce i biglietti acquistati dell'utente del model a partire dai dati del DB
+     *
+     * @throws SQLException the sql exception
      */
     public void buildBigliettiAcquistati() throws SQLException {
         try {
@@ -307,10 +330,14 @@ public class ControllerCliente {
      * @param veicolo                    the veicolo
      * @param bagaglio                   the bagaglio
      * @param idCorsa                    output parameter
+     * @param nomeCompagnia              the nome compagnia
      * @param data                       output parameter
+     * @param orePart                    the ore part
+     * @param oreDest                    the ore dest
      * @param postiDispPass              output parameter
      * @param postiDispVei               output parameter
      * @param minutiRitardo              output parameter
+     * @param natanti                    the natanti
      * @param cancellata                 output parameter
      * @param prezzo                     output parameter
      */
@@ -371,6 +398,7 @@ public class ControllerCliente {
      * @param bagaglio      indica la presenza di un bagaglio
      * @param etaPasseggero l'etá del passeggero per cui si vuole acquistare il biglietto
      * @param prezzo        il prezzo
+     * @return the boolean
      */
     public boolean acquistaBiglietto(int idCorsa, LocalDate data, String targaVeicolo, boolean prevendita, boolean bagaglio, int etaPasseggero, float prezzo) {
         try {
@@ -393,7 +421,8 @@ public class ControllerCliente {
     /**
      * Visualizza porti.
      *
-     *
+     * @param idPorto the id porto
+     * @param comune  the comune
      */
     public void visualizzaPorti(ArrayList<Integer> idPorto, ArrayList<String> comune) {
         for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
@@ -405,8 +434,8 @@ public class ControllerCliente {
     /**
      * Add veicolo boolean.
      *
-     * @param targa       the targa
      * @param tipoVeicolo the tipo veicolo
+     * @param targa       the targa
      * @return a boolean
      */
     public boolean addVeicolo(String tipoVeicolo, String targa) {
@@ -469,6 +498,22 @@ public class ControllerCliente {
         }
     }
 
+    /**
+     * Visualizza biglietti acquistati.
+     *
+     * @param idBiglietti   the id biglietti
+     * @param idCorse       the id corse
+     * @param dataCor       the data cor
+     * @param orePart       the ore part
+     * @param minutiRitardo the minuti ritardo
+     * @param portoPar      the porto par
+     * @param portoDest     the porto dest
+     * @param bagagli       the bagagli
+     * @param targaVeicolo  the targa veicolo
+     * @param etaPass       the eta pass
+     * @param dataAcquisto  the data acquisto
+     * @param prezzi        the prezzi
+     */
     public void visualizzaBigliettiAcquistati(ArrayList<Integer> idBiglietti, ArrayList<Integer> idCorse, ArrayList<LocalDate> dataCor, ArrayList<LocalTime> orePart, ArrayList<Integer> minutiRitardo, ArrayList<String> portoPar, ArrayList<String> portoDest, ArrayList<Boolean> bagagli, ArrayList<String> targaVeicolo, ArrayList<Integer> etaPass, ArrayList<LocalDate> dataAcquisto, ArrayList<Float> prezzi) {
         for (Biglietto b : cliente.getBigliettiAcquistati()) {
             idBiglietti.add(b.getIdBiglietto());
@@ -490,6 +535,15 @@ public class ControllerCliente {
         }
     }
 
+    /**
+     * Cliente si registra boolean.
+     *
+     * @param nome    the nome
+     * @param cognome the cognome
+     * @param login   the login
+     * @param pwd     the pwd
+     * @return the boolean
+     */
     public boolean clienteSiRegistra(String nome, String cognome, String login, String pwd) {
         try {
             ClienteDAO clienteDAO = new ClienteDAO();
@@ -500,6 +554,13 @@ public class ControllerCliente {
         }
     }
 
+    /**
+     * Visualizza info porti.
+     *
+     * @param comune    the comune
+     * @param indirizzo the indirizzo
+     * @param telefono  the telefono
+     */
     public void visualizzaInfoPorti(ArrayList<String> comune, ArrayList<String> indirizzo, ArrayList<String> telefono) {
         for (Map.Entry<Integer, Porto> it : porti.entrySet()) {
             Porto p = it.getValue();
@@ -509,6 +570,11 @@ public class ControllerCliente {
         }
     }
 
+    /**
+     * Gets login cliente.
+     *
+     * @return the login cliente
+     */
     public String getLoginCliente() {
         return cliente.getLogin();
     }

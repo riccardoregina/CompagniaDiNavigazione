@@ -8,16 +8,20 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The type Compagnia db.
  */
 public class CompagniaDAO implements dao.CompagniaDAO {
+    private Logger logger = Logger.getLogger(this.getClass().getName());
     private Connection connection;
     public CompagniaDAO() throws SQLException {
         try {
             connection = ConnessioneDB.getInstance().getConnection();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             throw e;
         }
     }
@@ -50,6 +54,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             rs.close();
             ps.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
             throw e;
         } finally {
             connection.close();
@@ -120,8 +125,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -154,8 +158,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             s.close();
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -190,8 +193,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Cancellazione fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -241,8 +243,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -278,8 +279,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -317,8 +317,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -388,8 +387,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -414,8 +412,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Cancellazione fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
             throw new SQLException();
         }
     }
@@ -443,8 +440,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Segnalazione ritardo fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
             throw new SQLException();
         }
     }
@@ -469,7 +465,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
+            logger.log(Level.SEVERE, "Aggiunta del natante fallita.");
             throw new Exception();
         }
     }
@@ -492,8 +488,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Rimozione fallita.");
         }
     }
 
@@ -513,7 +508,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Inserimento fallito.");
+            logger.log(Level.SEVERE, "Inserimento fallito.");
             throw new SQLException();
         }
     }
@@ -540,6 +535,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Aggiunta del periodo fallita.");
             throw new SQLException();
         }
     }
@@ -557,6 +553,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Attivazione della corsa fallita.");
             throw new SQLException();
         }
     }
@@ -574,6 +571,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica orario fallita.");
             throw new SQLException();
         }
     }
@@ -591,6 +589,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica orario fallita.");
             throw new SQLException();
         }
     }
@@ -608,6 +607,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica costo fallita.");
             throw new SQLException();
         }
     }
@@ -625,6 +625,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica costo fallita.");
             throw new SQLException();
         }
     }
@@ -642,6 +643,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica costo fallita.");
             throw new SQLException();
         }
     }
@@ -659,6 +661,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica costo fallita.");
             throw new SQLException();
         }
     }
@@ -677,6 +680,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica costo fallita.");
             throw new SQLException();
         }
     }
@@ -702,6 +706,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Rimozione di un periodo di attivita fallito.");
             throw new SQLException();
         }
     }
@@ -723,6 +728,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             connection.close();
             return ret;
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
             throw new SQLException();
         }
     }
@@ -737,8 +743,9 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             cs.close();
             connection.close();
 
-            System.out.println("I posti sono stati aggiornati");
+            logger.log(Level.FINEST, "I posti sono stati aggiornati");
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Richiesta al DB fallita");
             throw new SQLException();
         }
     }
@@ -758,7 +765,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Inserimento fallito.");
+            logger.log(Level.SEVERE, "Inserimento fallito.");
             throw new SQLException();
         }
     }
@@ -777,7 +784,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
+            logger.log(Level.SEVERE, "Eliminazione fallita.");
             throw new SQLException();
         }
     }
@@ -796,7 +803,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Inserimento fallito.");
+            logger.log(Level.SEVERE, "Aggiunta fallita.");
             throw new SQLException();
         }
     }
@@ -814,7 +821,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
+            logger.log(Level.SEVERE, "Eliminazione fallita.");
             throw new SQLException();
         }
     }
@@ -833,7 +840,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Inserimento fallito.");
+            logger.log(Level.SEVERE, "Aggiunta fallita.");
             throw new SQLException();
         }
     }
@@ -851,7 +858,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
+            logger.log(Level.SEVERE, "Eliminazione fallita.");
             throw new SQLException();
         }
     }
@@ -871,7 +878,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Modifica fallita.");
+            logger.log(Level.SEVERE, "Modifica fallita.");
             throw new SQLException();
         }
     }

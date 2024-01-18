@@ -7,11 +7,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The type Cliente db.
  */
 public class ClienteDAO implements dao.ClienteDAO {
+    private Logger logger = Logger.getLogger(this.getClass().getName());
     private Connection connection;
     public ClienteDAO() throws SQLException {
         try {
@@ -79,8 +82,7 @@ public class ClienteDAO implements dao.ClienteDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -109,8 +111,7 @@ public class ClienteDAO implements dao.ClienteDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -147,8 +148,7 @@ public class ClienteDAO implements dao.ClienteDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -193,8 +193,7 @@ public class ClienteDAO implements dao.ClienteDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -227,8 +226,7 @@ public class ClienteDAO implements dao.ClienteDAO {
             s.close();
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -261,8 +259,7 @@ public class ClienteDAO implements dao.ClienteDAO {
             s.close();
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -298,8 +295,7 @@ public class ClienteDAO implements dao.ClienteDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -354,8 +350,7 @@ public class ClienteDAO implements dao.ClienteDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -393,8 +388,7 @@ public class ClienteDAO implements dao.ClienteDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -438,8 +432,7 @@ public class ClienteDAO implements dao.ClienteDAO {
             ps.close();
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
         }
     }
 
@@ -485,7 +478,7 @@ public class ClienteDAO implements dao.ClienteDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Acquisto fallito.");
+            logger.log(Level.SEVERE, "Acquisto fallito.");
             throw new SQLException();
         }
     }
@@ -512,7 +505,7 @@ public class ClienteDAO implements dao.ClienteDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
+            logger.log(Level.SEVERE, "Aggiunta del veicolo fallita.");
             throw new SQLException();
         }
     }
@@ -532,7 +525,7 @@ public class ClienteDAO implements dao.ClienteDAO {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
+            logger.log(Level.SEVERE, "Registrazione fallita.");
             throw new SQLException();
         }
     }
