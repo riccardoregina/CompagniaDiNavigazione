@@ -17,7 +17,7 @@ import unnamed.Pair;
  * La classe ControllerCliente si occupa di:
  *  + ricevere richieste da un interfaccia
  *  + provvedere a soddisfare tali richieste, che possono interessare: il Model, il DB, o entrambi.
- * Questa classe contiene i dati del Model presenti nei membr: cliente, porti, compagnie, corse.
+ * Questa classe contiene i dati del Model presenti nei membri: cliente, porti, compagnie, corse.
  */
 public class ControllerCliente {
     Logger logger = Logger.getLogger(this.getClass().getName());

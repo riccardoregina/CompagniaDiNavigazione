@@ -144,7 +144,7 @@ public class CreaCorse {
             cbPortoArrivo.addItem(porto.last);
         }
 
-        controllerCompagnia.visualizzaNatanti(natanti);
+        controllerCompagnia.visualizzaNomiNatanti(natanti);
         for (String natante : natanti) {
             cbNatante.addItem(natante);
         }
