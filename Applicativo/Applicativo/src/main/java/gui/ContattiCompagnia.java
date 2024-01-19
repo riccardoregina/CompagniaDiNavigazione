@@ -84,7 +84,7 @@ public class ContattiCompagnia {
         labelYt.setIcon(imageYt);
         labelTk.setIcon(imageTk);
 
-        ImageIcon imageWww = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-web-48.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+        ImageIcon imageWww = new ImageIcon("resources/icons/icons_contatti/icons8-web-48.png");
         labelSitoWeb.setIcon(imageWww);
         labelSitoWeb.setHorizontalTextPosition(SwingConstants.LEFT);
 
