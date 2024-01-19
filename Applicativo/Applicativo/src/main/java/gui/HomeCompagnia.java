@@ -80,6 +80,12 @@ public class HomeCompagnia {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
+        Color white = Color.white;
+        Color gray = new Color(216, 232, 240);
+        Color accent = new Color(81, 115, 248);
+        Color accentHovered = new Color(182, 146, 248);
+        Color secondary = new Color(145, 209, 241);
+
         contentPane.setBackground(Color.white);
         panelContatti.setBackground(Color.white);
         panelCorse.setBackground(Color.white);
@@ -91,12 +97,12 @@ public class HomeCompagnia {
         panelLogout.setBackground(Color.white);
         panelL.setBackground(Color.white);
 
-        ImageIcon imageAncora = new ImageIcon(new ImageIcon("resources/icons/icons8-anchor-48.png").getImage().getScaledInstance(48, 48, Image.SCALE_DEFAULT));
-        ImageIcon imageNave = new ImageIcon(new ImageIcon("resources/icons/icons8-nave-48.png").getImage().getScaledInstance(48, 48, Image.SCALE_DEFAULT));
+        ImageIcon imageAncora = new ImageIcon("resources/icons/icons8-anchor-48.png");
+        ImageIcon imageNave = new ImageIcon("resources/icons/icons8-nave-48.png");
         ImageIcon imageLogout = new ImageIcon("resources/icons/icons8-ritorno-48.png");
         ImageIcon imageLogoutHovered = new ImageIcon("resources/icons/icons8-ritorno-48-hovered.png");
-        ImageIcon imageContatti = new ImageIcon("resources/icons/icons_contatti/icons8-contatti-mela-48.png");
-        ImageIcon imageContattiHovered = new ImageIcon("resources/icons/icons_contatti/icons8-contatti-mela-48_hovered.png");
+        ImageIcon imageContatti = new ImageIcon("resources/icons/icons8-informazioni-48.png");
+        ImageIcon imageContattiHovered = new ImageIcon("resources/icons/icons8-informazioni-48-hovered.png");
 
         corseErogateLabel.setIcon(imageAncora);
         corseErogateLabel.setHorizontalTextPosition(SwingConstants.LEFT);

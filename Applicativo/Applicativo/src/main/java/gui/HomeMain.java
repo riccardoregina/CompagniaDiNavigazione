@@ -54,8 +54,8 @@ public class HomeMain {
         panel1.setBackground(Color.white);
         panelSelezione.setBackground(Color.white);
 
-        ImageIcon imageCompagnia = new ImageIcon("resources/icons/icons8-nave-48.png");
-        ImageIcon imageCompagniaHovered = new ImageIcon("resources/icons/icons8-nave-48-hovered.png");
+        ImageIcon imageCompagnia = new ImageIcon("resources/icons/icons8-compagnia-48.png");
+        ImageIcon imageCompagniaHovered = new ImageIcon("resources/icons/icons8-compagnia-48-hovered.png");
         ImageIcon imageCliente = new ImageIcon("resources/icons/icons8-utente-maschile-48.png");
         ImageIcon imageClienteHovered = new ImageIcon("resources/icons/icons8-utente-maschile-48-hovered.png");
         labelButtonCompagnia.setIcon(imageCompagnia);

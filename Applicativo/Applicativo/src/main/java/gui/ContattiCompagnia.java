@@ -37,7 +37,7 @@ public class ContattiCompagnia {
     private JLabel labelFb;
     private JLabel labelIg;
     private JLabel labelYt;
-    private JLabel labelLk;
+    private JLabel labelTk;
     private JPanel panelSocial;
     private JPanel panelContatti;
     private JPanel panel1;
@@ -67,22 +67,22 @@ public class ContattiCompagnia {
         panelEmail.setBackground(Color.white);
         panelSocial.setBackground(Color.white);
 
-        ImageIcon imageTelefono = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-telefono-48.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        ImageIcon imageTelefono = new ImageIcon("resources/icons/icons_contatti/icons8-telefono-48.png");
         labelTelefono.setIcon(imageTelefono);
         labelTelefono.setHorizontalTextPosition(SwingConstants.LEFT);
 
-        ImageIcon imageEmail = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-cassetta-postale-chiusa-bandiera-sù-48.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        ImageIcon imageEmail = new ImageIcon("resources/icons/icons_contatti/icons8-mail-with-wings-25.png");
         labelEmail.setIcon(imageEmail);
         labelEmail.setHorizontalTextPosition(SwingConstants.LEFT);
 
-        ImageIcon imageFb = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-facebook-48.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        ImageIcon imageIg = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-instagram-old-48.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        ImageIcon imageYt = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-youtube-48.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        ImageIcon imageLk = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-linkedin-48.png").getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        ImageIcon imageFb = new ImageIcon("resources/icons/icons_contatti/icons8-facebook-48.png");
+        ImageIcon imageIg = new ImageIcon("resources/icons/icons_contatti/icons8-instagram-old-48.png");
+        ImageIcon imageYt = new ImageIcon("resources/icons/icons_contatti/icons8-youtube-48.png");
+        ImageIcon imageTk = new ImageIcon("resources/icons/icons_contatti/icons8-tic-toc-25.png");
         labelFb.setIcon(imageFb);
         labelIg.setIcon(imageIg);
         labelYt.setIcon(imageYt);
-        labelLk.setIcon(imageLk);
+        labelTk.setIcon(imageTk);
 
         ImageIcon imageWww = new ImageIcon(new ImageIcon("resources/icons/icons_contatti/icons8-web-48.png").getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
         labelSitoWeb.setIcon(imageWww);
@@ -239,9 +239,9 @@ public class ContattiCompagnia {
         panelSocial.add(labelSocial, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         scrollPaneSocial = new JScrollPane();
         panelSocial.add(scrollPaneSocial, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 5, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        labelLk = new JLabel();
-        labelLk.setText("");
-        panelSocial.add(labelLk, new com.intellij.uiDesigner.core.GridConstraints(0, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelTk = new JLabel();
+        labelTk.setText("");
+        panelSocial.add(labelTk, new com.intellij.uiDesigner.core.GridConstraints(0, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelFb = new JLabel();
         labelFb.setText("");
         panelSocial.add(labelFb, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
