@@ -154,6 +154,7 @@ public class HomeCliente {
         frame.setIconImage(new ImageIcon("resources/icons/logo.png").getImage().getScaledInstance(400, 400, 1));
         frame.setVisible(true);
         acquistaButton.setEnabled(false);
+        acquistaButton.setContentAreaFilled(false);
 
         CardLayout cardLayout = (CardLayout) centralPanel.getLayout();
 
@@ -591,6 +592,7 @@ public class HomeCliente {
                 aggiornaTabelloneCorse();
 
                 acquistaButton.setEnabled(true);
+                acquistaButton.setContentAreaFilled(true);
             }
 
             @Override
