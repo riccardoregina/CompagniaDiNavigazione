@@ -58,6 +58,7 @@ public class LoginCliente {
         frame.setSize((int) screenSize.width / 4, (int) (screenSize.height / 2));
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
+        frame.setIconImage(new ImageIcon("resources/icons/logo.png").getImage().getScaledInstance(400, 400, 1));
         frame.setVisible(true);
 
         Color white = Color.white;

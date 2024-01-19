@@ -41,6 +41,7 @@ public class AggiungiScalo {
         frame.setSize((int) screenSize.width / 4, (int) (screenSize.height / 2));
         frame.setResizable(false);
         frame.setLocationRelativeTo(parent);
+        frame.setIconImage(new ImageIcon("resources/icons/logo.png").getImage().getScaledInstance(400, 400, 1));
         frame.setVisible(true);
 
         contentPane.setBackground(Color.white);

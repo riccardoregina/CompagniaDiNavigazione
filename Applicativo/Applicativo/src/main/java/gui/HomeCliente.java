@@ -151,6 +151,7 @@ public class HomeCliente {
         frame.setSize((int) (screenSize.width / 1.1), (int) (screenSize.height / 1.1));
         frame.setMinimumSize(new Dimension(1300, 800));
         frame.setLocationRelativeTo(null);
+        frame.setIconImage(new ImageIcon("resources/icons/logo.png").getImage().getScaledInstance(400, 400, 1));
         frame.setVisible(true);
         acquistaButton.setEnabled(false);
 

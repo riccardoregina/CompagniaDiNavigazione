@@ -56,6 +56,7 @@ public class LoginCompagnia {
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setIconImage(new ImageIcon("resources/icons/logo.png").getImage().getScaledInstance(400, 400, 1));
         frame.setVisible(true);
 
         contentPane.setBackground(Color.white);

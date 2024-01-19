@@ -43,6 +43,7 @@ public class InfoNatante {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize((int) (screenSize.width / 1.2), (int) (screenSize.height / 1.2));
         frame.setLocationRelativeTo(null);
+        frame.setIconImage(new ImageIcon("resources/icons/logo.png").getImage().getScaledInstance(400, 400, 1));
         frame.setVisible(true);
 
         contentPane.setBackground(Color.white);
