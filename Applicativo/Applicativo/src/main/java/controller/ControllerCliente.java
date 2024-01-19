@@ -416,7 +416,7 @@ public class ControllerCliente {
             LocalDate dataAcquisto = LocalDate.now();
             clienteDAO.acquistaBiglietto(cs.getCorsaRegolare().getIdCorsa(), cs.getData(), cliente.getLogin(), targaVeicolo, prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero, idBiglietto);
             Veicolo veicolo = cliente.getVeicoliPosseduti().get(targaVeicolo);
-            cliente.addBiglietto(new Biglietto(idBiglietto.get(), cliente, cs, etaPasseggero, veicolo, prevendita, bagaglio, prezzo, dataAcquisto));
+            cliente.addBiglietto(new Biglietto(idBiglietto.get(), cliente, cs, etaPasseggero, veicolo, bagaglio, prevendita, prezzo, dataAcquisto));
             corse.clear();
             buildCorse();
             return true;

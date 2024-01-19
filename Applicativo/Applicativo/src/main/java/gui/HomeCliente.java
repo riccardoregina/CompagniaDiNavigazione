@@ -153,6 +153,7 @@ public class HomeCliente {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         acquistaButton.setEnabled(false);
+        acquistaButton.setContentAreaFilled(false);
 
         CardLayout cardLayout = (CardLayout) centralPanel.getLayout();
 
@@ -590,6 +591,7 @@ public class HomeCliente {
                 aggiornaTabelloneCorse();
 
                 acquistaButton.setEnabled(true);
+                acquistaButton.setContentAreaFilled(true);
             }
 
             @Override
