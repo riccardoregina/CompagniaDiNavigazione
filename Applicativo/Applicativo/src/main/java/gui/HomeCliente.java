@@ -696,6 +696,8 @@ public class HomeCliente {
                         JOptionPane.showMessageDialog(null, "veicolo aggiunto.");
                         DefaultTableModel model = (DefaultTableModel) tableVeicoli.getModel();
                         model.addRow(new Object[]{tipoVeicolo, targa});
+
+                        comboBoxVeicoli.addItem(tipoVeicolo + " " + targa);
                     }
                 }
             }
