@@ -366,7 +366,7 @@ public class HomeCliente {
                     data[i][3] = orePart.get(i);
                     data[i][4] = portoPar.get(i);
                     data[i][5] = portoDest.get(i);
-                    data[i][6] = bagagli.get(i);
+                    data[i][6] = bagagli.get(i) ? "Si" : "No";
                     data[i][7] = targaVeicolo.get(i);
                     data[i][8] = etaPass.get(i);
                     data[i][9] = dataAcquisto.get(i);
