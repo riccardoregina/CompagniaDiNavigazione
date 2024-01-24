@@ -682,17 +682,11 @@ public class HomeCliente {
                 String targa = tfTargaVeicolo.getText();
                 if (targa.equals("Targa") || targa.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Inserisci la targa.");
-                    return;
                 } else {
                     boolean check = controllerCliente.addVeicolo(tipoVeicolo, targa);
                     if (!check) {
                         JOptionPane.showMessageDialog(null, "Non è stato possibile aggiungere il veicolo.");
                     } else {
-                        try {
-                            controllerCliente.buildVeicoli(controllerCliente.getLoginCliente());
-                        } catch (SQLException ex) {
-                            JOptionPane.showMessageDialog(null, "Non è stato possibile aggiungere il veicolo.");
-                        }
                         JOptionPane.showMessageDialog(null, "veicolo aggiunto.");
                         DefaultTableModel model = (DefaultTableModel) tableVeicoli.getModel();
                         model.addRow(new Object[]{tipoVeicolo, targa});
