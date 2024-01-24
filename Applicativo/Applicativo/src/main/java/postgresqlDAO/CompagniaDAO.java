@@ -63,10 +63,8 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.close();
         } catch (SQLException e) {
             String message = e.getMessage();
-            if (!message.equals("Credenziali errate / compagnia non esistente.")) {
-                logger.log(Level.SEVERE, message);
-                throw e;
-            }
+            logger.log(Level.SEVERE, message);
+            throw e;
         } finally {
             try {
                 connection.close();
