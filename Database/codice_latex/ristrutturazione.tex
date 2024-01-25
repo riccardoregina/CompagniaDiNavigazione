@@ -1,0 +1,46 @@
+\subsection{Analisi delle ridondanze}
+All'interno del diagramma iniziale, si identifica una ridondanza legata al concetto di costo, presente sia nell'entità \textit{BIGLIETTO} con l'attributo \textit{prezzo} che nell'entità \textit{CORSAREGOLARE} con gli attributi \textit{costoIntero}, \textit{costoRidotto}, \textit{costoBagaglio}, \textit{costoVeicolo} e \textit{costoPrevendita}. La scelta di mantenere la ridondanza è motivata dal fatto che il costo, sia esso intero o ridotto, rimarrà fisso per ogni corsa e non subirà variazioni, mentre il prezzo del biglietto sarà determinato in base alle opzioni selezionate dal cliente al momento dell'acquisto, ad esempio l'aggiunta di un veicolo o di un bagaglio.
+
+Un'altra ridondanza riscontrata è relativa al numero di posti disponibili per una corsa specifica. Questo valore potrebbe essere calcolato sottraendo al numero massimo di posti del natante utilizzato per quella corsa il numero di biglietti venduti, informazione ottenibile contando il numero di tuple relative a quella corsa nella tabella \textit{BIGLIETTO}. Tuttavia, è stata mantenuta un'esplicita registrazione del numero di posti disponibili come attributo separato nell'entità \textit{CORSASPECIFICA} per semplificare e ottimizzare le operazioni di lettura e rendere più efficienti le query relative alla disponibilità dei posti.
+
+\subsection{Eliminazione degli attributi multivalore}
+Nel diagramma iniziale, sono presenti alcuni attributi multivalore, tra cui due riferiti all'entità \textit{COMPAGNIA}, ossia \textit{TELEFONO} e \textit{EMAIL}. Per gestire in modo più efficiente e flessibile questi contatti di assistenza, si è optato per considerarli come entità separate, consentendo così la gestione di più contatti.
+
+Un altro attributo multivalore è \textit{giorno} all'interno dell'entità \textit{PERIODO}, che indica i giorni della settimana in cui la corsa è disponibile. Al fine di semplificare le operazioni di controllo necessarie per implementare alcune richieste, si è scelto di mantenere \textit{giorno} come una stringa unica di sette caratteri, composti esclusivamente da $0$ e $1$. Questa rappresentazione permette di indicare in modo chiaro e compatto la disponibilità della corsa nei vari giorni della settimana. Ad esempio, se la stringa \textit{giorni} è "$1001101$", significa che la corsa sarà disponibile nei giorni domenica, mercoledì, giovedì e sabato (il bit in posizione 0 si riferisce alla domenica).
+
+\subsection{Eliminazione degli attributi composti}
+Non sono presenti attributi composti.
+
+\subsection{Eliminazione delle generalizzazioni}
+Nel diagramma iniziale progettato per la costruzione del database, sono state introdotte alcune generalizzazioni. Una di esse coinvolge l'entità \textit{UTENTE}, la quale si specializza in \textit{COMPAGNIA} o \textit{CLIENTE}. Questa specializzazione è di tipo totale disgiunta. Ogni utente del sistema, sia esso un cliente o una compagnia, è caratterizzato da un \textit{login} e da una \textit{password}. Pertanto, abbiamo scelto di semplificare il modello eliminando l'entità \textit{UTENTE} e includendo gli attributi di \textit{login} e \textit{password} sia nell'entità \textit{COMPAGNIA} che in quella \textit{CLIENTE}.
+
+La seconda generalizzazione inserita è, invece, una specializzazione disgiunta parziale e coinvolge l'entità \textit{NATANTE}, che può specializzarsi in \textit{TRAGHETTO}, \textit{ALISCAFO}, \textit{MOTONAVE} o anche nessuno dei tre. Poiché solo i traghetti hanno la possibilità di trasportare veicoli e gli altri due tipi di natante condividono gli stessi attributi, abbiamo scelto di raggruppare le classi figlie all'interno della classe padre, quindi è stato aggiunto un attributo \textit{tipo} per specificare il tipo di natante e un attributo \textit{capienzaVeicoli}, il quale sarà NULL nel caso di aliscafi e motonavi. Questa modifica semplifica la struttura del modello, evitando la duplicazione degli attributi comuni tra aliscafi e motonavi.
+
+\subsection{Identificazioni delle chiavi primarie}
+In questa fase, procederemo a selezionare uno più attributi per l'identificazione univoca delle diverse entità presenti nello schema precedente. In particolare:
+
+\begin{itemize}
+    \item \textbf{\textit{COMPAGNIA}}: Ogni compagnia può essere identificata univocamente attraverso l'attributo \textbf{login}, utilizzato per l'accesso al sistema.
+    
+    \item \textbf{\textit{CLIENTE}}: Analogamente, anche per i clienti, l'identificazione univoca avviene tramite l'attributo \textbf{login}.
+    
+    \item \textbf{\textit{CORSAREGOLARE}}: Per l'entità \textit{CORSAREGOLARE}, è stata introdotta una chiave surrogata, \textbf{idCorsa}, poiché le altre chiavi candidate erano composte da un insieme di più attributi, rendendo poco efficiente l'identificazione.
+
+    \item \textbf{\textit{CORSASPECIFICA}}: L'entità \textit{CORSASPECIFICA} è un'entità debole con chiave parziale \textbf{data}, poichè ogni corsa regolare ha cadenza giornaliera.
+    
+    \item \textbf{\textit{PERIODO}}: Anche per \textit{PERIODO} è stata aggiunta una chiave surrogata, \textbf{idPeriodo}.
+    
+    \item \textbf{\textit{PORTO}}:  Anche per \textit{PORTO}, l'identificazione avviene attraverso una chiave surrogata, \textbf{idPorto}.
+    
+    \item \textbf{\textit{SCALO}}: L'identificazione di uno \textit{SCALO} si basa sulla chiave esterna di CORSA, poiché ogni corsa può avere al più uno scalo.
+    
+    \item \textbf{\textit{NATANTE}}:  L'identificazione di ogni \textit{NATANTE} avviene tramite l'attributo \textbf{nome}.
+
+    \item \textbf{\textit{BIGLIETTO}}:  Per l'entità \textit{BIGLIETTO}, è stata aggiunta la chiave surrogata \textbf{idBiglietto}, in quanto non è possibile identificarlo in altro modo.
+
+    \item \textbf{\textit{VEICOLO}}: L'identificazione di ogni VEICOLO avviene attraverso l'attributo \textbf{targa}.
+
+    \item \textbf{\textit{ACCOUNTSOCIAL}}: L'identificazione di \textit{ACCOUNTSOCIAL} è basata sulla coppia di attributi \textbf{nomeSocial} e \textbf{tag} del profilo.
+
+    \item \textbf{\textit{EMAIL e TELEFONO}}: In entrambi i casi, l'identificazione avviene attraverso un unico attributo, rispettivamente \textbf{indirizzo} per \textit{EMAIL} e \textbf{numero} per \textit{TELEFONO}, poiché ciascun valore deve essere unico all'interno del sistema.
+\end{itemize}

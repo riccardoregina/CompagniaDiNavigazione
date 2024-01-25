@@ -1,0 +1,90 @@
+\subsection{Schema finale}
+
+Gli attributi \underline{sottolineati} sono chiavi primarie, mentre gli attributi indicati con $\uparrow$ sono chiavi esterne.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{sb} 
+
+    \textbf{Compagnia}  &
+    (\underline{login}, password, nome, sitoWeb)\\
+
+    \textbf{CorsaRegolare}  &
+    (\underline{idCorsa}, PortoPartenza$\uparrow$, PortoArrivo$\uparrow$, orarioPartenza, orarioArrivo, costoIntero, scontoRidotto, costoBagaglio, costoPrevendita, costoVeicolo, Compagnia$\uparrow$, Natante$\uparrow$, CorsaSup$\uparrow$)
+    
+    \textit{ PortoPartenza $\rightarrow$ Porto.idPorto}
+
+    \textit{PortoArrivo $\rightarrow$ Porto.idPorto}
+
+    \textit{Compagnia $\rightarrow$ Compagnia.login}
+
+    \textit{Natante $\rightarrow$ Natante.nome} 
+
+    \textit{CorsaSup $\rightarrow$ CorsaRegolare.idCorsa} \\
+
+    \textbf{CorsaSpecifica}  &
+    (\underline{idCorsa$\uparrow$, data}, postiDispPass, postiDispVei, minutiRitardo, cancellata)
+    
+    \textit{idCorsa $\rightarrow$ CorsaRegolare.idCorsa}\\
+
+    \textbf{Periodo} &
+    (\underline{idPeriodo}, datainizio, dataFine, giorni) \\
+
+    \textbf{AttivaIn} &
+    (\underline{idCorsa$\uparrow$, idPeriodo$\uparrow$}) 
+
+    \textit{idCorsa $\rightarrow$ CorsaRegolare.idCorsa}
+
+    \textit{idPeriodo $\rightarrow$ Periodo.idPeriodo} \\
+
+    \textbf{Porto}  &
+    (\underline{idPorto}, comune, indirizzo, numeroTelefono)\\
+
+    \textbf{Scalo}  &
+    (\underline{idCorsa$\uparrow$}, idPorto$\uparrow$, orarioAttracco, orarioRipartenza)
+
+    \textit{idCorsa $\rightarrow$ CorsaRegolare.idCorsa}
+
+    \textit{idPorto  $\rightarrow$ Porto.idPorto} \\
+
+    \textbf{Natante}  &
+    (\underline{nome}, capienzaPasseggeri, capienzaVeicoli, tipo, Compagnia$\uparrow$)
+
+    \textit{Compagnia $\rightarrow$ Compagnia.login} \\
+
+    \textbf{Cliente} & 
+    (\underline{login}, password, nome, cognome) \\
+
+    \textbf{Biglietto} &
+    (\underline{idBiglietto}, idCorsa$\uparrow$, data$\uparrow$, Cliente$\uparrow$, Veicolo$\uparrow$, prevendita, bagaglio, prezzo, dataAcquisto, etaPasseggero)
+
+        \{\textit{idCorsa},\textit{data}\}
+    $\rightarrow$
+         \{\textit{CorsaSpecifica.idCorsa}, \textit{CorsaSpecifica.data}\}
+
+    \textit{Cliente $\rightarrow$ Cliente.login}
+
+    \textit{Veicolo $\rightarrow$ Veicolo.targa} \\
+
+    \textbf{Veicolo} &
+    (\underline{targa}, tipo, Proprietario$\uparrow$)
+
+    \textit{Proprietario $\rightarrow$ Cliente.login} \\
+
+    \textbf{AccountSocial} &
+    (\underline{nomeSocial, tag}, Compagnia$\uparrow$)
+
+    \textit{Compagnia $\rightarrow$ Compagnia.login} \\
+
+    \textbf{Email} &
+    (\underline{indirizzo}, Compagnia$\uparrow$)
+
+    \textit{Compagnia $\rightarrow$ Compagnia.login} \\
+
+    \textbf{Telefono} &
+    (\underline{numero}, Compagnia$\uparrow$)
+
+    \textit{Compagnia $\rightarrow$ Compagnia.login} \\
+    
+    \end{tabularx}
+\end{table}

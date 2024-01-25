@@ -1,0 +1,74 @@
+\subsection{Dizionario delle Associazioni}
+
+\begin{longtable}{|| m{0.2\textwidth} | m{0.8\textwidth} ||}
+    \hline\hline
+     \textbf{Associazione} & \textbf{Descrizione} \\
+     \hline\hline
+     \endfirsthead
+
+     \hline
+     \textbf{Associazione} & \textbf{Descrizione} \\
+     \hline
+     \endhead
+
+     Erogazione & Associazione \textbf{uno-a-molti} tra \textit{Compagnia} e \textit{CorsaRegolare}. 
+     Una Compagnia può erogare zero o più corse regolari e una CorsaRegolare se esiste è erogata da una ed una sola Compagnia.\\
+     \hline
+
+     Partenza & Associazione \textbf{uno-a-molti} tra \textit{Porto} e \textit{CorsaRegolare}. 
+     Una Corsa parte da uno ed un solo Porto, mentre da un Porto possono partire zero o più Corse.\\
+     \hline
+
+     Arrivo & Associazione \textbf{uno-a-molti} tra \textit{Porto} e \textit{CorsaRegolare}. 
+     Una Corsa ha come destinazione finale uno ed un solo Porto, mentre un Porto può essere destinazione di zero o più Corse.\\
+     \hline
+
+     Scalo & Associazione \textbf{uno-a-molti} tra \textit{Porto} e \textit{CorsaRegolare}. 
+     Una Corsa può fare scalo al più in un solo Porto intermedio e in un Porto possono fare scalo zero o più Corse. 
+     Inoltre ogni Scalo è caratterizzato dall'orario in cui il natante che fa lo scalo arriva al porto (\textit{oraAttracco}) e dall'orario in cui riparte (\textit{oraRipartenza}).\\
+     \hline
+
+     SottotrattaDi & Associazione ricorsiva \textbf{uno-a-molti} di \textit{CorsaRegolare}. 
+     Una corsa regolare A puó essere un segmento di una ed una sola corsa regolare B, la cui tratta di competenza contiene la tratta di competenza di A. Viceversa, B puó contenere piú sottocorse del tipo di A.\\
+     \hline
+
+     AttivaIn & Associazione \textbf{molti-a-molti} tra \textit{CorsaRegolare} e \textit{Periodo}. 
+     Una corsa può essere attiva in più periodi e un periodo può coprire più corse.\\
+     \hline
+
+     Utilizzo & Associazione \textbf{uno-a-molti} tra \textit{Natante} e \textit{CorsaRegolare}. 
+     Un Natante può essere utilizzato per compiere zero o più Corse, mentre una Corsa può usare uno ed un solo Natante.\\
+     \hline
+
+     Possesso & Associazione \textbf{uno-a-molti} tra \textit{Compagnia} e \textit{Natante}. 
+     Una Compagnia può possedere zero o più Natanti, mentre un Natante è intestato ad una ed una sola Compagnia.\\
+     \hline
+
+     Genera & Associazione \textbf{uno-a-molti} tra \textit{CorsaRegolare} e \textit{CorsaSpecifica}.
+     Ogni CorsaRegolare genera una CorsaSpecifica per ogni giorno dei periodi in cui è disponibile, mentre una CorsaSpecifica è generata da una ed una sola CorsaRegolare.\\
+     \hline
+
+     Riferimento & Associazione \textbf{uno-a-uno} tra \textit{CorsaSpecifica} e \textit{Biglietto}. 
+     Per una CorsaSpecifica possono essere stati venduti zero o più Biglietti, mentre un Biglietto fa riferimento ad una ed una sola CorsaSpecifica.\\
+     \hline
+
+     Acquisto & Associazione \textbf{uno-a-molti} tra \textit{Cliente} e \textit{Biglietto}. 
+     Un Cliente può comprare zero o più Biglietti, mentre un Biglietto è intestato ad uno ed un solo Cliente.\\
+     \hline
+
+     Possesso & Associazione \textbf{uno-a-molti} tra \textit{Cliente} e \textit{Veicolo}. 
+     Un Cliente può possedere zero o più Veicoli, mentre un Veicolo è intestato ad uno ed un solo Cliente.\\
+     \hline
+
+     Inserimento & Associazione \textbf{uno-a-molti} tra \textit{Veicolo} e \textit{Biglietto}. 
+     Un Biglietto può essere associato al più ad un solo Veicolo, mentre un Veicolo può essere imbarcato più volte quindi può essere associato a zero o a più Biglietti.\\
+     \hline
+
+    %%Contatti della Compagnia
+     Riferimento & Associazione \textbf{uno-a-molti} tra \textit{Compagnia} e \textit{AccountSocial}. 
+     Una Compagnia può avere zero o più Account Social, mentre ogni Account Social è riferito ad una ed una sola Compagnia.\\
+     \hline
+
+     \hline\hline
+
+\end{longtable}

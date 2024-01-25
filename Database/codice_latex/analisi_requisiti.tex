@@ -1,0 +1,36 @@
+\subsection{Analisi dei Requisiti}
+Durante la fase di analisi dei requisiti, l'obiettivo principale è identificare le informazioni chiave necessarie per la realizzazione della struttura del database della compagnia di navigazione. In particolare, si concentrerà sull'individuazione delle entità, delle associazioni tra di esse, e sui vincoli e comportamenti del database.
+
+\begin{quote}
+    \textit{"Il sistema si basa sulla conoscenza delle corse offerte dalle compagnie di navigazione. Ogni corsa è offerta da una specifica compagnia di navigazione, che indica il tipo di natante utilizzato. Tra i tipi di natante si distinguono i traghetti (che trasportano persone e automezzi), gli aliscafi e le motonavi (che trasportano entrambe solo passeggeri). Ogni corsa ha cadenza giornaliera, un orario di partenza e un orario di arrivo ma può essere operata solo in alcuni giorni della settimana e solo in alcuni specifici periodi dell’anno. Ad esempio, una compagnia potrebbe operare una corsa di motonave da Mu ad Atlantide soltanto il martedì e il giovedì e nel periodo tra il 15 giugno e il 15 settembre."}
+\end{quote}
+
+In base alle specifiche fornite, è possibile identificare diverse entità fondamentali per la struttura del database. Inizialmente, l'entità \textit{CORSAREGOLARE} conterrà le informazioni fondamentali relative alle corse ricorrenti in determinati periodi dell'anno, compresi gli orari di partenza e di arrivo. Inoltre, \textit{CORSASPECIFICA} rappresenterà un'istanza specifica di una corsa regolare e includerà quindi come attributo la data in cui si svolgerà la corsa.
+
+Un'altra entità individuata è il \textit{NATANTE} dotato di nome e suddiviso in tre tipi distinti: \textit{TRAGHETTO}, con posti dedicati sia a passeggeri che a veicoli; \textit{ALISCAFO} e \textit{MOTONAVE}, entrambi progettati solo per passeggeri. Poiché le richieste specificano il vincolo di effettuare ogni corsa solo in determinati periodi dell'anno, l'entità \textit{CORSAREGOLARE} sarà associata ad un'entità \textit{PERIODO} che conterrà una data di inizio e una data di fine periodo in cui la corsa può essere effettuata, inoltre avrà anche un attributo multivalore per indicare i giorni della settimana in cui la corsa è disponibile. Questa scelta di implementazione è motivata dal fatto che ogni corsa può coprire un numero non precisato di periodi.
+
+\begin{quote}
+    \textit{"Ogni corsa ha diversi prezzi: un prezzo per il biglietto intero, uno per il biglietto ridotto. Inoltre può esserci un sovrapprezzo per la prenotazione e uno per i bagagli. Ogni corsa è caratterizzata da un porto di arrivo e da uno di partenza: nel caso di corse che abbiano uno scalo intermedio il sistema espone tra le sue corse tutte le singole tratte. Ad esempio, se esiste una corsa tra Mu e Atlantide con scalo a Tortuga, il sistema manterrà tutte e tre le corse da Mu a Tortuga, da Tortuga ad Atlantide e da Mu ad Atlantide. Ogni compagnia di navigazione ha un nome e una serie di contatti (telefono, mail, sito web indirizzi su diversi social)."}
+\end{quote}
+
+Per quanto riguarda la gestione dei prezzi, l'entità \textit{CORSAREGOLARE} comprende gli attributi relativi al costo del biglietto intero, eventuali sconti per prezzi ridotti e i sovrapprezzi legati alla prenotazione, ai bagagli o al veicolo che il \textit{CLIENTE} desidera imbarcare.
+
+Dall'altra parte, nell'entità \textit{BIGLIETTO} sono inclusi gli attributi associati alle scelte effettuate dal cliente durante l'acquisto del biglietto, come l'età del passeggero, la prenotazione e l'imbarco di bagagli o veicoli.
+
+L'entità \textit{PORTO} è caratterizzata da attributi come il comune, l'indirizzo e il numero di telefono del porto. Tra l'entità \textit{PORTO} e \textit{CORSAREGOLARE}, esistono diverse relazioni che andranno a mappare per ogni corsa il porto di partenza, di arrivo e quello di un possibile scalo intermedio.
+
+Per quanto riguarda l'entità \textit{COMPAGNIA}, gli attributi comprendono il nome e vari contatti come numeri telefonici, indirizzi email e sito web. Inoltre, considerando la diversità dei social media, i quali potrebbero avere tag distinti, verranno strutturati come un'entità separata \textit{SOCIAL}.
+
+\begin{quote}
+    \textit{"Il sistema può essere utilizzato dalle compagnie e dai passeggeri. Le compagnie possono aggiornare le proprie corse oppure segnalare l’annullamento o il ritardo di una singola corsa. Il passeggero può consultare il tabellone delle corse, che contiene tutte le corse da un determinato porto di partenza verso un determinato porto di destinazione, da un giorno e orario di partenza indicato e per le successive 24 ore, eventualmente filtrate in base al tipo di natante scelto o in base al prezzo. Nel tabellone le corse in ritardo o cancellate dovranno comunque essere mostrato con una annotazione che riporti questo evento."}
+\end{quote} 
+
+Poiché il sistema prevede l'utilizzo da parte di due categorie distinte di utenti, verrà introdotta una generalizzazione delle classi \textit{COMPAGNIA} e \textit{CLIENTE} nella classe \textit{UTENTE}. Quest'ultima sarà dotata di attributi di login e password per consentire l'autenticazione.
+
+Dal momento che le compagnie hanno la facoltà di aggiornare, cancellare o segnalare ritardi per singole corse, saranno aggiunti due attributi all'entità \textit{CORSASPECIFICA}: uno per i minuti di ritardo e l'altro per indicare se la corsa è stata cancellata o meno.
+
+\begin{quote}
+    \textit{"Le compagnie indicano anche la capienza dei natanti utilizzati per quella corsa, in termini di numero di posti per i passeggeri e numero di posti per autoveicoli. I passeggeri possono prenotare una singola corsa solo se il sistema verificherà la presenza di un posto utile. All’atto della prenotazione il sistema dovrà aggiornare il numero dei posti utili in tutte le tratte interessate. Ad esempio, all’atto della prenotazione di due biglietti passeggero e un autoveicolo da Atlantide a Tortuga dovranno essere diminuite le disponibilità di biglietti passeggero ed autoveicolo anche nella tratta da Atlantide a Mu (ma non in quella da Tortuga a Mu)."}
+\end{quote}
+
+Siccome è richiesto identificare quanti posti disponibili ci sono, saranno inseriti come attributi nell'entità \textit{CORSASPECIFICA}.

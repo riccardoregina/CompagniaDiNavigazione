@@ -1,0 +1,315 @@
+\subsubsection{Vincoli Intra-Relazionali}
+
+\begin{longtable}{|| m{0.3\textwidth} | m{0.7\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{accountsocial\_pkey} & Vincolo di chiave primaria  \\ [1ex]
+      \hline
+
+      \textit{accountfkcompagnia} & Vincolo di chiave esterna. Se viene eliminata la compagnia vengono eliminati anche tutti i suoi account social. \\ [1ex]
+     \hline\hline
+
+     \caption*{Tabella AccountSocial} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.4\textwidth} | m{0.6\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{attivain\_pkey} & Vincolo di chiave primaria  \\ [1ex]
+      \hline
+
+      \textit{attivain\_idcorsa\_fkey} & Vincolo di chiave esterna. Se viene eliminata la corsa regolare vengono eliminate anche le tuple associate in AttivaIn. \\ [1ex]
+     \hline
+
+     \textit{attivain\_idperiodo\_fkey} & Vincolo di chiave esterna. Se viene eliminato un periodo vengono eliminate anche le tuple associate in AttivaIn. \\ [1ex]
+     \hline\hline
+
+     \caption*{Tabella AttivaIn} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.4\textwidth} | m{0.6\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{biglietto\_pkey} & Vincolo di chiave primaria  \\ [1ex]
+      \hline
+
+      \textit{biglietto\_idcorsa\_data\_fkey} & Vincolo di chiave esterna. Se viene eliminata una corsa specifica anche i biglietti associati verranno eliminati \\ [1ex]
+     \hline
+
+     \textit{bigliettofkcliente} & Vincolo di chiave esterna. Se viene eliminato un cliente anche i biglietti associati verrano eliminati \\ [1ex]
+     \hline
+
+     \textit{bigliettofkveicolo} & Vincolo di chiave esterna. Se viene eliminato un veicolo il valore in biglietto sarà settato a null \\ [1ex]
+     \hline
+
+     \textit{biglietto\_etapasseggero\_check} & Controlla che l'età del passeggero sia un numero non negativo. \\ [1ex]
+     \hline
+
+     \textit{biglietto\_prezzo\_check} & Controlla che il prezzo del biglietto sia un numero non negativo. \\ [1ex]
+     \hline\hline
+
+     \caption*{Tabella Biglietto} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.3\textwidth} | m{0.7\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{cliente\_pkey} & Vincolo di chiave primaria. \\ [1ex]
+     \hline\hline
+
+     \caption*{Tabella Cliente} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.3\textwidth} | m{0.7\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{compagnia\_pkey} & Vincolo di chiave primaria. \\ [1ex]
+     \hline\hline
+
+     \caption*{Tabella Compagnia} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.5\textwidth} | m{0.5\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{corsaregolare\_pkey} & Vincolo di chiave primaria. \\ [1ex]
+        \hline
+
+      \textit{corsafkcompagnia} & Vincolo di chiave esterna. Se viene eliminata la compagnia verrano eliminati anche tutte le sue corse regolari. \\ [1ex]
+     \hline
+
+     \textit{corsafkcorsasup} & Vincolo di chiave esterna. Se viene eliminata la corsa principale anche le sottocorse verranno eliminate. \\ [1ex]
+     \hline
+
+     \textit{corsafkportoarrivo} & Vincolo di chiave esterna. Se viene eliminato il porto di arrivo, verranno eliminate tutte le corse che arrivano in quel porto. \\ [1ex]
+     \hline
+
+     \textit{corsafkportopartenza} & Vincolo di chiave esterna. Se viene eliminato il porto di partenza, verranno eliminate tutte le corse che partivano da quel porto. \\ [1ex]
+     \hline
+
+    \textit{corsafknatante} & Vincolo di chiave esterna. Se viene eliminato il natante, verrano eliminate tutte le corse che usavano quel natante. \\ [1ex]
+     \hline
+
+     \textit{corsaregolare\_check} & Controlla che il porto di arrivo sia diverso dal porto di partenza. \\ [1ex]
+     \hline
+
+     \textit{corsaregolare\_costobagaglio\_check} & Controlla che il costo del bagaglio sia un numero non negativo. \\ [1ex]
+     \hline
+
+     \textit{corsaregolare\_costointero\_check} & Controlla che il costo intero della corsa sia un numero non negativo. \\ [1ex]
+     \hline
+
+     \textit{corsaregolare\_costoprevendita\_check} & Controlla che il costo della prevendita sia un numero non negativo. \\ [1ex]
+     \hline
+
+     \textit{corsaregolare\_costoveicolo\_check} & Controlla che il costo del veicolo sia un numero non negativo. \\ [1ex]
+     \hline
+
+     \textit{corsaregolare\_scontoridotto\_check} & Controlla che la percentuale di sconto sia un numero compreso tra $0$ e $100$. \\ [1ex]      
+     \hline\hline
+
+     \caption*{Tabella CorsaRegolare} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.5\textwidth} | m{0.5\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{corsaspecifica\_pkey} & Vincolo di chiave primaria. \\ [1ex]
+      \hline
+
+      \textit{corsaspecifica\_idcorsa\_fkey} & Vincolo di chiave esterna. Se viene eliminata una corsa regolare, tutte le corse specifiche associato verranno eliminate. \\ [1ex]
+      \hline
+        
+      \textit{corsaspecifica\_postidisppass\_check} & Controlla che i posti passeggeri disponibili sia un numero non negativo \\ [1ex]
+     \hline
+
+     \textit{corsaspecifica\_postidisppass\_check} & Controlla che i posti veicoli disponibili siano un numero non negativo \\ [1ex]      
+     \hline\hline
+
+     \caption*{Tabella CorsaSpecifica} \\
+\end{longtable}
+\newpage
+
+\begin{longtable}{|| m{0.3\textwidth} | m{0.7\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{email\_pkey} & Vincolo di chiave primaria. \\ [1ex]
+      \hline
+
+      \textit{emailfkcompagnia} & Vincolo di chiave esterna. Se una compagnia viene eliminata anche tutte le sue email verrano eliminate. \\ [1ex]      
+     \hline\hline
+
+     \caption*{Tabella Email} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.3\textwidth} | m{0.7\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{natante\_pkey} & Vincolo di chiave primaria. \\ [1ex]
+      \hline
+
+      \textit{natantefkcompagnia} & Vincolo di chiave esterna. Se una compagnia viene eliminata anche i natanti da essa posseduta verranno eliminati. \\ [1ex]      
+     \hline\hline
+
+     \caption*{Tabella Natante} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.3\textwidth} | m{0.7\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{periodo\_pkey} & Vincolo di chiave primaria. \\ [1ex]
+      \hline
+
+      \textit{periodo\_check} & Controlla che la data di inizio periodo sia minore o uguale alla data di fine periodo. \\ [1ex]      
+     \hline\hline
+
+     \caption*{Tabella Periodo} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.3\textwidth} | m{0.7\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{porto\_pkey} & Vincolo di chiave primaria. \\ [1ex]    
+     \hline\hline
+
+     \caption*{Tabella Porto} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.3\textwidth} | m{0.7\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{scalo\_pkey} & Vincolo di chiave primaria. \\ [1ex]
+      \hline
+
+      \textit{scalofkcorsa} & Vincolo di chiave esterna. Se una corsa viene eliminata, anche lo scalo associato viene eliminato. \\ [1ex]
+      \hline
+
+      \textit{scalofkporto} & Vincolo di chiave esterna. Se un porto viene eliminato, anche gli scali in quel porto verranno eliminati. \\ [1ex]
+      \hline
+
+      \textit{scalo\_check} & Controlla che l'orario di attracco sia minore dell'orario di ripartenza. \\ [1ex]     
+     \hline\hline
+
+     \caption*{Tabella Scalo} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.3\textwidth} | m{0.7\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{telefono\_pkey} & Vincolo di chiave primaria. \\ [1ex]
+      \hline
+
+      \textit{telefonofkcompagnia} & Vincolo di chiave esterna. Se una compagnia viene eliminata anche i suoi numeri telefonici verranno eliminati.\\ [1ex]      
+     \hline\hline
+
+     \caption*{Tabella Telefono} \\
+\end{longtable}
+
+\begin{longtable}{|| m{0.3\textwidth} | m{0.7\textwidth} ||}
+    \hline\hline
+     \textbf{Vincolo} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{veicolo\_pkey} & Vincolo di chiave primaria. \\ [1ex]
+      \hline
+
+      \textit{veicolofkproprietario} & Vincolo di chiave esterna. Se un cliente viene eliminato anche tutti i suoi veicoli verranno eliminati.\\ [1ex]      
+     \hline\hline
+
+     \caption*{Tabella Veicolo} \\
+\end{longtable}
+
+\subsubsection{Vincoli Inter-Relazionali}
+\label{sec:VincoliInterRelazionali}
+
+L'implementazione dei trigger è riportata nella sezione \hyperref[sec:ImplementazioneTrigger]{Trigger e trigger function}.
+
+\begin{longtable}{|| m{0.45\textwidth} | m{0.55\textwidth} ||}
+    \hline\hline
+     \textbf{Trigger} & \textbf{Descrizione} \\ [1ex]
+     \hline\hline
+     \endfirsthead
+
+      \textit{attivaSottoCorseTrigger} & Dopo aver inserito una tupla in \textit{AttivaIn}, anche le eventuali sottocorse della corsa inserita verranno inserite in \textit{AttivaIn}. \\ [1ex]
+      \hline
+
+      \textit{cancellaCorseTrigger} & Dopo aver eliminato una una tupla in \textit{AttivaIn}, vengono eliminate tutte le corse specifiche relative a quella corsa, in tutte le date appartenenti a quel periodo \\ [1ex]
+      \hline
+
+      \textit{generaCorse} & Dopo aver inserito una tupla in \textit{AttivaIn}, per tutte le date appartenti al periodo in questione verranno inserite delle corse specifiche. \\ [1ex]
+      \hline
+
+      \textit{triggerAggiornaPostiPasseggero} & Dopo aver inserito una tupla in \textit{Biglietto}, il trigger aggiorna i posti disponibili per quella corsa specifica, inoltre se la corsa in questione è una corsa principale, il trigger aggiornerà i posti anche per le sottocorse, se invece la corsa è una sottocorsa, il trigger aggionerà i posti anche per la corsa principale ma non per l'altra sottocorsa. \\ [1ex]
+      \hline
+
+      \textit{triggerAggiornaPostiVeicolo} & Dopo aver inserito una tupla in \textit{Biglietto}, il trigger aggiorna i posti disponibili per quella corsa specifica, inoltre se la corsa in questione è una corsa principale, il trigger aggiornerà i posti anche per le sottocorse, se invece la corsa è una sottocorsa, il trigger aggionerà i posti anche per la corsa principale ma non per l'altra sottocorsa. Il trigger si attiva solo quando il valore di \textit{veicolo} è diverso da null. \\ [1ex]
+      \hline
+
+      \textit{cambiaOrarioArrivoInSottocorsa} & Dopo aver modificato il valore di \textit{orarioArrivo} in \textit{CorsaRegolare}, il trigger modificherà il valore anche nelle eventuali sottocorse. Il trigger si attiva quindi solo quando \textit{corsaSup} è null. \\ [1ex]
+      \hline
+
+      \textit{cambiaOrarioPartenzaInSottocorsa} & Dopo aver modificato il valore di \textit{orarioPartenza} in \textit{CorsaRegolare}, il trigger modificherà il valore anche nelle eventuali sottocorse. Il trigger si attiva quindi solo quando \textit{corsaSup} è null. \\ [1ex]
+      \hline
+
+      \textit{eliminaAltraSottocorsa} & Dopo aver eliminato una tupla in \textit{CorsaRegolare} e quando \textit{corsaSup} è diverso da null, quindi si è appena eliminata una sottocorsa, il trigger andrà ad eliminare anche l'altra sottocorsa che ha lo stesso valore di \textit{corsaSup}. \\ [1ex]
+      \hline
+
+      \textit{propagaCancellazione} & Dopo aver settato a \textit{true} il valore di \textit{cancellata} in \textit{CorsaSpecifica}, il trigger andrà a settare a \textit{true} anche il valore di \textit{cancellata} delle corse specifiche che sono sottocorse della corsa in questione. Se invece la corsa cancellata è una sottocorsa, il trigger andrà a cancellare anche l'altra sottocorsa, dal momento che una sottocorsa non può esistere senza l'altra. \\ [1ex]
+      \hline
+
+      \textit{eliminaTratteScalo} & Dopo aver eliminato una tupla in \textit{Scalo}, il trigger elimina le sottocorse della corsa in questione. \\ [1ex]
+      \hline
+
+      \textit{generaTratteScalo} & Dopo aver inserito una tupla in \textit{Scalo}, il trigger genera le due sottocorse, una avrà come porto di partenza lo stesso della corsa inserita e come porto di arrivo il porto di scalo, l'altra invece avrà come porto di partenza il porto di scalo e come porto di arrivo il porto di arrivo della corsa inserita. \\ [1ex]          
+     \hline\hline
+\end{longtable}
+
+
+
+
+
+
+
+
+
+
