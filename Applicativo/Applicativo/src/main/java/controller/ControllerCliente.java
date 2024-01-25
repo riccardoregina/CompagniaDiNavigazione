@@ -445,7 +445,19 @@ public class ControllerCliente {
         try {
             ClienteDAO clienteDAO = new ClienteDAO();
             clienteDAO.aggiungeVeicolo(tipoVeicolo, targa, cliente.getLogin());
-            cliente.addVeicolo(new Veicolo(targa, tipoVeicolo));
+            cliente.addVeicolo(new Veicolo(tipoVeicolo, targa));
+            return true;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean removeVeicolo(String targa) {
+        try {
+            ClienteDAO clienteDAO = new ClienteDAO();
+            clienteDAO.rimuoveVeicolo(targa, cliente.getLogin());
+            cliente.removeVeicolo(cliente.getVeicoliPosseduti().get(targa));
             return true;
         } catch (SQLException e) {
             logger.log(Level.SEVERE, e.getMessage());

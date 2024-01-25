@@ -615,4 +615,27 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
         }
     }
+
+    public void rimuoveVeicolo(String targa, String login) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "delete from navigazione.veicolo" +
+                " where targa = ? and proprietario = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, targa);
+            ps.setString(2, login);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Rimozione del veicolo fallita.");
+            throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
+        }
+    }
 }
