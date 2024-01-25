@@ -1,0 +1,151 @@
+\subsection{Dizionario delle Classi}
+
+\vspace{4mm}
+
+\begin{longtable}{|| m{0.2\textwidth} | m{0.35\textwidth} | m{0.45\textwidth} ||}
+    \hline\hline
+     \textbf{Classe} & \textbf{Descrizione} & \textbf{Attributi} \\
+     \hline\hline
+     \endfirsthead
+
+     \hline
+     \textbf{Classe} & \textbf{Descrizione} & \textbf{Attributi} \\
+     \hline
+     \endhead
+
+     %Utente
+     Utente & L'utente fa l'accesso al sistema o come Compagnia per aggiungere o aggiornare le corsa, o come Cliente per consultare le corse disponibili &
+     \textbf{login}(String): login identificativo per accedere all'area riservata della compagnia o del cliente
+     
+     \textbf{password}(String): password per accedere all'area riservata della compagnia o del cliente\\
+     \hline
+
+     %Compagnia
+     Compagnia & La compagnia di navigazione offre delle corse in traghetto, aliscafo, motonave o altro tra le varie isole  & 
+     \textbf{nome}(String): nome della compagnia
+
+     \textbf{numero}(String): numero di telefono della compagnia
+
+     \textbf{indirizzo}(String): indirizzo di posta elettronica della compagnia
+     
+     \textbf{sitoWeb}(String): link URL al sito web della compagnia\\
+     \hline
+
+     %Porto
+     Porto & Luogo in cui le imbarcazioni salpano e attraccano &
+     \textbf{comune}(String): nome del comune di appartenenza del porto
+     
+     \textbf{indirizzo}(String): indirizzo presso il quale è situato il porto
+     
+     \textbf{numeroTelefono}(String): numero telefonico del servizio informazioni\\
+     \hline
+
+     %Scalo
+     Scalo & Atrracco al porto di un isola intermedia per consentire ad altri passeggeri di arrivare a destinazione & 
+     \textbf{OraAttracco}(Timestamp): ora in cui il natante arriva al porto
+     
+     \textbf{OraRipartenza}(Timestamp): ora in cui il natante riparte
+     
+     \textbf{costoPrimaTratta}(float): costo della tratta intermedia che va dal porto di partenza al porto di scalo
+
+     \textbf{costoSecondaTratta}(float): costo della tratta intermedia che va dal porto di scalo al porto di arrivo\\
+     \hline
+
+     %CorsaRegolare
+     CorsaRegolare & Tratta marittima messa a disposizione da una compagnia che collega due isole (o tre se c'è uno scalo) che si ripeterà per determinati periodi e determinati giorni &   
+     \textbf{OrarioPartenza}(Time): ora in cui il natante salpa dal porto di partenza e ha inizio la corsa
+     
+     \textbf{OrarioArrivo}(Time): ora in cui il natante attracca al porto di arrivo e la corsa ha termine
+     
+     \textbf{costoIntero}(float): costo base della corsa per un adulto senza bagaglio o veicolo
+     
+     \textbf{scontoRidotto}(float): percentuale di sconto per un biglietto ridotto
+
+     \textbf{costoBagaglio}(float): sovrapprezzo per i clienti che portano un bagaglio
+
+     \textbf{costoVeicolo}(float): sovrapprezzo per i clienti che imbarcano un veicolo
+
+     \textbf{costoPrevendita}(float): sovrapprezzo per i clienti che acquistano il biglietto in prevendita\\
+     \hline
+
+     %CorsaSpecifica
+     CorsaSpecifica & Istanza specifica di una corsa regolare &
+     \textbf{data}(Date): giorno in cui viene effettuata la corsa
+     
+     \textbf{postiDispPass}(int): numero di posti passeggeri ancora disponibili
+     
+     \textbf{postiDispVei}(int): numero di posti veicoli ancora disponibili
+     
+     \textbf{minutiRitardo}(int): minuti di ritardo della corsa
+     
+     \textbf{cancellata}(boolean): valore booleano che indica se una corsa è stata cancellata dalla compagnia\\
+     \hline
+
+     %Periodo
+     Periodo & Periodo dell'anno in cui è attiva una corsa regolare &
+     \textbf{dataInizio}(Date): data di inizio del periodo
+     
+     \textbf{dataFine}(Date): data di fine del periodo
+     
+     \textbf{giorno}(String): attributo multivalore che indica i giorni in cui la corsa è attiva\\
+     \hline
+    
+     %Natante
+     Natante & Categoria di imbarcazione utilizzata dalle compagnie di navigazione &
+     \textbf{nome}(String): nome identificativo del natante
+     
+     \textbf{capienzaPasseggeri}(int): numero massimo di passeggeri che il natante può trasportare\\
+     \hline
+
+     %Traghetto
+     Traghetto & Specializzazione di Natante dotato di posti per passeggeri e per veicoli &
+     \textbf{capienzaVeicoli}(int): numero massimo di veicoli che il natante può trasportare\\
+     \hline
+
+     %Aliscafo
+     Aliscafo & Specializzazione di Natante dotato di posti solo per passeggeri &
+     \\
+     \hline
+
+     %Motonave
+     Motonave & Specializzazine di Natante dotati di posti solo per passeggeri &
+     \\
+     \hline
+
+     %Cliente
+     Cliente & Utente registrato al sistema che decide di acquistare uno o più biglietti per una o più corse specifiche &
+     \textbf{nome}(String): nome del cliente
+     
+     \textbf{cognome}(String): cognome del cliente\\
+     \hline
+
+     %Biglietto
+     Biglietto & Biglietto acquistato dal cliente per usufruire di una determinata corsa &
+     \textbf{eta}(int): età del passeggero
+     
+     \textbf{prevendita}(boolean): valore booleano che indica se il cliente ha prenotato o meno il biglietto
+     
+     \textbf{bagaglio}(boolean): valore booleano che indica se il cliente porta con se o meno un bagaglio
+     
+     \textbf{prezzo}(int): prezzo totale del biglietto calcolato in base all'età del passeggero e alla presenza del bagaglio e dell'autoveicolo
+     
+     \textbf{dataAcquisto}(Date): data di acquisto del biglietto\\
+     \hline
+
+     %Veicolo
+     Veicolo & Informazioni sul veicolo che un cliente vuole imbarcare & 
+     \textbf{targa}(String): targa identificativa del veicolo
+     
+     \textbf{tipo}(String): tipo di veicolo (Automobile, Scooter etc.)\\
+     \hline
+     
+     %AccountSocial
+     Account Social & Informazioni sui vari account social di una compagnia &
+     \textbf{nomeSocial}(String): nome del social al qual è associato l'account
+     
+     \textbf{tag}(String): tag dell'account\\
+     \hline
+
+     \hline\hline
+     
+\end{longtable}

@@ -1,0 +1,92 @@
+%Preambolo
+\documentclass[a4paper, 12pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{hyperref} %per i riferimenti
+\usepackage{enumitem} %per modificare gli elenchi puntati e le enumerazioni
+\usepackage{array}
+\usepackage{longtable} %per creare tabelle multipagina
+\usepackage{verbatim} %per i commenti multiriga
+\usepackage{tabularx}
+    %\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+    \newcolumntype{b}{>{\hsize=0.76\hsize}X}
+    \newcolumntype{s}{>{\hsize=0.22\hsize}X}
+
+%preambolo per inserire codice sql
+\usepackage{listings}
+\usepackage{color}
+
+%definizione dei colori
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+%definizione dello stile per il linguaggio sql
+\lstdefinestyle{sqlstyle}{
+    language=sql,
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize\ttfamily,
+    breakatwhitespace=true,
+    breaklines=true,
+    postbreak=\mbox{\space\space\space\space\space\textcolor{red}{$\hookrightarrow$}\space},
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\begin{document}
+
+%Frontespizio
+\input{frontespizio}
+
+\tableofcontents
+\newpage
+
+\section{Progettazione Concettuale}
+\input{analisi_requisiti}
+\newpage
+
+\subsection{Schema Concettuale UML}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width = 0.9\textwidth]{immagini/UMLdiagramNonRistrutturato.png}
+    \label{UMLNonRistrutturato}
+\end{figure}
+
+\input{dizionari/dizionario_classi}
+\input{dizionari/dizionario_associazioni}
+\newpage
+
+\section{Ristrutturazione del modello concettuale}
+\input{ristrutturazione}
+\newpage
+
+\subsection{Class Diagram UML ristrutturato}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width = 0.9\textwidth]{immagini/UMLdiagramRistrutturato.png}
+    \label{UMLRistrutturato}
+\end{figure}
+
+\section{Traduzione al modello logico}
+\input{modello_logico}
+\newpage
+
+\section{Progettazione fisica}
+\input{database}
+
+\end{document}
