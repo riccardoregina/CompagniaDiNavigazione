@@ -53,13 +53,8 @@ public class ControllerCliente {
             buildModel(login, password);
         } catch(SQLException e) {
             String message = e.getMessage();
-            if (message.equals("Impossibile connettersi al server.")) {
-                logger.log(Level.SEVERE, message);
-                throw e;
-            } else if (message.equals("Credenziali errate / utente non esistente.")) {
-                logger.log(Level.FINE, message);
-                throw e;
-            }
+            logger.log(Level.FINE, message);
+            throw e;
         }
     }
 

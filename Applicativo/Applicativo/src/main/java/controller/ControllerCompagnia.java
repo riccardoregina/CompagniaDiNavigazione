@@ -55,11 +55,7 @@ public class ControllerCompagnia {
         } catch(SQLException e) {
             String message = e.getMessage();
             logger.log(Level.FINE, message);
-            if (message.equals("Impossibile connettersi al server.")) {
-                throw e;
-            } else if (message.equals("Credenziali errate / compagnia non esistente.")) {
-                throw e;
-            }
+            throw e;
         }
     }
 

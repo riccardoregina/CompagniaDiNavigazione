@@ -39,6 +39,7 @@ public class ConnessioneDB {
             connection = DriverManager.getConnection(url, user, password);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Impossibile accedere a dbconfig.properties");
+            throw new SQLException("Impossibile accedere a dbconfig.properties");
         } catch (ClassNotFoundException e) {
             logger.log(Level.SEVERE, "Impossibile trovare il driver.");
             throw new SQLException("Impossibile trovare il driver.");
