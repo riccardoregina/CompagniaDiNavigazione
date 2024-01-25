@@ -159,7 +159,7 @@ public class ContattiCompagnia {
         tableTelefoni = new JTable(modelTel);
         tableTelefoni.getTableHeader().setReorderingAllowed(false);
         tableTelefoni.setDefaultRenderer(Object.class, centerRenderer);
-        ListSelectionModel selectionModelTel = tableSocial.getSelectionModel();
+        ListSelectionModel selectionModelTel = tableTelefoni.getSelectionModel();
         selectionModelTel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollPaneTelefoni.setViewportView(tableTelefoni);
 

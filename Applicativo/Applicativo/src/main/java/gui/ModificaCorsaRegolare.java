@@ -122,6 +122,14 @@ public class ModificaCorsaRegolare {
         panelTabellaCorse.setBackground(Color.white);
         panelTabellaPeriodi.setBackground(Color.white);
 
+        checkLun.setBackground(Color.white);
+        checkMar.setBackground(Color.white);
+        checkMer.setBackground(Color.white);
+        checkGio.setBackground(Color.white);
+        checkVen.setBackground(Color.white);
+        checkSab.setBackground(Color.white);
+        checkDom.setBackground(Color.white);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         tfDataInizioPeriodo.setText(LocalDate.now().format(formatter));

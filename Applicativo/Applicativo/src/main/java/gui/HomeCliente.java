@@ -698,6 +698,7 @@ public class HomeCliente {
                         model.addRow(new Object[]{tipoVeicolo, targa});
 
                         comboBoxVeicoli.addItem(tipoVeicolo + " " + targa);
+                        targhe.add(targa);
                     }
                 }
             }
@@ -723,12 +724,13 @@ public class HomeCliente {
                     JOptionPane.showMessageDialog(null, "Seleziona un veicolo.");
                     return;
                 }
-                if (!controllerCliente.removeVeicolo(targhe.get(selectedIndex))) {
+                if (!controllerCliente.removeVeicolo((String) tableVeicoli.getValueAt(selectedIndex, 1))) {
                     JOptionPane.showMessageDialog(null, "Non e' stato possibile rimuovere il veicolo");
                 } else {
                     DefaultTableModel model = (DefaultTableModel) tableVeicoli.getModel();
                     model.removeRow(selectedIndex);
                     JOptionPane.showMessageDialog(null, "Veicolo rimosso.");
+                    comboBoxVeicoli.removeItemAt(selectedIndex + 1);
                 }
             }
 
