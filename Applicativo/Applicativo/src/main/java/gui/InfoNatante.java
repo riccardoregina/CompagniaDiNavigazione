@@ -1,7 +1,6 @@
 package gui;
 
 import controller.ControllerCompagnia;
-import unnamed.NonStandardStringFunctions;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -12,10 +11,8 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 

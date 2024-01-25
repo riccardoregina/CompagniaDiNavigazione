@@ -2,16 +2,17 @@ package controller;
 
 import model.*;
 import postgresqlDAO.ClienteDAO;
+import unnamed.Pair;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import unnamed.Pair;
 
 /**
  * La classe ControllerCliente si occupa di:

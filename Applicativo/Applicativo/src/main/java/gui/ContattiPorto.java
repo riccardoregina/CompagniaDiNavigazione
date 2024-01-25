@@ -1,7 +1,6 @@
 package gui;
 
 import controller.ControllerCliente;
-import unnamed.CustomRenderer;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;

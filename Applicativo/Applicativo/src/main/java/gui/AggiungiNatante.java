@@ -1,5 +1,7 @@
 package gui;
 
+import controller.ControllerCompagnia;
+
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
@@ -8,8 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Locale;
-
-import controller.ControllerCompagnia;
 
 /**
  * The type Aggiungi natante.

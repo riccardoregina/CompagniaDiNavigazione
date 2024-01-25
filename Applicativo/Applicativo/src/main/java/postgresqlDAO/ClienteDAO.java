@@ -1,6 +1,6 @@
 package postgresqlDAO;
 
-import database.*;
+import database.ConnessioneDB;
 
 import java.sql.*;
 import java.time.LocalDate;

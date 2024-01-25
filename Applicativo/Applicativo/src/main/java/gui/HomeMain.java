@@ -1,16 +1,12 @@
 package gui;
 
-import controller.ControllerCompagnia;
 import controller.ControllerCliente;
+import controller.ControllerCompagnia;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 
 /**
  * The type Home main.
