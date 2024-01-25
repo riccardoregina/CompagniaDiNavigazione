@@ -26,7 +26,6 @@ create table Navigazione.CorsaRegolare(
     costoVeicolo numeric default 0 check(costoVeicolo >= 0),
     Compagnia text not null,
     Natante text not null,
-    CorsaSup integer not null,
 
     check (PortoArrivo <> PortoPartenza)
 );
@@ -155,11 +154,6 @@ alter table Navigazione.CorsaRegolare
 alter table Navigazione.CorsaRegolare
     add constraint corsaFKportoArrivo
         foreign key (PortoArrivo) references Navigazione.Porto(idPorto)
-            on delete cascade       on update cascade;
-
-alter table Navigazione.CorsaRegolare
-    add constraint corsaFKcorsaSup
-        foreign key (CorsaSup) references Navigazione.CorsaRegolare(idCorsa)
             on delete cascade       on update cascade;
 
 /*alter Scalo*/
