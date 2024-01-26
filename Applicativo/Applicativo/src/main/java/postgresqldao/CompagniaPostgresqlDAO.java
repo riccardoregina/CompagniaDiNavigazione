@@ -1,4 +1,4 @@
-package postgresqlDAO;
+package postgresqldao;
 
 import database.ConnessioneDB;
 
@@ -8,26 +8,32 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * The type Compagnia db.
+ * La classe CompagniaPostgresqlDAO.
  */
-public class CompagniaDAO implements dao.CompagniaDAO {
+public class CompagniaPostgresqlDAO implements dao.CompagniaDAO {
+    private Logger logger = Logger.getLogger(this.getClass().getName());
     private Connection connection;
-    public CompagniaDAO() throws SQLException {
-        try {
-            connection = ConnessioneDB.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw e;
-        }
+
+    /**
+     *  Istanzia un Data Access Object per richiedere accesso a dati, riguardanti la compagnia,
+     *  presenti sul DB.
+     *
+     * @throws SQLException
+     */
+    public CompagniaPostgresqlDAO() throws SQLException {
+        connection = ConnessioneDB.getInstance().getConnection();
     }
 
     /**
-     * Accedi boolean.
+     * Verifica sul db se esiste una compagnia con i login e password passati come parametri.
      *
-     * @param login the login
-     * @param pw    the pw
-     * @return the boolean
+     * @param login la login
+     * @param pw    la password
+     * @throws SQLException
      */
     public void accede(String login, String pw) throws SQLException {
         PreparedStatement ps = null;
@@ -45,27 +51,34 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             if (!rs.next()) {
                 rs.close();
                 ps.close();
+                logger.log(Level.FINE, "Credenziali errate / compagnia non esistente.");
                 throw new SQLException("Credenziali errate / compagnia non esistente.");
             }
             rs.close();
             ps.close();
         } catch (SQLException e) {
+            String message = e.getMessage();
+            logger.log(Level.SEVERE, message);
             throw e;
         } finally {
-            connection.close();
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch compagnia from db.
+     * Effettua il fetch dei dati della compagnia sul DB.
      *
-     * @param loginCompagnia the login compagnia
-     * @param nome           the nome
-     * @param telefono       the telefono
-     * @param email          the email
-     * @param nomeSocial     the nome social
-     * @param tagSocial      the tag social
-     * @param sitoWeb        the sito web
+     * @param loginCompagnia la login
+     * @param nome           output - il nome della compagnia
+     * @param telefono       output - i telefoni della compagnia
+     * @param email          output - gli indirizzi email della compagnia
+     * @param nomeSocial     output - i nomi dei social
+     * @param tagSocial      output - i tag della compagnia nei social
+     * @param sitoWeb        output - il sito web della compagnia
      */
     public void fetchCompagnia(String loginCompagnia, ArrayList<String> nome, ArrayList<String> telefono, ArrayList<String> email, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> sitoWeb) {
         PreparedStatement ps = null;
@@ -117,21 +130,24 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             }
             rs.close();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch porti.
+     * Effettua il fetch di tutti i porti presenti sul DB.
      *
-     * @param idPorto        the id porto
-     * @param comuni         the comuni
-     * @param indirizzi      the indirizzi
-     * @param numeriTelefono the numeri telefono
+     * @param idPorto        output - gli id dei porti
+     * @param comuni         output - i comuni dei porti
+     * @param indirizzi      output - gli indirizzi dei porti
+     * @param numeriTelefono output - i numeri di telefono dei porti
      */
     public void fetchPorti(ArrayList<Integer> idPorto, ArrayList<String> comuni, ArrayList<String> indirizzi, ArrayList<String> numeriTelefono) {
         Statement s = null;
@@ -152,21 +168,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             }
             rs.close();
             s.close();
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch natanti compagnia.
+     * Effettua il fetch dei natanti posseduti dalla compagnia.
      *
-     * @param loginCompagnia     the login compagnia
-     * @param nomeNatante        the nome natante
-     * @param capienzaPasseggeri the capienza passeggeri
-     * @param capienzaVeicoli    the capienza veicoli
-     * @param tipo               the tipo
+     * @param loginCompagnia     la login
+     * @param nomeNatante        output - i nomi dei natanti
+     * @param capienzaPasseggeri output - le capienze di passeggeri
+     * @param capienzaVeicoli    output - le capienze di veicoli
+     * @param tipo               output - i tipi dei natanti
      */
     public void fetchNatantiCompagnia(String loginCompagnia, ArrayList<String> nomeNatante, ArrayList<Integer> capienzaPasseggeri, ArrayList<Integer> capienzaVeicoli, ArrayList<String> tipo) {
         PreparedStatement ps = null;
@@ -188,29 +208,33 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Cancellazione fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch corse regolari.
+     * Effettua il fetch delle corse regolari erogate dalla compagnia.
      *
      * @param loginCompagnia  the login compagnia
-     * @param idCorsa         the id corsa
-     * @param idPortoPartenza the id porto partenza
-     * @param idPortoArrivo   the id porto arrivo
-     * @param orarioPartenza  the orario partenza
-     * @param orarioArrivo    the orario arrivo
-     * @param costoIntero     the costo intero
-     * @param scontoRidotto   the sconto ridotto
-     * @param costoBagaglio   the costo bagaglio
-     * @param costoPrevendita the costo prevendita
-     * @param costoVeicolo    the costo veicolo
-     * @param nomeNatante     the nome natante
-     * @param corsaSup
+     * @param idCorsa         output - gli id delle corse
+     * @param idPortoPartenza output - gli id dei porti di partenza
+     * @param idPortoArrivo   output - gli id dei porti di arrivo
+     * @param orarioPartenza  output - gli orari di partenza
+     * @param orarioArrivo    output - gli orari di arrivo
+     * @param costoIntero     output - i costi del biglietto intero
+     * @param scontoRidotto   output - gli sconti percentuali da applicare in caso di biglietto ridotto
+     * @param costoBagaglio   output - i costi aggiuntivi per il bagaglio
+     * @param costoPrevendita output - i costi aggiuntivi per la prevendita
+     * @param costoVeicolo    output - i costi aggiuntivi per il veicolo
+     * @param nomeNatante     output - i nomi dei natanti impiegati nelle corse
+     * @param corsaSup        output - le corse regolari di cui le corse sono sotto-corse
      */
     public void fetchCorseRegolari(String loginCompagnia, ArrayList<Integer> idCorsa, ArrayList<Integer> idPortoPartenza, ArrayList<Integer> idPortoArrivo, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<String> nomeNatante, ArrayList<Integer> corsaSup) {
         PreparedStatement ps = null;
@@ -238,23 +262,26 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             }
             rs.close();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch periodi attivita corse.
+     * Effettua il fetch dei periodi di attivita' delle corse regolari erogate dalla compagnia.
      *
-     * @param loginCompagnia the login compagnia
-     * @param idPeriodo      the id periodo
-     * @param dataInizio     the data inizio
-     * @param dataFine       the data fine
-     * @param giorni         the giorni
-     * @param corsa          the corsa
+     * @param loginCompagnia la login
+     * @param idPeriodo      output - gli id dei periodi
+     * @param dataInizio     output - le date di inizio
+     * @param dataFine       output - le date di fine
+     * @param giorni         output - i giorni di attivita'
+     * @param corsa          output - le corse a cui sono legati i periodi
      */
     public void fetchPeriodiAttivitaCorse(String loginCompagnia, ArrayList<Integer> idPeriodo, ArrayList<LocalDate> dataInizio, ArrayList<LocalDate> dataFine, ArrayList<String> giorni, ArrayList<Integer> corsa) {
         PreparedStatement ps = null;
@@ -275,24 +302,27 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             }
             rs.close();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch corse specifiche.
+     * Effettua il fetch delle corse specifiche erogate dalla compagnia.
      *
      * @param loginCompagnia the login compagnia
-     * @param corsaRegolare  the corsa regolare
-     * @param data           the data
-     * @param postiDispPass  the posti disp pass
-     * @param postiDispVei   the posti disp vei
-     * @param minutiRitardo  the minuti ritardo
-     * @param cancellata     the cancellata
+     * @param corsaRegolare  output - le corse regolari che hanno generato le corse specifiche
+     * @param data           output - le date delle corse specifiche
+     * @param postiDispPass  output - i posti disponibili per i passeggeri nelle corse specifiche
+     * @param postiDispVei   output - i posti disponibili per i veicoli nelle corse specifiche
+     * @param minutiRitardo  output - i minuti di ritardo
+     * @param cancellata     output - valore booleano che indica se la corsa e' stata cancellata o meno
      */
     public void fetchCorseSpecifiche(String loginCompagnia, ArrayList<Integer> corsaRegolare, ArrayList<LocalDate> data, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Integer> minutiRitardo, ArrayList<Boolean> cancellata) {
         PreparedStatement ps = null;
@@ -314,11 +344,14 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             }
             rs.close();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
@@ -327,17 +360,19 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      * Prova ad aggiungere una corsa nel DB. Se riesce, restituisce l'id
      * della tupla inserita, altrimenti viene lanciata un'eccezione.
      *
-     * @param idPortoPartenza
-     * @param idPortoArrivo
-     * @param orarioPartenza
-     * @param orarioArrivo
-     * @param costoIntero
-     * @param scontoRidotto
-     * @param costoBagaglio
-     * @param costoPrevendita
-     * @param costoVeicolo
-     * @param nomeNatante
-     * @param idCorsa - output parameter
+     * @param idPortoPartenza l'id del porto di partenza
+     * @param idPortoArrivo l'id del porto di arrivo
+     * @param orarioPartenza l'orario di partenza
+     * @param orarioArrivo l'orario di arrivo
+     * @param costoIntero il costo del biglietto intero
+     * @param scontoRidotto lo sconto percentuale per il biglietto ridotto
+     * @param costoBagaglio il costo aggiuntivo per il bagaglio
+     * @param costoPrevendita il costo aggiuntivo per la prevendita
+     * @param costoVeicolo il costo aggiunto per il veicolo
+     * @param nomeNatante il nome del natante della corsa
+     * @param idCorsa - output - l'id assegnato dal DB alla corsa inserita.
+     *
+     * @throws SQLException
      */
     public void aggiungeCorsa(int idPortoPartenza, int idPortoArrivo, LocalTime orarioPartenza, LocalTime orarioArrivo, float costoIntero, float scontoRidotto, float costoBagaglio, float costoPrevendita, float costoVeicolo, String loginCompagnia, String nomeNatante, AtomicInteger idCorsa) throws SQLException {
         PreparedStatement ps = null;
@@ -359,22 +394,26 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(11, nomeNatante);
             rs = ps.executeQuery();
             rs.next();
-            idCorsa.set((int) rs.getInt("idCorsa"));
+            idCorsa.set(rs.getInt("idCorsa"));
             rs.close();
 
             ps.close();
-            connection.close();
-
         } catch(SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Cancella corsa regolare.
+     * Cancella una corsa regolare dal DB.
      *
-     * @param idCorsa the id corsa
+     * @param idCorsa l'id della corsa da cancellare
      */
     public void cancellaCorsaRegolare(int idCorsa){
         PreparedStatement ps = null;
@@ -385,19 +424,22 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setInt(1, idCorsa);
             
             ps.executeUpdate();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Cancella corsa specifica.
+     * Cancella una corsa specifica dal DB.
      *
-     * @param idCorsa the id corsa
-     * @param data    the data
+     * @param idCorsa l'id della corsa regolare che ha generato la corsa specifica da eliminare
+     * @param data    la data della corsa specifica da eliminare
      */
     public void cancellaCorsaSpecifica(int idCorsa, Date data) throws SQLException {
         PreparedStatement ps = null;
@@ -411,21 +453,24 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setDate(2, (java.sql.Date) data);
             
             ps.executeUpdate();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Cancellazione fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Segnala ritardo.
+     * Segnala un ritardo per una corsa specifica
      *
-     * @param idCorsa the id corsa
-     * @param data    the data
-     * @param ritardo the ritardo
+     * @param idCorsa l'id della corsa regolare che ha generato la corsa specifica
+     * @param data    la data della corsa specifica
+     * @param ritardo il valore in minuti del ritardo da segnalare
      */
     public void segnalaRitardo(int idCorsa, Date data, int ritardo) throws SQLException {
         PreparedStatement ps = null;
@@ -440,19 +485,29 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setDate(3, (java.sql.Date) data);
             
             ps.executeUpdate();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Segnalazione ritardo fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Aggiunge natante.
+     * Aggiunge un natante della compagnia al DB.
+     *
+     * @param loginCompagnia la login
+     * @param nomeNatante il nome del natante da aggiungere
+     * @param capienzaPasseggeri la capienza di passeggeri del natante
+     * @param capienzaVeicoli la capienza di veicoli del natante
+     * @param tipo il tipo del natante
+     * @throws SQLException
      */
-    public void aggiungeNatante(String loginCompagnia, String nomeNatante, int capienzaPasseggeri, int capienzaVeicoli, String tipo) throws Exception {
+    public void aggiungeNatante(String loginCompagnia, String nomeNatante, int capienzaPasseggeri, int capienzaVeicoli, String tipo) throws SQLException {
         PreparedStatement ps = null;
         String query = "insert into navigazione.natante"
         + " values (?,?,?,?,?::navigazione.tiponatante)";
@@ -466,18 +521,22 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(5, tipo);
             
             ps.executeUpdate();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
-            throw new Exception();
+            logger.log(Level.SEVERE, "Aggiunta del natante fallita.");
+            throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Rimuovi natante.
+     * Rimuove un natante della compagnia dal DB.
      *
-     * @param nomeNatante the nome natante
+     * @param nomeNatante il nome del natante da eliminare
      */
     public void rimuoveNatante(String nomeNatante) {
         PreparedStatement ps = null;
@@ -489,14 +548,26 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(1, nomeNatante);
             
             ps.executeUpdate();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Rimozione fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Aggiunge sul DB uno scalo per la corsa identificata dall'idCorsa in ingresso.
+     *
+     * @param idCorsa          l'id della corsa per cui si aggiunge lo scalo
+     * @param idPortoScalo     il porto di scalo
+     * @param orarioAttracco   l'orario di arrivo al porto di scalo
+     * @param orarioRipartenza l'orario di ripartenza dal porto di scalo
+     * @throws SQLException
+     */
     public void aggiungeScalo(int idCorsa, Integer idPortoScalo, LocalTime orarioAttracco, LocalTime orarioRipartenza) throws SQLException {
         PreparedStatement ps = null;
         String query = "insert into navigazione.Scalo"
@@ -510,14 +581,27 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setTime(4, Time.valueOf(orarioRipartenza));
             ps.executeUpdate();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Inserimento fallito.");
+            logger.log(Level.SEVERE, "Inserimento fallito.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Aggiunge un periodo di attivita', ma senza attaccarlo ad una corsa regolare.
+     *
+     * @param giorni        i giorni di attivita'
+     * @param inizioPeriodo l'inizio del periodo
+     * @param finePeriodo   la fine del periodo
+     * @param idPeriodo     output - l'id assegnato dal DB al periodo inserito
+     * @throws SQLException
+     */
     public void aggiungePeriodo(String giorni, LocalDate inizioPeriodo, LocalDate finePeriodo, AtomicInteger idPeriodo) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -538,12 +622,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             rs.close();
 
             ps.close();
-            connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Aggiunta del periodo fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Attiva una corsa regolare in un periodo
+     *
+     * @param idCorsa   l'id della corsa
+     * @param idPeriodo l'id del periodo
+     * @throws SQLException
+     */
     public void attivaCorsaInPeriodo(int idCorsa, int idPeriodo) throws SQLException {
         PreparedStatement ps = null;
         String query = "insert into navigazione.attivain values (?,?)";
@@ -555,12 +652,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.executeUpdate();
 
             ps.close();
-            connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Attivazione della corsa fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Modifica l'orario di partenza di una corsa regolare.
+     *
+     * @param idCorsa             l'id della corsa
+     * @param nuovoOrarioPartenza il nuovo orario di partenza
+     * @throws SQLException
+     */
     public void modificaOrarioPartenza(int idCorsa, LocalTime nuovoOrarioPartenza) throws SQLException {
         PreparedStatement ps = null;
         String query = "update navigazione.corsaregolare set orariopartenza = ? where idcorsa = ?";
@@ -572,12 +682,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.executeUpdate();
 
             ps.close();
-            connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica orario fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Modifica l'orario di arrivo della corsa.
+     *
+     * @param idCorsa           l'id della corsa
+     * @param nuovoOrarioArrivo il nuovo orario di arrivo
+     * @throws SQLException
+     */
     public void modificaOrarioArrivo(int idCorsa, LocalTime nuovoOrarioArrivo) throws SQLException {
         PreparedStatement ps = null;
         String query = "update navigazione.corsaregolare set orarioarrivo = ? where idcorsa = ?";
@@ -589,12 +712,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.executeUpdate();
 
             ps.close();
-            connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica orario fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
-    
+
+    /**
+     * Modifica il costo del biglietto intero della corsa.
+     *
+     * @param idCorsa          l'id della corsa
+     * @param nuovoCostoIntero il nuovo costo intero
+     * @throws SQLException
+     */
     public void modificaCostoIntero(int idCorsa, float nuovoCostoIntero) throws SQLException {
         PreparedStatement ps = null;
         String query = "update navigazione.corsaregolare set costointero = ? where idcorsa = ?";
@@ -606,12 +742,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.executeUpdate();
 
             ps.close();
-            connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica costo fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Modifica lo sconto percentuale per il biglietto ridotto.
+     *
+     * @param idCorsa            l'id della corsa
+     * @param nuovoScontoRidotto il nuovo sconto ridotto
+     * @throws SQLException
+     */
     public void modificaScontoRidotto(int idCorsa, float nuovoScontoRidotto) throws SQLException {
         PreparedStatement ps = null;
         String query = "update navigazione.corsaregolare set scontoridotto = ? where idcorsa = ?";
@@ -623,12 +772,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.executeUpdate();
 
             ps.close();
-            connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica costo fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Modifica il costo aggiuntivo per il bagaglio.
+     *
+     * @param idCorsa            l'id della corsa
+     * @param nuovoCostoBagaglio il nuovo costo per il bagaglio
+     * @throws SQLException
+     */
     public void modificaCostoBagaglio(int idCorsa, float nuovoCostoBagaglio) throws SQLException {
         PreparedStatement ps = null;
         String query = "update navigazione.corsaregolare set costobagaglio = ? where idcorsa = ?";
@@ -640,12 +802,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.executeUpdate();
 
             ps.close();
-            connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica costo fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Modifica il costo aggiuntivo per la prevendita.
+     *
+     * @param idCorsa              l'id della corsa
+     * @param nuovoCostoPrevendita il nuovo costo prevendita
+     * @throws SQLException
+     */
     public void modificaCostoPrevendita(int idCorsa, float nuovoCostoPrevendita) throws SQLException {
         PreparedStatement ps = null;
         String query = "update navigazione.corsaregolare set costoprevendita = ? where idcorsa = ?";
@@ -657,13 +832,26 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.executeUpdate();
 
             ps.close();
-            connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica costo fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
 
+    /**
+     * Modifica il costo aggiuntivo per il veicolo.
+     *
+     * @param idCorsa           l'id della corsa
+     * @param nuovoCostoVeicolo il nuovo costo per il veicolo
+     * @throws SQLException the sql exception
+     */
     public void modificaCostoVeicolo(int idCorsa, float nuovoCostoVeicolo) throws SQLException {
         PreparedStatement ps = null;
         String query = "update navigazione.corsaregolare set costoveicolo = ? where idcorsa = ?";
@@ -675,19 +863,24 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.executeUpdate();
 
             ps.close();
-            connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Modifica costo fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Elimina un periodo di attivita per una corsa.
-     * Elimina anche tale periodo dal DB.
+     * Elimina dal DB un periodo di attivita per una corsa.
      *
-     * @param idCorsa   the id corsa
-     * @param idPeriodo the id periodo
-     * @throws SQLException the sql exception
+     * @param idCorsa   l'id della corsa
+     * @param idPeriodo l'id del periodo
+     * @throws SQLException
      */
     public void eliminaPeriodoAttivitaPerCorsa(int idCorsa, int idPeriodo) throws SQLException {
         PreparedStatement ps = null;
@@ -699,13 +892,27 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setInt(2, idPeriodo);
             ps.executeUpdate();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Rimozione di un periodo di attivita fallito.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Calcola gli incassi di una corsa in un periodo.
+     *
+     * @param idCorsa       l'id della corsa
+     * @param inizioPeriodo l'inizio del periodo
+     * @param finePeriodo   la fine del periodo
+     * @return un float corrispondente all'incasso della corsa nel periodo
+     * @throws SQLException
+     */
     public float calcolaIncassiCorsaInPeriodo(int idCorsa, LocalDate inizioPeriodo, LocalDate finePeriodo) throws SQLException {
         CallableStatement cs = null;
         try {
@@ -720,13 +927,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             float ret = (float) cs.getDouble(4);
             cs.close();
 
-            connection.close();
             return ret;
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Aggiorna i posti disponibili nelle sottocorse.
+     *
+     * @param idCorsa l'id della corsa
+     * @throws SQLException
+     */
     public void aggiornaPostiDisponibiliSottocorse(int idCorsa) throws SQLException {
         CallableStatement cs = null;
         try {
@@ -735,14 +954,28 @@ public class CompagniaDAO implements dao.CompagniaDAO {
 
             cs.executeUpdate();
             cs.close();
-            connection.close();
 
-            System.out.println("I posti sono stati aggiornati");
+            logger.log(Level.FINEST, "I posti sono stati aggiornati");
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Richiesta al DB fallita");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Aggiunge un profilo social per la compagnia.
+     *
+     * @param nomeSocial    il nome del social
+     * @param tag           il tag
+     * @param nomeCompagnia il nome della compagnia
+     * @throws SQLException
+     */
     public void aggiungiSocial(String nomeSocial, String tag, String nomeCompagnia) throws SQLException {
         PreparedStatement ps = null;
         String query = "insert into navigazione.AccountSocial"
@@ -755,14 +988,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(3, nomeCompagnia);
             ps.executeUpdate();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Inserimento fallito.");
+            logger.log(Level.SEVERE, "Inserimento fallito.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Elimina un profilo social della compagnia.
+     *
+     * @param nomeSocial il nome del social
+     * @param tag        il tag nel social
+     * @throws SQLException
+     */
     public void eliminaSocial(String nomeSocial, String tag) throws SQLException {
         PreparedStatement ps = null;
         String query = "delete from navigazione.AccountSocial "
@@ -774,14 +1018,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(2, tag);
             ps.executeUpdate();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
+            logger.log(Level.SEVERE, "Eliminazione fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Aggiunge un indirizzo email della compagnia.
+     *
+     * @param email         l'email
+     * @param nomeCompagnia il nome della compagnia
+     * @throws SQLException
+     */
     public void aggiungiEmail(String email, String nomeCompagnia) throws SQLException {
         PreparedStatement ps = null;
         String query = "insert into navigazione.Email"
@@ -793,14 +1048,24 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(2, nomeCompagnia);
             ps.executeUpdate();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Inserimento fallito.");
+            logger.log(Level.SEVERE, "Aggiunta fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Elimina un indirizzo email della compagnia.
+     *
+     * @param email l'email
+     * @throws SQLException
+     */
     public void eliminaEmail(String email) throws SQLException {
         PreparedStatement ps = null;
         String query = "delete from navigazione.Email " +
@@ -811,14 +1076,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(1, email);
             ps.executeUpdate();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
+            logger.log(Level.SEVERE, "Eliminazione fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Aggiunge un recapito telefonico della compagnia.
+     *
+     * @param telefono      il telefono
+     * @param nomeCompagnia il nome della compagnia
+     * @throws SQLException
+     */
     public void aggiungiTelefono(String telefono, String nomeCompagnia) throws SQLException {
         PreparedStatement ps = null;
         String query = "insert into navigazione.Telefono"
@@ -830,14 +1106,24 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(2, nomeCompagnia);
             ps.executeUpdate();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Inserimento fallito.");
+            logger.log(Level.SEVERE, "Aggiunta fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Elimina un recapito telefonico della compagnia
+     *
+     * @param telefono il telefono
+     * @throws SQLException
+     */
     public void eliminaTelefono(String telefono) throws SQLException {
         PreparedStatement ps = null;
         String query = "delete from navigazione.Telefono " +
@@ -848,14 +1134,25 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(1, telefono);
             ps.executeUpdate();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Eliminazione fallita.");
+            logger.log(Level.SEVERE, "Eliminazione fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Modifica il sito web della compagnia.
+     *
+     * @param sito          il sito web
+     * @param nomeCompagnia il nome della compagnia
+     * @throws SQLException
+     */
     public void modificaSitoWeb(String sito, String nomeCompagnia) throws SQLException {
         PreparedStatement ps = null;
         String query = "update navigazione.Compagnia " +
@@ -868,11 +1165,15 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(2, nomeCompagnia);
             ps.executeUpdate();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Modifica fallita.");
+            logger.log(Level.SEVERE, "Modifica fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 }

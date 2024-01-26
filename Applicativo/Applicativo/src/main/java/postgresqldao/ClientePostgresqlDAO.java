@@ -1,31 +1,37 @@
-package postgresqlDAO;
+package postgresqldao;
 
-import database.*;
+import database.ConnessioneDB;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * The type Cliente db.
+ * La classe ClientePostgresqlDAO.
  */
-public class ClienteDAO implements dao.ClienteDAO {
+public class ClientePostgresqlDAO implements dao.ClienteDAO {
+    private Logger logger = Logger.getLogger(this.getClass().getName());
     private Connection connection;
-    public ClienteDAO() throws SQLException {
-        try {
-            connection = ConnessioneDB.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw e;
-        }
+
+    /**
+     * Istanzia un Data Access Object per richiedere accesso a dati, riguardanti informazioni necessarie al cliente,
+     * presenti sul DB.
+     *
+     * @throws SQLException the sql exception
+     */
+    public ClientePostgresqlDAO() throws SQLException {
+        connection = ConnessioneDB.getInstance().getConnection();
     }
 
     /**
-     * Accedi boolean.
+     * Verifica sul DB se esiste un cliente con login e password inseriti.
      *
-     * @param login the login
-     * @param pw    the pw
+     * @param login la login
+     * @param pw    la password
      */
     public void accede(String login, String pw) throws SQLException {
         PreparedStatement ps = null;
@@ -40,23 +46,33 @@ public class ClienteDAO implements dao.ClienteDAO {
             ps.setString(2, pw);
             rs = ps.executeQuery();
             if (!rs.next()) {
+                rs.close();
+                ps.close();
+                logger.log(Level.FINE, "Credenziali errate / utente non esistente.");
                 throw new SQLException("Credenziali errate / utente non esistente.");
             }
 
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
+            String message = e.getMessage();
+            logger.log(Level.SEVERE, message);
             throw e;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch cliente from db.
+     * Effettua il fetch delle generalita' del cliente.
      *
-     * @param login   the login
-     * @param nome    the nome
-     * @param cognome the cognome
+     * @param login   la login
+     * @param nome    output - il nome
+     * @param cognome output - il cognome
      */
     public void fetchCliente(String login, ArrayList<String> nome, ArrayList<String> cognome) {
         PreparedStatement ps = null;
@@ -76,20 +92,23 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
             rs.close();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch veicoli cliente.
+     * Effettua il fetch dei veicoli del cliente.
      *
-     * @param login        the login
-     * @param veicoliTarga the veicoli targa
-     * @param veicoliTipo  the veicoli tipo
+     * @param login        la login
+     * @param veicoliTarga output - le targhe dei veicoli
+     * @param veicoliTipo  output - i tipi dei veicoli
      */
     public void fetchVeicoliCliente(String login, ArrayList<String> veicoliTarga, ArrayList<String> veicoliTipo) {
         PreparedStatement ps = null;
@@ -107,28 +126,25 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch compagnie.
+     * Effettua il fetch delle compagnie.
      *
-     * @param login             the login
-     * @param nomeCompagnia     the nome compagnia
-     * @param sitoWeb           the sito web
-     * @param compagniaSocial   the compagnia social
-     * @param nomeSocial        the nome social
-     * @param tagSocial         the tag social
-     * @param compagniaEmail    the compagnia email
-     * @param indirizzoEmail    the indirizzo email
-     * @param compagniaTelefono the compagnia telefono
-     * @param numeroTelefono    the numero telefono
+     * @param login         output - le login delle compagnie
+     * @param nomeCompagnia output - i nomi delle compagnie
+     * @param sitoWeb       output - i siti web delle compagnie
      */
-    public void fetchCompagnie(ArrayList<String> login, ArrayList<String> nomeCompagnia, ArrayList<String> sitoWeb, ArrayList<String> compagniaSocial, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> compagniaEmail, ArrayList<String> indirizzoEmail, ArrayList<String> compagniaTelefono, ArrayList<String> numeroTelefono) {
+    public void fetchCompagnie(ArrayList<String> login, ArrayList<String> nomeCompagnia, ArrayList<String> sitoWeb) {
         Statement s = null;
         ResultSet rs = null;
         String query = "select * from navigazione.Compagnia";
@@ -144,14 +160,28 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
             rs.close();
             s.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        }  finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Effettua il fetch dei contatti di tutte le compagnie del DB.
+     *
+     * @param compagniaSocial output - le compagnie a cui sono legati i profili social
+     * @param nomeSocial output - i nomi dei social
+     * @param tagSocial output - i tag nei social
+     * @param compagniaEmail output - le compagnie a cui sono legati gli indirizzi email
+     * @param indirizzoEmail output - gli indirizzi email
+     * @param compagniaTelefono output - le compagnie a cui sono legati i recapiti telefonici
+     * @param numeroTelefono output - i recapiti telefonici
+     */
     public void fetchContattiCompagnie(ArrayList<String> compagniaSocial, ArrayList<String> nomeSocial, ArrayList<String> tagSocial, ArrayList<String> compagniaEmail, ArrayList<String> indirizzoEmail, ArrayList<String> compagniaTelefono, ArrayList<String> numeroTelefono) {
         Statement s = null;
         ResultSet rs = null;
@@ -190,21 +220,24 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
             rs.close();
             s.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch porti.
+     * Effettua il fetch di tutti i porti del DB.
      *
-     * @param idPorto        the id porto
-     * @param comuni         the comuni
-     * @param indirizzi      the indirizzi
-     * @param numeriTelefono the numeri telefono
+     * @param idPorto        output - gli id dei porti
+     * @param comuni         output - i comuni dei porti
+     * @param indirizzi      output - gli indirizzi dei porti
+     * @param numeriTelefono output - i recapiti telefonici dei porti
      */
     public void fetchPorti(ArrayList<Integer> idPorto, ArrayList<String> comuni, ArrayList<String> indirizzi, ArrayList<String> numeriTelefono) {
         Statement s = null;
@@ -225,21 +258,25 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
             rs.close();
             s.close();
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch natanti.
+     * Effettua il fetch di tutti i natanti del DB.
      *
-     * @param compagnia          the compagnia
-     * @param nome               the nome
-     * @param capienzaPasseggeri the capienza passeggeri
-     * @param capienzaVeicoli    the capienza veicoli
-     * @param tipo               the tipo
+     * @param compagnia          output - le compagnie che posseggono i natanti
+     * @param nome               output - i nomi dei natanti
+     * @param capienzaPasseggeri output - le capienze di passeggeri dei natanti
+     * @param capienzaVeicoli    output - le capienze di veicoli dei natanti
+     * @param tipo               output - i tipi dei natanti
      */
     public void fetchNatanti(ArrayList<String> compagnia, ArrayList<String> nome, ArrayList<Integer> capienzaPasseggeri, ArrayList<Integer> capienzaVeicoli, ArrayList<String> tipo) {
         Statement s = null;
@@ -259,22 +296,26 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
             rs.close();
             s.close();
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch periodi attivita corse.
+     * Effettua il fetch dei periodi di attivita delle corse
      *
-     * @param idPeriodo  the id periodo
-     * @param dataInizio the data inizio
-     * @param dataFine   the data fine
-     * @param giorni     the giorni
-     * @param corsa      the corsa
-     * @param compagnia  the compagnia
+     * @param idPeriodo  output - gli id dei periodi
+     * @param dataInizio output - le date di inizio dei periodi
+     * @param dataFine   output - le date di fine dei periodi
+     * @param giorni     output - i giorni di attivita' dei periodi
+     * @param corsa      output - le corse attive nei periodi
+     * @param compagnia  output - le compagnie che erogano le corse
      */
     public void fetchPeriodiAttivitaCorse(ArrayList<Integer> idPeriodo ,ArrayList<LocalDate> dataInizio, ArrayList<LocalDate> dataFine, ArrayList<String> giorni, ArrayList<Integer> corsa, ArrayList<String> compagnia) {
         Statement s = null;
@@ -295,30 +336,33 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
             rs.close();
             s.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch corse regolari.
+     * Effettua il fetch di tutte le corse regolari del DB.
      *
-     * @param idCorsa         the id corsa
-     * @param idPortoPartenza the id porto partenza
-     * @param idPortoArrivo   the id porto arrivo
-     * @param orarioPartenza  the orario partenza
-     * @param orarioArrivo    the orario arrivo
-     * @param costoIntero     the costo intero
-     * @param scontoRidotto   the sconto ridotto
-     * @param costoBagaglio   the costo bagaglio
-     * @param costoPrevendita the costo prevendita
-     * @param costoVeicolo    the costo veicolo
-     * @param compagniaCorsa  the compagnia corsa
-     * @param nomeNatante     the nome natante
-     * @param corsaSup
+     * @param idCorsa         output - gli id delle corse
+     * @param idPortoPartenza output - gli id dei porti di partenza
+     * @param idPortoArrivo   output - gli id dei porti di arrivo
+     * @param orarioPartenza  output - gli orari di partenza
+     * @param orarioArrivo    output - gli orari di arrivo
+     * @param costoIntero     output - i costi dei biglietti interi
+     * @param scontoRidotto   output - le percentuali di sconto per i biglietti ridotti
+     * @param costoBagaglio   output - i costi aggiuntivi per il bagaglio
+     * @param costoPrevendita output - i costi aggiuntivi per la prevendita
+     * @param costoVeicolo    output - i costi aggiuntivi per il veicolo
+     * @param compagniaCorsa  output - le compagnie che erogano le corse
+     * @param nomeNatante     output - i nomi dei natanti impiegati nelle corse
+     * @param corsaSup        output - le corse superiori delle corse
      */
     public void fetchCorseRegolari(ArrayList<Integer> idCorsa, ArrayList<Integer> idPortoPartenza, ArrayList<Integer> idPortoArrivo, ArrayList<LocalTime> orarioPartenza, ArrayList<LocalTime> orarioArrivo, ArrayList<Float> costoIntero, ArrayList<Float> scontoRidotto, ArrayList<Float> costoBagaglio, ArrayList<Float> costoPrevendita, ArrayList<Float> costoVeicolo, ArrayList<String> compagniaCorsa, ArrayList<String> nomeNatante, ArrayList<Integer> corsaSup) {
         Statement s = null;
@@ -351,24 +395,27 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
             rs.close();
             s.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        }  finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch corse specifiche.
+     * Effettua il fetch delle corse specifiche del DB.
      *
-     * @param compagniaCorsaS the compagnia corsa s
-     * @param corsaRegolare   the corsa regolare
-     * @param data            the data
-     * @param postiDispPass   the posti disp pass
-     * @param postiDispVei    the posti disp vei
-     * @param minutiRitardo   the minuti ritardo
-     * @param cancellata      the cancellata
+     * @param compagniaCorsaS output - le compagnie che erogano le corse
+     * @param corsaRegolare   output - le corse regolari che generano le corse specifiche
+     * @param data            output - le date delle corse
+     * @param postiDispPass   output - i posti disponibili per passeggeri delle corse
+     * @param postiDispVei    output - i posti disponibile per veicoli delle corse
+     * @param minutiRitardo   output - i minuti di ritardo delle corse
+     * @param cancellata      output - valori booleani che indicano se le corse sono state cancellate o meno
      */
     public void fetchCorseSpecifiche(ArrayList<String> compagniaCorsaS, ArrayList<Integer> corsaRegolare, ArrayList<LocalDate> data, ArrayList<Integer> postiDispPass, ArrayList<Integer> postiDispVei, ArrayList<Integer> minutiRitardo, ArrayList<Boolean> cancellata) {
         Statement s = null;
@@ -390,27 +437,30 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
             rs.close();
             s.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Fetch biglietti cliente.
+     * Effettua il fetch dei biglietti acquistati dal cliente dal DB.
      *
-     * @param login         the login
-     * @param idBiglietto   the id biglietto
-     * @param idCorsa       the id corsa
-     * @param dataCorsa     the data corsa
-     * @param targaVeicolo  the targa veicolo
-     * @param prevendita    the prevendita
-     * @param bagaglio      the bagaglio
-     * @param prezzo        the prezzo
-     * @param dataAcquisto  the data acquisto
-     * @param etaPasseggero the eta passeggero
+     * @param login         la login del cliente
+     * @param idBiglietto   gli id dei biglietti
+     * @param idCorsa       gli id delle corse
+     * @param dataCorsa     le date delle corse
+     * @param targaVeicolo  le targhe dei veicoli
+     * @param prevendita    le prevendite dei biglietti
+     * @param bagaglio      valori booleani che indicano se il cliente ha pagato un costo aggiuntivo per un bagaglio o meno
+     * @param prezzo        il prezzo di acquisto
+     * @param dataAcquisto  la data di acquisto
+     * @param etaPasseggero l'eta del passeggero
      */
     public void fetchBigliettiCliente(String login, ArrayList<Integer> idBiglietto, ArrayList<Integer> idCorsa, ArrayList<LocalDate> dataCorsa, ArrayList<String> targaVeicolo, ArrayList<Boolean> prevendita, ArrayList<Boolean> bagaglio, ArrayList<Float> prezzo, ArrayList<LocalDate> dataAcquisto, ArrayList<Integer> etaPasseggero) {
         PreparedStatement ps = null;
@@ -436,26 +486,30 @@ public class ClienteDAO implements dao.ClienteDAO {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Acquista biglietto.
+     * Registra l'acquisto di un biglietto da parte del cliente.
      *
-     * @param idCorsa       the id corsa
-     * @param data          the data
-     * @param loginCliente  the login cliente
-     * @param targaVeicolo  the targa veicolo
-     * @param prevendita    the prevendita
-     * @param bagaglio      the bagaglio
-     * @param prezzo        the prezzo
-     * @param dataAcquisto  the data acquisto
-     * @param etaPasseggero the eta passeggero
-     * @param idBiglietto   output parameter
+     * @param idCorsa       l'id della corsa
+     * @param data          la data della corsa
+     * @param loginCliente  la login del cliente
+     * @param targaVeicolo  la targa del veicolo
+     * @param prevendita    un valore booleano che indica se il cliente sta pagando la prevendita o meno
+     * @param bagaglio      un valore booleano che indica se il cliente sta pagando per un bagaglio o meno
+     * @param prezzo        il prezzo di acquisto
+     * @param dataAcquisto  la data di acquisto
+     * @param etaPasseggero l'eta del passeggero
+     * @param idBiglietto   output - l'id del biglietto assegnato dal DB
      */
     public void acquistaBiglietto(int idCorsa, LocalDate data, String loginCliente, String targaVeicolo, boolean prevendita, boolean bagaglio, float prezzo, LocalDate dataAcquisto, int etaPasseggero, AtomicInteger idBiglietto) throws SQLException{
         //l'aggiornamento dei posti disponibili sará effettuato dal DB
@@ -482,20 +536,24 @@ public class ClienteDAO implements dao.ClienteDAO {
             idBiglietto.set(rs.getInt("idBiglietto"));
             rs.close();
             ps.close();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Acquisto fallito.");
+            logger.log(Level.SEVERE, "Acquisto fallito.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
     /**
-     * Aggiungi veicolo.
+     * Aggiunge un veicolo del cliente al DB.
      *
-     * @param targa             the targa
-     * @param tipo              the tipo
-     * @param loginProprietario the login proprietario
+     * @param targa             la targa del veicolo
+     * @param tipo              il tipo di veicolo
+     * @param loginProprietario la login del cliente
      */
     public void aggiungeVeicolo(String tipo, String targa, String loginProprietario) throws SQLException{
         PreparedStatement ps = null;
@@ -509,14 +567,27 @@ public class ClienteDAO implements dao.ClienteDAO {
             ps.setString(3, tipo);
             
             ps.executeUpdate();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
+            logger.log(Level.SEVERE, "Aggiunta del veicolo fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 
+    /**
+     * Registra un nuovo cliente sul DB. Se non vi riesce, lancia una eccezione.
+     *
+     * @param nome    il nome del nuovo cliente
+     * @param cognome il cognome del nuovo cliente
+     * @param login   la login del nuovo cliente
+     * @param pwd     la password del nuovo cliente
+     * @throws SQLException
+     */
     public void siRegistra(String nome, String cognome, String login, String pwd) throws SQLException {
         PreparedStatement ps = null;
         String query = "insert into navigazione.cliente" +
@@ -529,11 +600,45 @@ public class ClienteDAO implements dao.ClienteDAO {
             ps.setString(4, cognome);
 
             ps.executeUpdate();
-
-            connection.close();
         } catch (SQLException e) {
-            System.out.println("Aggiunta fallita.");
+            logger.log(Level.SEVERE, "Registrazione fallita.");
             throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
+        }
+    }
+
+    /**
+     * Rimuove un veicolo del cliente dal DB.
+     *
+     * @param targa
+     * @param login
+     * @throws SQLException
+     */
+    public void rimuoveVeicolo(String targa, String login) throws SQLException {
+        PreparedStatement ps = null;
+        String query = "delete from navigazione.veicolo" +
+                " where targa = ? and proprietario = ?";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setString(1, targa);
+            ps.setString(2, login);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Rimozione del veicolo fallita.");
+            throw new SQLException();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Impossibile chiudere la connessione.");
+            }
         }
     }
 }
