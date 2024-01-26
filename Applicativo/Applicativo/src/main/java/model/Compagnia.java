@@ -266,6 +266,6 @@ public class Compagnia extends Utente{
      * @param corsa the corsa
      */
     public void removeCorsaRegolare(CorsaRegolare corsa) {
-        corseErogate.remove(corsa);
+        corseErogate.remove(corsa.getIdCorsa());
     }
 }

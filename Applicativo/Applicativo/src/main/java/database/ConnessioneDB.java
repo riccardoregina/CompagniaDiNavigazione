@@ -28,12 +28,13 @@ public class ConnessioneDB {
         String password = null;
         String driver = null;
         try {
-            InputStream inputStream = new FileInputStream(filePath);
-            properties.load(inputStream);
-            url = properties.getProperty("database.url");
-            user = properties.getProperty("database.user");
-            password = properties.getProperty("database.password");
-            driver = properties.getProperty("database.driver");
+            try (InputStream inputStream = new FileInputStream(filePath)) {
+                properties.load(inputStream);
+                url = properties.getProperty("database.url");
+                user = properties.getProperty("database.user");
+                password = properties.getProperty("database.password");
+                driver = properties.getProperty("database.driver");
+            }
 
             Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
@@ -56,9 +57,7 @@ public class ConnessioneDB {
      * @throws SQLException
      */
     public static ConnessioneDB getInstance() throws SQLException {
-        if (instance == null) {
-            instance = new ConnessioneDB();
-        } else if (instance.connection.isClosed()) {
+        if (instance == null || instance.connection.isClosed()) {
             instance = new ConnessioneDB();
         }
         return instance;

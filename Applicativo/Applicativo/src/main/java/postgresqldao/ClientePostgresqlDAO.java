@@ -1,4 +1,4 @@
-package postgresqlDAO;
+package postgresqldao;
 
 import database.ConnessioneDB;
 
@@ -11,9 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * La classe ClienteDAO.
+ * La classe ClientePostgresqlDAO.
  */
-public class ClienteDAO implements dao.ClienteDAO {
+public class ClientePostgresqlDAO implements dao.ClienteDAO {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private Connection connection;
 
@@ -23,12 +23,8 @@ public class ClienteDAO implements dao.ClienteDAO {
      *
      * @throws SQLException the sql exception
      */
-    public ClienteDAO() throws SQLException {
-        try {
-            connection = ConnessioneDB.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw e;
-        }
+    public ClientePostgresqlDAO() throws SQLException {
+        connection = ConnessioneDB.getInstance().getConnection();
     }
 
     /**
@@ -616,6 +612,13 @@ public class ClienteDAO implements dao.ClienteDAO {
         }
     }
 
+    /**
+     * Rimuove un veicolo del cliente dal DB.
+     *
+     * @param targa
+     * @param login
+     * @throws SQLException
+     */
     public void rimuoveVeicolo(String targa, String login) throws SQLException {
         PreparedStatement ps = null;
         String query = "delete from navigazione.veicolo" +

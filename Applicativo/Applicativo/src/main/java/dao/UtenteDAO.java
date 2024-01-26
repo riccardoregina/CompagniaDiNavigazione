@@ -3,15 +3,15 @@ package dao;
 import java.sql.SQLException;
 
 /**
- * The interface Utente dao.
+ * L'interfaccia UtenteDAO
  */
 public interface UtenteDAO {
     /**
-     * Accedi boolean.
+     * Verifica sul db se esiste un utente con i login e password passati come parametri.
      *
-     * @param login    the login
-     * @param password the password
-     * @return the boolean
+     * @param login       la login
+     * @param password    la password
+     * @throws SQLException
      */
-    public void accede(String login, String password) throws SQLException;
+    void accede(String login, String password) throws SQLException;
 }

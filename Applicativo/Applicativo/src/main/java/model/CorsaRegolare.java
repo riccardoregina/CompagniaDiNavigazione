@@ -58,7 +58,7 @@ public class CorsaRegolare {
         this.costoVeicolo = costoVeicolo;
         this.corsaSup = corsaSup;
         periodiAttivita = new HashMap<>();
-        corseSpecifiche = new ArrayList<CorsaSpecifica>();
+        corseSpecifiche = new ArrayList<>();
         scali = new ArrayList<>();
     }
 

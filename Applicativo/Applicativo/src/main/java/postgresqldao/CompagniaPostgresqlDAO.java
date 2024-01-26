@@ -1,4 +1,4 @@
-package postgresqlDAO;
+package postgresqldao;
 
 import database.ConnessioneDB;
 
@@ -12,9 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * La classe CompagniaDAO.
+ * La classe CompagniaPostgresqlDAO.
  */
-public class CompagniaDAO implements dao.CompagniaDAO {
+public class CompagniaPostgresqlDAO implements dao.CompagniaDAO {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private Connection connection;
 
@@ -24,13 +24,8 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      *
      * @throws SQLException
      */
-    public CompagniaDAO() throws SQLException {
-        try {
-            connection = ConnessioneDB.getInstance().getConnection();
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, e.getMessage());
-            throw e;
-        }
+    public CompagniaPostgresqlDAO() throws SQLException {
+        connection = ConnessioneDB.getInstance().getConnection();
     }
 
     /**
@@ -38,7 +33,7 @@ public class CompagniaDAO implements dao.CompagniaDAO {
      *
      * @param login la login
      * @param pw    la password
-     * @return true se la compagnia esiste, false altrimenti
+     * @throws SQLException
      */
     public void accede(String login, String pw) throws SQLException {
         PreparedStatement ps = null;
@@ -399,12 +394,12 @@ public class CompagniaDAO implements dao.CompagniaDAO {
             ps.setString(11, nomeNatante);
             rs = ps.executeQuery();
             rs.next();
-            idCorsa.set((int) rs.getInt("idCorsa"));
+            idCorsa.set(rs.getInt("idCorsa"));
             rs.close();
 
             ps.close();
         } catch(SQLException e) {
-            System.out.println("Richiesta al DB fallita.");
+            logger.log(Level.SEVERE, "Richiesta al DB fallita.");
             throw new SQLException();
         } finally {
             try {
