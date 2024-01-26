@@ -1,0 +1,15 @@
+
+g	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(¯åÕøÿÿÿÿ8æ˜á€Â1
+P
+java:S1068".Remove this unused "acquirente" private field.(‹ã“úÿÿÿÿ8ò˜á€Â1
+F
+java:S1068")Remove this unused "corsa" private field.(©š £8©Üá€Â1
+M
+java:S1068"+Remove this unused "veicolo" private field.(Ú¶“±úÿÿÿÿ8ò˜á€Â1
+G
+java:S1068	"*Remove this unused "prezzo" private field.(Âîïê8¹â€Â1
+R
+java:S1068
+"0Remove this unused "dataAcquisto" private field.(ŠÔÙúÿÿÿÿ8ò˜á€Â1
+N
+java:S1068"1Remove this unused "etaPasseggero" private field.(šÿ²Æ8ò˜á€Â1

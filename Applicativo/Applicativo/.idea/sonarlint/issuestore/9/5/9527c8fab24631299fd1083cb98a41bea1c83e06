@@ -1,0 +1,42 @@
+
+l
+java:S1104"QMake frame a static final constant or non-public and provide accessors if needed.(¹å‘şøÿÿÿÿ
+s
+java:S1104"]Make controllerCliente a static final constant or non-public and provide accessors if needed.(ïí«°
+z
+java:S1104"_Make controllerCompagnia a static final constant or non-public and provide accessors if needed.(ÖœÂ·ıÿÿÿÿ
+F
+java:S1444"+Make this "public static frame" field final(¹å‘şøÿÿÿÿ
+r	java:S116"XRename this field "TextBenvenuto" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Şã¡ûÿÿÿÿ
+w
+java:S1450"\Remove the "TextBenvenuto" field and declare it as a local variable in the relevant methods.(Şã¡ûÿÿÿÿ
+v
+java:S1450"[Remove the "labelCliente" field and declare it as a local variable in the relevant methods.(›ë€‚ıÿÿÿÿ
+x
+java:S1450"]Remove the "labelCompagnia" field and declare it as a local variable in the relevant methods.(¯Æ‹şÿÿÿÿ
+=
+java:S3010""Remove this assignment of "frame".(Ìğßªÿÿÿÿÿ
+<
+java:S1905"&Remove this unnecessary cast to "int".(¤šÜ
+<
+java:S1905"&Remove this unnecessary cast to "int".(¤šÜ
+_
+java:S3252 "IUse static access with "javax.swing.WindowConstants" for "EXIT_ON_CLOSE".(¢¡´
+c
+java:S18542"HRemove this useless assignment to local variable "credenzialiCompagnia".(”ÏÂ²úÿÿÿÿ
+T
+java:S14812"9Remove this unused "credenzialiCompagnia" local variable.(”ÏÂ²úÿÿÿÿ
+\
+java:S1854G"FRemove this useless assignment to local variable "credenzialiCliente".(°¸å
+M
+java:S1481G"7Remove this unused "credenzialiCliente" local variable.(°¸å
+W
+java:S1854["<Remove this useless assignment to local variable "homeMain".(‡¯½€ûÿÿÿÿ
+H
+java:S1481["-Remove this unused "homeMain" local variable.(‡¯½€ûÿÿÿÿ
+t
+java:S1171_"YMove the contents of this initializer to a standard constructor or to field initializers.(ÒÌâ–øÿÿÿÿ
+o	java:S100m"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(–­Œßúÿÿÿÿ8é©Ê³Ô1
+i	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‘ ¨úúÿÿÿÿ
+@
+java:S1068"*Remove this unused "panel2" private field.(›ÏÑ´
