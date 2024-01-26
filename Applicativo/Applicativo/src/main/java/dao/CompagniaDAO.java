@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The interface Compagnia dao.
+ * L'interfaccia CompagniaDAO
  */
 public interface CompagniaDAO extends UtenteDAO {
     /**

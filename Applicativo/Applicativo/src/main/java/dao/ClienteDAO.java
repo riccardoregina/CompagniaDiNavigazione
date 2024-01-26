@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The interface Cliente dao.
+ * L'interfaccia ClienteDAO
  */
 public interface ClienteDAO extends UtenteDAO {
     /**
