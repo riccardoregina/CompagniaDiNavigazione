@@ -1,6 +1,0 @@
-
-g	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(¯åÕøÿÿÿÿ8Æò²€Â1
-g	java:S112	"FDefine and throw a dedicated exception instead of using a generic one.(Ø ³Ëúÿÿÿÿ8ö¼³€Â1
-L	java:S106"+Replace this use of System.out by a logger.(†ƒğ·şÿÿÿÿ8¿Éµ€Â1
-E
-java:S1068"(Remove this unused "tipo" private field.(©Ê‚8´†²€Â1
