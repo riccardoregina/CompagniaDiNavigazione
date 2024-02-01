@@ -457,12 +457,6 @@ public class ModificaCorsaRegolare {
                                             tableCorse.clearSelection();
                                             return;
                                         }
-                                    } else {
-                                        if (selectedColumn == 2) {
-                                            tableCorse.setValueAt(inputValue, 1, 2);
-                                        } else {
-                                            tableCorse.setValueAt(inputValue, 2, 4);
-                                        }
                                     }
                                 }
                                 if (selectedColumn == 5 || selectedColumn == 6 || selectedColumn == 7 || selectedColumn == 8 || selectedColumn == 9) {
@@ -503,6 +497,7 @@ public class ModificaCorsaRegolare {
                             JOptionPane.showMessageDialog(null, "Non puoi modificare il valore di " + col[selectedColumn]);
                         }
                         tableCorse.clearSelection();
+                        aggiornaTabellaCorse();
                     }
                 }
             }
